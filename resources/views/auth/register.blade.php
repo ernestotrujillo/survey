@@ -29,6 +29,13 @@
 						</div>
 
 						<div class="form-group">
+                            <label class="col-md-4 control-label">Unumber</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="unumber" value="{{ old('unumber') }}">
+                            </div>
+                        </div>
+
+						<div class="form-group">
 							<label class="col-md-4 control-label">E-Mail Address</label>
 							<div class="col-md-6">
 								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
@@ -48,6 +55,13 @@
 								<input type="password" class="form-control" name="password_confirmation">
 							</div>
 						</div>
+
+						<div class="form-group">
+                            <label class="col-md-4 control-label">Role</label>
+                            <div class="col-md-6">
+                                <?php echo Form::select('role', array('1' => 'User', '2' => 'Director', '3' => 'Manager', '4' => 'Administrator'), '1'); ?>
+                            </div>
+                        </div>
 
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
