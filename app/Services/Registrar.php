@@ -1,6 +1,8 @@
 <?php namespace App\Services;
 
+use DB;
 use App\User;
+use App\Role;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 
@@ -15,7 +17,8 @@ class Registrar implements RegistrarContract {
 	public function validator(array $data)
 	{
 		return Validator::make($data, [
-			'name' => 'required|max:255',
+			'firstname' => 'required|max:255',
+			'lastname' => 'required|max:255',
             'unumber' => 'required|max:255|unique:users',
 			'email' => 'required|email|max:255|unique:users',
 			'password' => 'required|confirmed|min:6',
@@ -31,13 +34,33 @@ class Registrar implements RegistrarContract {
 	 */
 	public function create(array $data)
 	{
-		return User::create([
-			'name' => $data['name'],
-            'unumber' => $data['unumber'],
-			'email' => $data['email'],
-			'password' => bcrypt($data['password']),
-            'role' => $data['role'],
-		]);
+
+		DB::beginTransaction(); //Start transaction!
+
+		try{
+			$user = new User([
+				'firstname' => $data['firstname'],
+				'lastname' => $data['firstname'],
+				'unumber' => $data['unumber'],
+				'email' => $data['email'],
+				'password' => bcrypt($data['password']),
+			]);
+			$user->save();
+
+			//set user role
+			Role::find($data['role'])->users()->save($user);
+		}
+		catch(\Exception $e)
+		{
+			//failed logic here
+			DB::rollback();
+			throw $e;
+		}
+
+		DB::commit();
+
+		return $user;
+
 	}
 
 }

@@ -11,11 +11,25 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
-
+Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index');
 
-Route::controllers([
+//Login routes
+Route::get('login', 'Auth\AuthController@getlogin');
+Route::post('login', 'Auth\AuthController@postlogin');
+
+Route::get('logout', 'Auth\AuthController@getlogout');
+
+
+// ADMIN ALLOWED ROUTES
+Route::group(['middleware' => ['auth', 'admin']], function()
+{
+	//Login routes
+	Route::get('user/create', 'Auth\AuthController@getregister');
+	Route::post('user/create', 'Auth\AuthController@postregister');
+});
+
+/*Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
-]);
+]);*/

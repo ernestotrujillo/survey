@@ -1,68 +1,90 @@
-@extends('app')
+@extends('layout.login')
 
 @section('content')
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
-				<div class="panel-heading">Login</div>
-				<div class="panel-body">
-					@if (count($errors) > 0)
-						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
-							<ul>
-								@foreach ($errors->all() as $error)
-									<li>{{ $error }}</li>
-								@endforeach
-							</ul>
-						</div>
-					@endif
+	<div class="center">
+		<h1>
+			<i class="ace-icon fa fa-leaf green"></i>
+			<span class="red">Ace</span>
+			<span class="grey" id="id-text2">Application</span>
+		</h1>
+		<h4 class="blue" id="id-company-text">&copy; Company Name</h4>
+	</div>
 
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/login') }}">
+	<div class="space-6"></div>
+
+	@if (count($errors) > 0)
+		<div class="alert alert-danger">
+			Exíste un problema en el envío del formulario.<br><br>
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
+	<div class="position-relative">
+		<div id="login-box" class="login-box visible widget-box no-border">
+			<div class="widget-body">
+				<div class="widget-main">
+					<h4 class="header blue lighter bigger">
+						<i class="ace-icon fa fa-coffee green"></i>
+						Por favor! Introduzca sus datos
+					</h4>
+
+					<div class="space-6"></div>
+
+					<form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-						<div class="form-group">
-							<label class="col-md-4 control-label">E-Mail Address</label>
-							<div class="col-md-6">
-								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
+						<fieldset>
+
+							<label class="block clearfix">
+								<span class="block input-icon input-icon-right">
+									<input type="text" class="form-control" name="unumber" placeholder="Unumber" value="{{ old('unumber') }}">
+									<i class="ace-icon fa fa-user"></i>
+								</span>
+							</label>
+
+							<label class="block clearfix">
+								<span class="block input-icon input-icon-right">
+									<input type="password" class="form-control" name="password" placeholder="Password">
+									<i class="ace-icon fa fa-lock"></i>
+								</span>
+							</label>
+
+							<div class="space"></div>
+
+							<div class="clearfix">
+								<label class="inline">
+									<input class="ace" type="checkbox" name="remember" />
+									<span class="lbl"> Recuerdame</span>
+								</label>
+
+								<button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
+									<i class="ace-icon fa fa-key"></i>
+									<span class="bigger-110">Entrar</span>
+								</button>
+
 							</div>
-						</div>
 
-						<div class="form-group">
-                            <label class="col-md-4 control-label">Unumber</label>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="unumber" value="{{ old('unumber') }}">
-                            </div>
-                        </div>
-
-						<div class="form-group">
-							<label class="col-md-4 control-label">Password</label>
-							<div class="col-md-6">
-								<input type="password" class="form-control" name="password">
-							</div>
-						</div>
-
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" name="remember"> Remember Me
-									</label>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">Login</button>
-
-								<a class="btn btn-link" href="{{ url('/password/email') }}">Forgot Your Password?</a>
-							</div>
-						</div>
+							<div class="space-4"></div>
+						</fieldset>
 					</form>
+
+				</div><!-- /.widget-main -->
+
+				<div class="toolbar clearfix">
+					<div>
+						<a href="{{ url('/password/email') }}" class="forgot-password-link">
+							<i class="ace-icon fa fa-arrow-left"></i>
+							Olvidé mi contraseña
+						</a>
+					</div>
 				</div>
-			</div>
-		</div>
-	</div>
-</div>
+			</div><!-- /.widget-body -->
+		</div><!-- /.login-box -->
+
+	</div><!-- /.position-relative -->
+
 @endsection
