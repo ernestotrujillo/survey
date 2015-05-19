@@ -38,7 +38,7 @@
 
     <ul class="nav nav-list">
         <li class="">
-            <a href="index.html">
+            <a href="{{ url('/') }}">
                 <i class="menu-icon fa fa-tachometer"></i>
                 <span class="menu-text"> Dashboard </span>
             </a>
@@ -73,9 +73,9 @@
                 </li>
 
                 <li class="">
-                    <a href="{{ url('/user/create') }}">
+                    <a href="{{ url('/user') }}">
                         <i class="menu-icon fa fa-caret-right"></i>
-                        Elements
+                        Usuarios
                     </a>
                     <b class="arrow"></b>
                 </li>
@@ -84,7 +84,7 @@
         </li>
         <li class="">
             <a href="#" class="dropdown-toggle">
-                <i class="menu-icon fa fa-user"></i>
+                <i class="menu-icon fa fa-question"></i>
                 <span class="menu-text">
                     Encuestas
                 </span>
@@ -98,7 +98,7 @@
                 <li class="">
                     <a href="#">
                         <i class="menu-icon fa fa-caret-right"></i>
-                        Crear Nueva
+                        Crear Encuesta
                     </a>
                     <b class="arrow"></b>
                 </li>

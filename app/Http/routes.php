@@ -26,7 +26,9 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 {
 	//Login routes
 	Route::get('user/create', 'Auth\AuthController@getregister');
-	Route::post('user/create', 'Auth\AuthController@postregister');
+	Route::post('user', 'Auth\AuthController@postregister');
+
+	Route::resource('user', 'UserController', ['only' => ['index', 'show', 'edit'/*, 'update'*/, 'destroy']]);
 });
 
 /*Route::controllers([

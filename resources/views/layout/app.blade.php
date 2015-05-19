@@ -317,6 +317,7 @@
 	<script src="{{ asset('/js/ace/ace.searchbox-autocomplete.js') }}"></script>
 
 	<!-- inline scripts related to this page -->
+	@yield('script')
 
 </body>
 </html>
