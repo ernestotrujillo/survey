@@ -87,7 +87,7 @@
 				<li class="light-blue">
 					<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 						<span class="user-info">
-							<small>Welcome,</small>
+							<small>Bienvenido,</small>
 							{{ Auth::user()->firstname }}
 						</span>
 						<i class="ace-icon fa fa-caret-down"></i>
@@ -317,6 +317,7 @@
 	<script src="{{ asset('/js/ace/ace.searchbox-autocomplete.js') }}"></script>
 
 	<!-- inline scripts related to this page -->
+	@yield('script')
 
 </body>
 </html>

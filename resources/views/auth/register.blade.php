@@ -22,7 +22,7 @@
 			<!-- PAGE CONTENT BEGINS -->
 				@if (count($errors) > 0)
 					<div class="alert alert-danger">
-						<strong>Whoops!</strong> There were some problems with your input.<br><br>
+						Exíste un problema en el envío del formulario.<br><br>
 						<ul>
 							@foreach ($errors->all() as $error)
 								<li>{{ $error }}</li>
@@ -34,7 +34,7 @@
 				<!-- view handling messages -->
 				@include('errors.error')
 
-				<form class="form-horizontal" role="form" method="POST" action="{{ url('/user/create') }}">
+				<form class="form-horizontal" role="form" method="POST" action="{{ url('/user') }}">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 					<div class="form-group">

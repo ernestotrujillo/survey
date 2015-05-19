@@ -38,7 +38,7 @@
 
     <ul class="nav nav-list">
         <li class="">
-            <a href="index.html">
+            <a href="{{ url('/') }}">
                 <i class="menu-icon fa fa-tachometer"></i>
                 <span class="menu-text"> Dashboard </span>
             </a>
@@ -47,10 +47,49 @@
         </li>
 
         <?php
+        $user_session = session('user');
+        if($user_session['role']['id'] == 2)
+        {
+        ?>
+        <li class="">
+            <a href="{{ url('/') }}">
+                <i class="menu-icon glyphicon glyphicon-stats"></i>
+                <span class="menu-text"> Reportes </span>
+            </a>
+
+            <b class="arrow"></b>
+        </li>
+        <?php } ?>
+
+        <?php
+        $user_session = session('user');
+        if($user_session['role']['id'] == 3)
+        {
+        ?>
+        <li class="">
+            <a href="{{ url('/') }}">
+                <i class="menu-icon glyphicon glyphicon-stats"></i>
+                <span class="menu-text"> Reportes </span>
+            </a>
+
+            <b class="arrow"></b>
+        </li>
+        <?php } ?>
+
+        <?php
+            //Administrator
             $user_session = session('user');
             if($user_session['role']['id'] == 4)
             {
         ?>
+        <li class="">
+            <a href="{{ url('/') }}">
+                <i class="menu-icon glyphicon glyphicon-stats"></i>
+                <span class="menu-text"> Reportes </span>
+            </a>
+
+            <b class="arrow"></b>
+        </li>
         <li class="">
             <a href="#" class="dropdown-toggle">
                 <i class="menu-icon fa fa-user"></i>
@@ -73,9 +112,9 @@
                 </li>
 
                 <li class="">
-                    <a href="{{ url('/user/create') }}">
+                    <a href="{{ url('/user') }}">
                         <i class="menu-icon fa fa-caret-right"></i>
-                        Elements
+                        Usuarios
                     </a>
                     <b class="arrow"></b>
                 </li>
@@ -84,7 +123,7 @@
         </li>
         <li class="">
             <a href="#" class="dropdown-toggle">
-                <i class="menu-icon fa fa-user"></i>
+                <i class="menu-icon fa fa-question"></i>
                 <span class="menu-text">
                     Survey
                 </span>
