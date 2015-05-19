@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 	//Login routes
 	Route::get('user/create', 'Auth\AuthController@getregister');
 	Route::post('user/create', 'Auth\AuthController@postregister');
+	Route::resource('survey', 'Survey\SurveyController');
 });
 
 /*Route::controllers([
