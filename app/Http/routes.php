@@ -36,6 +36,8 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 	Route::get('user/active/{id}', 'UserController@active');
 	Route::get('user/role/{id}', 'UserController@filter');
 	Route::resource('user', 'UserController', ['only' => ['index', 'show', 'edit'/*, 'update'*/, 'destroy']]);
+	
+	Route::resource('survey', 'Survey\SurveyController');
 });
 
 /*Route::controllers([
