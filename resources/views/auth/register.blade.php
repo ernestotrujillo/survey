@@ -82,8 +82,20 @@
 					<div class="form-group">
 						<label class="col-sm-3 control-label no-padding-right">Tipo de cuenta</label>
 						<div class="col-sm-9">
-							<?php echo Form::select('role', $roles, '1', array('class' => 'col-xs-10 col-sm-6')); ?>
+							<?php echo Form::select('role', array('' => '-- Seleccione --') +$roles, '',array('class' => 'account-type-select col-xs-10 col-sm-6')); ?>
 						</div>
+					</div>
+
+					<div class="form-group hidden units-input-wrap">
+						<label class="col-sm-3 control-label no-padding-right">Unidad</label>
+						<div class="col-sm-9">
+							<?php echo Form::select('unit', array('' => '-- Seleccione --') + $units, '',array('class' => 'units-select col-xs-10 col-sm-6')); ?>
+						</div>
+					</div>
+
+					<div class="form-group hidden area-input-wrap">
+						<label class="col-sm-3 control-label no-padding-right">Area</label>
+						<div class="area-input-div col-sm-9"></div>
 					</div>
 
 					<div class="clearfix form-actions">
@@ -106,4 +118,63 @@
 
 		</div><!-- /.col -->
 	</div><!-- /.row -->
+@endsection
+
+@section('script')
+	<script type="text/javascript">
+		jQuery(function($) {
+
+			if($('.account-type-select').val() > 0 && $('.account-type-select').val() < 4){
+				$('.units-input-wrap').removeClass('hidden')
+			}
+
+			if($('.units-select').val() > 0){
+				$('.units-select').val('');
+			}
+
+			$('.account-type-select').on('change', function() {
+				var account_type = $(this).val();
+				if(account_type == 1 || account_type == 2) {
+					$('.units-select').val('').trigger('change');
+					$('.units-input-wrap').removeClass('hidden');
+				}else if(account_type == 3){
+					$('.units-select').val('').trigger('change');
+					$('.units-input-wrap').removeClass('hidden');
+				}else{
+					$('.units-select').val('').trigger('change');
+					$('.units-input-wrap').addClass('hidden');
+				}
+			});
+
+			$('.units-select').on('change', function() {
+				var unit = $(this).val();
+				var account_type = $('.account-type-select').val();
+				if(unit > 0 && (account_type == 1 || account_type == 2)){
+
+					$.ajax({
+						method: "GET",
+						url: "{{ URL::to('/') }}/area/filter/unit/"+unit,
+						success: function(areas) {
+							var html = '<select class="areas-select col-xs-10 col-sm-6" name="area">';
+							html += '<option value="" selected="selected">-- Seleccione --</option>';
+							$.each(areas, function( index, value ) {
+								html += '<option value="'+index+'">'+value+'</option>';
+							});
+							html += '</select>';
+							$('.area-input-div').html(html)
+							$('.area-input-wrap').removeClass('hidden');
+						},
+						error: function(data) {
+							alert('Disculpe. Hay un error para obtener las areas de esta unidad.')
+						}
+					});
+
+				}else{
+					$('.area-select').val('');
+					$('.area-input-wrap').addClass('hidden');
+				}
+			});
+
+		});
+	</script>
 @endsection

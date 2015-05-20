@@ -2,6 +2,7 @@
 
 use App\Role;
 use App\User;
+use App\Unit;
 use Illuminate\Contracts\Pagination;
 
 use App\Http\Requests;
@@ -18,8 +19,25 @@ class UserController extends Controller {
 	 */
 	public function index()
 	{
-		$allUsers = User::paginate(20);
-		return view('user.list', ['users' => $allUsers]);
+		//$users = User::paginate(20);
+		$users = User::with('roles')->paginate(20);
+
+		$data = Role::where('active', '=', 1)->get(array('id','name'));
+		foreach ($data as $key => $value)
+		{
+			// Create the options array
+			$roles[$value->id] = $value->name;
+		}
+
+		//get all current active units
+		$data = Unit::where('active', '=', 1)->get(array('id','name'));
+		foreach ($data as $key => $value)
+		{
+			// Create the options array
+			$units[$value->id] = $value->name;
+		}
+
+		return view('user.list', compact('users', 'roles', 'units'));
 	}
 
 	/**
@@ -83,7 +101,71 @@ class UserController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		return User::where('id', '=', $id)->delete();
+		$user = User::find($id);
+		$affectedRows = $user->delete();
+
+		return response()->json(array('deleted' => $affectedRows));
+	}
+
+	/**
+	 * Ban an user.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function ban($id)
+	{
+		$user = User::find($id);
+		$user->active = 0;
+		$user->save();
+
+		return response()->json(array('user' => $user));
+	}
+
+	/**
+	 * Active an user.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function active($id)
+	{
+		$user = User::find($id);
+		$user->active = 1;
+		$user->save();
+
+		return response()->json(array('user' => $user));
+	}
+
+	/**
+	 * Filter users.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function filter($id)
+	{
+		//$users = Role::find($id)->users()->where('users.active', '=', 1)->paginate(20);
+
+		$users = Role::find($id)->users()->paginate(20);
+
+		$data = Role::where('active', '=', 1)->get(array('id','name'));
+		foreach ($data as $key => $value)
+		{
+			// Create the options array
+			$roles[$value->id] = $value->name;
+		}
+
+		//get all current active units
+		$data = Unit::where('active', '=', 1)->get(array('id','name'));
+		foreach ($data as $key => $value)
+		{
+			// Create the options array
+			$units[$value->id] = $value->name;
+		}
+
+		return view('user.list', compact('users', 'roles', 'units'));
+
 	}
 
 }

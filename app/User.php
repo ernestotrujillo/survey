@@ -41,4 +41,34 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $this->belongsToMany('App\Role')->withPivot('current');
 	}
 
+	/**
+	 * Many to many relation area_user table.
+	 *
+	 * @return relation
+	 */
+	public function areas()
+	{
+		return $this->belongsToMany('App\Area');
+	}
+
+	/**
+	 * Many to many relation unit_user table.
+	 *
+	 * @return relation
+	 */
+	public function units()
+	{
+		return $this->belongsToMany('App\Unit');
+	}
+
+	/**
+	 * Active condition
+	 *
+	 * @return query
+	 */
+	public function scopeActive($query, $active)
+	{
+		return $query->where('active', '=', $active);
+	}
+
 }

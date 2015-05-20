@@ -20,6 +20,10 @@ Route::post('login', 'Auth\AuthController@postlogin');
 
 Route::get('logout', 'Auth\AuthController@getlogout');
 
+//Area routes
+Route::get('area/filter/unit/{id}', 'AreaController@filterByUnit');
+Route::resource('area', 'AreaController', ['only' => ['index']]);
+//Route::controller('area/filter/unit/{id}', 'AreaController@filterbyunit');
 
 // ADMIN ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'admin']], function()
@@ -28,6 +32,9 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 	Route::get('user/create', 'Auth\AuthController@getregister');
 	Route::post('user', 'Auth\AuthController@postregister');
 
+	Route::get('user/ban/{id}', 'UserController@ban');
+	Route::get('user/active/{id}', 'UserController@active');
+	Route::get('user/role/{id}', 'UserController@filter');
 	Route::resource('user', 'UserController', ['only' => ['index', 'show', 'edit'/*, 'update'*/, 'destroy']]);
 });
 

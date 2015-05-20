@@ -3,6 +3,8 @@
 use DB;
 use App\User;
 use App\Role;
+use App\Unit;
+use App\Area;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 
@@ -23,6 +25,20 @@ class Registrar implements RegistrarContract {
 			'email' => 'required|email|max:255|unique:users',
 			'password' => 'required|confirmed|min:6',
             'role' => 'required',
+		]);
+	}
+
+	public function unitValidator(array $data)
+	{
+		return Validator::make($data, [
+			'unit' => 'required',
+		]);
+	}
+
+	public function areaValidator(array $data)
+	{
+		return Validator::make($data, [
+			'area' => 'required',
 		]);
 	}
 
@@ -49,6 +65,22 @@ class Registrar implements RegistrarContract {
 
 			//set user role
 			Role::find($data['role'])->users()->save($user);
+
+			switch ($data['role']) {
+				case '1':
+					Area::find($data['area'])->users()->save($user);
+					break;
+				case '2':
+					Area::find($data['area'])->users()->save($user);
+					break;
+				case '3':
+					Unit::find($data['unit'])->users()->save($user);
+					break;
+				/*case '4':
+					Unit::find($data['unit'])->users()->save($user);
+					break;*/
+			}
+
 		}
 		catch(\Exception $e)
 		{

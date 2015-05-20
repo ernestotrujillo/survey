@@ -11,29 +11,11 @@
  Target Server Version : 50622
  File Encoding         : utf-8
 
- Date: 05/19/2015 01:04:16 AM
+ Date: 05/20/2015 01:50:01 AM
 */
 
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
---  Table structure for `administrator`
--- ----------------------------
-DROP TABLE IF EXISTS `administrator`;
-CREATE TABLE `administrator` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL,
-  `unit_id` int(10) unsigned NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`) USING BTREE,
-  KEY `unit_id` (`unit_id`) USING BTREE,
-  CONSTRAINT `administrator_unit_id_fk` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `administrator_use_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  Table structure for `answer`
@@ -63,7 +45,39 @@ CREATE TABLE `area` (
   PRIMARY KEY (`id`),
   KEY `unit_id` (`unit_id`) USING BTREE,
   CONSTRAINT `unit_id_fk` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+--  Records of `area`
+-- ----------------------------
+BEGIN;
+INSERT INTO `area` VALUES ('1', 'AVA-Area1', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('2', 'AVA-Area2', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('3', 'AVA-Area3', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('4', 'CNS-Area1', '2', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+COMMIT;
+
+-- ----------------------------
+--  Table structure for `area_user`
+-- ----------------------------
+DROP TABLE IF EXISTS `area_user`;
+CREATE TABLE `area_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `area_id` int(10) unsigned NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`) USING BTREE,
+  KEY `area_id` (`area_id`) USING BTREE,
+  CONSTRAINT `area_id_area_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `user_id_area_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+--  Records of `area_user`
+-- ----------------------------
+BEGIN;
+INSERT INTO `area_user` VALUES ('2', '8', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('3', '9', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `base`
@@ -76,42 +90,6 @@ CREATE TABLE `base` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- ----------------------------
---  Table structure for `director_area`
--- ----------------------------
-DROP TABLE IF EXISTS `director_area`;
-CREATE TABLE `director_area` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL,
-  `area_id` int(10) unsigned NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`) USING BTREE,
-  KEY `area_id` (`area_id`) USING BTREE,
-  CONSTRAINT `area_id_director_area_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `user_id_director_area_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- ----------------------------
---  Table structure for `manager_unit`
--- ----------------------------
-DROP TABLE IF EXISTS `manager_unit`;
-CREATE TABLE `manager_unit` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL,
-  `unit_id` int(10) unsigned NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`) USING BTREE,
-  KEY `unit_id` (`unit_id`) USING BTREE,
-  CONSTRAINT `manager_unit_unit_id_fk` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `manager_unit_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -199,13 +177,13 @@ CREATE TABLE `role_user` (
   KEY `user_id` (`user_id`) USING BTREE,
   CONSTRAINT `role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  Records of `role_user`
 -- ----------------------------
 BEGIN;
-INSERT INTO `role_user` VALUES ('1', '1', '1', '0', '1'), ('2', '1', '4', '1', '1'), ('3', '3', '1', '1', '1'), ('4', '4', '1', '1', '1'), ('5', '5', '1', '1', '1');
+INSERT INTO `role_user` VALUES ('7', '7', '4', '1', '1'), ('8', '8', '1', '1', '1'), ('9', '9', '2', '1', '1'), ('10', '10', '3', '1', '1');
 COMMIT;
 
 -- ----------------------------
@@ -272,25 +250,39 @@ CREATE TABLE `unit` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
---  Table structure for `user_area`
+--  Records of `unit`
 -- ----------------------------
-DROP TABLE IF EXISTS `user_area`;
-CREATE TABLE `user_area` (
+BEGIN;
+INSERT INTO `unit` VALUES ('1', 'AVA', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('2', 'CNS', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('3', 'IBU', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('4', 'SPC', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+COMMIT;
+
+-- ----------------------------
+--  Table structure for `unit_user`
+-- ----------------------------
+DROP TABLE IF EXISTS `unit_user`;
+CREATE TABLE `unit_user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
-  `area_id` int(10) unsigned NOT NULL,
+  `unit_id` int(10) unsigned NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`) USING BTREE,
-  KEY `area_id` (`area_id`) USING BTREE,
-  CONSTRAINT `area_id_area_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `user_id_area_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `unit_id` (`unit_id`) USING BTREE,
+  CONSTRAINT `unit_id_user_fk` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `user_id_unit_area_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+--  Records of `unit_user`
+-- ----------------------------
+BEGIN;
+INSERT INTO `unit_user` VALUES ('1', '10', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `user_survey`
@@ -329,13 +321,13 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`),
   UNIQUE KEY `users_unumber_unique` (`unumber`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 --  Records of `users`
 -- ----------------------------
 BEGIN;
-INSERT INTO `users` VALUES ('1', 'Antonio', 'Alarcon', '18039050', 'antonio.alarcon@outlook.com', '$2y$10$5eQsL83ekA3V9J.r5f8JUOaRdEoFcnqmIbkv7NB0KNwJMuTp4pu2y', '9mq4OHoGqjvdSCfIILZKDK5RCeAW18SXK7BuFW8K9kSljoj3RkGtIXYqL0Pz', '2015-05-15 19:37:40', '2015-05-18 07:15:44', '1'), ('2', 'prueba', 'prueba', '18', 'li@gmail.com', '$2y$10$EXSe.vdQcbydH4BarATB2.ffJMSIzM8M3yquXjDuYuE1h9F.4UpSy', null, '2015-05-16 17:53:20', '2015-05-16 17:53:20', '1'), ('3', 'prueba2', 'prueba2', '111', 'a@a2.com', '$2y$10$USMuugHAQFELc.6opF2bGOG2E64FDxdSZ2FJo7jxWKCFWM7CfpVHi', null, '2015-05-16 18:23:46', '2015-05-16 18:23:46', '1'), ('4', 'Catherine', 'Catherine', '18932138', 'cc@gmail.com', '$2y$10$jswoxK2Jimn9QnbIPMLn1O9x10KM1T9UvHPueaDUKS1YNErF7/W7.', null, '2015-05-18 02:08:31', '2015-05-18 02:08:31', '1'), ('5', 'prueba', 'prueba', '1803905', 'a@o.com', '$2y$10$lM9SjnGe.k37fpDE7lzGBOYVmb1n.Q01ySguTf2mDqVQiXAO4MMla', null, '2015-05-19 03:08:01', '2015-05-19 03:08:01', '1');
+INSERT INTO `users` VALUES ('7', 'Administrador', 'Administrador', '1', 'admin@gmail.com', '$2y$10$/9uq1TNZ3.8wkrLVlzg71eX5fHPqX9VZXH9ONI39y8yW2fhy0XBGm', null, '2015-05-20 03:19:00', '2015-05-20 06:17:42', '1'), ('8', 'User', 'User', '2', 'user@gmail.com', '$2y$10$SfjNQlbjB5vT7Cfu7Yr42uIxA9hmVdcVEwutOzhCUOMz/3Y5pbQke', null, '2015-05-20 03:21:04', '2015-05-20 03:55:37', '1'), ('9', 'Manager', 'Manager', '3', 'manager@gmail.com', '$2y$10$am7ynG8t6UZHVeYkbTpDKe5VAJzzxopA2nDf8mBaOHX4NnZZaxvCa', null, '2015-05-20 03:35:34', '2015-05-20 06:17:45', '0'), ('10', 'Director', 'Director', '4', 'director@gmail.com', '$2y$10$5FdVNinS6857HJ3SJOxJduIxPTB5u3uSpeCIbPATeHdaXbkY6qVz6', null, '2015-05-20 03:36:15', '2015-05-20 03:36:15', '1');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

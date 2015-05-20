@@ -2,6 +2,7 @@
 
 use App\Role;
 use App\User;
+use App\Unit;
 
 use Illuminate\Http\Request;
 
@@ -111,22 +112,26 @@ class AuthController extends Controller {
      */
     public function getRegister()
     {
-        //if ($this->auth->check())
-        //{
-            //get all current active roles
-            $data = Role::where('active', '=', 1)->get(array('id','name'));
-            foreach ($data as $key => $value)
-            {
-                // Create the options array
-                $roles[$value->id] = $value->name;
-            }
+        $roles = array();
+        $units = array();
 
-            return view('auth.register', ['roles' => $roles]);
-       /* }
-        else
+        //get all current active roles
+        $data = Role::where('active', '=', 1)->get(array('id','name'));
+        foreach ($data as $key => $value)
         {
-            return redirect($this->loginPath());
-        }*/
+            // Create the options array
+            $roles[$value->id] = $value->name;
+        }
+
+        //get all current active units
+        $data = Unit::where('active', '=', 1)->get(array('id','name'));
+        foreach ($data as $key => $value)
+        {
+            // Create the options array
+            $units[$value->id] = $value->name;
+        }
+
+        return view('auth.register', compact('roles', 'units'));
     }
 
     /**
@@ -146,9 +151,33 @@ class AuthController extends Controller {
             );
         }
 
+        $role = $request->input('role');
+        if($role == 1 || $role == 2)
+        {
+            $v = $this->registrar->areaValidator($request->all());
+
+            if ($v->fails())
+            {
+                $this->throwValidationException(
+                    $request, $v
+                );
+            }
+        }
+        elseif($role == 3)
+        {
+            $v = $this->registrar->unitValidator($request->all());
+
+            if ($v->fails())
+            {
+                $this->throwValidationException(
+                    $request, $v
+                );
+            }
+        }
+
         if($this->registrar->create($request->all()))
         {
-            return redirect($this->redirectPath())
+            return redirect('/user')
                 ->with('message', array( 'type' => 'success', 'message' => 'Cuenta creada con éxito'));
         }
         else

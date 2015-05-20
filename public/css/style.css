@@ -1,0 +1,5 @@
+/* User list view */
+.filter-users .filter-select{ padding: 0; margin: 0 4px 2px 0; }
+.filter-users .filter-select select{ margin-bottom: 10px; }
+.filter-users .filter-buttom{ padding: 0; margin: 2px 0 2px 0; }
+.filter-users .filter-buttom button{ width: 100%; }

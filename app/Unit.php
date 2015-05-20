@@ -2,14 +2,14 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model {
+class Unit extends Model {
 
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'roles';
+    protected $table = 'unit';
 
     /**
      * The attributes that are mass assignable.
@@ -26,13 +26,23 @@ class Role extends Model {
     protected $guarded = ['id'];
 
     /**
-     * Many to many relation user_role table.
+     * Many to many relation unit_user table.
      *
      * @return relation
      */
     public function users()
     {
-        return $this->belongsToMany('App\User')->withPivot('current');
+        return $this->belongsToMany('App\User');
+    }
+
+    /**
+     * one to many relation.
+     *
+     * @return relation
+     */
+    public function areas()
+    {
+        return $this->hasMany('App\Area');
     }
 
 }

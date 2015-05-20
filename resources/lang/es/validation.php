@@ -101,6 +101,15 @@ return [
 		'lastname' => [
 			'required' => 'El campo apellido es requerido',
 		],
+		'role' => [
+			'required' => 'El campo tipo de cuenta es requerido',
+		],
+		'unit' => [
+			'required' => 'El campo unidad es requerido',
+		],
+		'area' => [
+			'required' => 'El campo area es requerido',
+		],
 	],
 
 	/*
