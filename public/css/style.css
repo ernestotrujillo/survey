@@ -3,3 +3,20 @@
 .filter-users .filter-select select{ margin-bottom: 10px; }
 .filter-users .filter-buttom{ padding: 0; margin: 2px 0 2px 0; }
 .filter-users .filter-buttom button{ width: 100%; }
+
+
+
+/* Survey Style */
+.survey-form input.name{
+    border: none;
+    font-size: 2em;
+}
+.survey-form .option-form {
+    display: none;
+}
+.survey-form .options input {
+    margin-bottom: 3px;
+}
+.show-grid {
+    margin-bottom: 15px;
+}
