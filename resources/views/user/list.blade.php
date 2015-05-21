@@ -127,7 +127,7 @@
 
                         <td>
                             <div class="hidden-sm hidden-xs btn-group">
-                                <a href="#" class="blue" title="Editar">
+                                <a href="{{ URL::to('/user/edit/'.$user->id) }}" class="blue" title="Editar">
                                     <i class="ace-icon glyphicon glyphicon-edit"></i>
                                 </a>
 
@@ -154,7 +154,7 @@
 
                                     <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                         <li>
-                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="Editar">
+                                            <a href="{{ URL::to('/user/edit/'.$user->id) }}" class="tooltip-info" data-rel="tooltip" title="Editar">
                                                 <span class="blue">
                                                     <i class="ace-icon glyphicon glyphicon-edit"></i>
                                                 </span>

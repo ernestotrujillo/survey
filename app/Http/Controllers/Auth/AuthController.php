@@ -3,6 +3,9 @@
 use App\Role;
 use App\User;
 use App\Unit;
+use App\Area;
+use Validator;
+use Input;
 
 use Illuminate\Http\Request;
 
@@ -110,7 +113,7 @@ class AuthController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function getRegister()
+    public function getRegister($id = null)
     {
         $roles = array();
         $units = array();
@@ -184,6 +187,57 @@ class AuthController extends Controller {
         {
             return redirect('/user/create')
                 ->with('message', array( 'type' => 'error', 'message' => 'Ocurrió un error al crear la cuenta'));
+        }
+    }
+
+    /**
+     * Show the application registration form for edit user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getAccount($id = null)
+    {
+        $user = User::find($id);
+
+        if($user == null){
+            return redirect('/user')
+                ->with('message', array( 'type' => 'error', 'message' => 'Usuario no existe'));
+        }else{
+            return view('auth.update', compact('user'));
+        }
+    }
+
+    /**
+     * Edit the application registration form for user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function postAccount(Request $request)
+    {
+        $v = Validator::make($request->all(), [
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'unumber' => 'required|max:255',
+            'email' => 'required|email|max:255',
+            'password' => 'required|confirmed|min:6',
+        ]);
+
+        if ($v->fails())
+        {
+            $this->throwValidationException(
+                $request, $v
+            );
+        }else{
+            $user = User::find(Input::get('id'));
+            $user->firstname = Input::get('firstname');
+            $user->lastname = Input::get('lastname');
+            $user->unumber = Input::get('unumber');
+            $user->email = Input::get('email');
+            $user->password = bcrypt(Input::get('password'));
+            $user->save();
+
+            return redirect('/user')
+                ->with('message', array( 'type' => 'success', 'message' => 'Cuenta actualizada.'));
         }
     }
 

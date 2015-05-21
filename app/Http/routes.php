@@ -28,9 +28,11 @@ Route::resource('area', 'AreaController', ['only' => ['index']]);
 // ADMIN ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'admin']], function()
 {
-	//Login routes
+	//account routes
 	Route::get('user/create', 'Auth\AuthController@getregister');
 	Route::post('user', 'Auth\AuthController@postregister');
+	Route::get('user/edit/{id}', 'Auth\AuthController@getaccount');
+	Route::post('user/edit', 'Auth\AuthController@postaccount');
 
 	Route::get('user/ban/{id}', 'UserController@ban');
 	Route::get('user/active/{id}', 'UserController@active');
