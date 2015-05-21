@@ -35,7 +35,7 @@
 				@include('errors.error')
 				{!! Form::open(array('url' => url('/user/create'),'class'=>'form-horizontal survey-form')) !!}
 
-                    <div class="from-group widget-box form-group col-xs-12 col-sm-10">
+                    <div class="from-group widget-box col-xs-12 col-sm-10">
                         <div class="widget-header">
                             <h5 class="widget-title">Survey Information</h5>
                         </div>
@@ -50,7 +50,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="from-group widget-box col-xs-12 col-sm-10">
+
+                    <!-- Question Builder-->
+                    <div class="widget-box col-xs-12 col-sm-10">
                         <div class="widget-header">
                             <h5 class="widget-title">Question builder</h5>
                         </div>
@@ -58,7 +60,7 @@
                             <div class="widget-main">
                                 <div class="row show-grid">
                                     <div class="col-xs-12 col-sm-3">
-                                        <button data-toggle="dropdown" class="btn btn-primary btn-white dropdown-toggle" aria-expanded="true">
+                                        <button data-toggle="dropdown" class="btn btn-primary btn-white dropdown-toggle btn-type" aria-expanded="true">
                                             <span>Question Type</span>
                                             <i class="ace-icon fa fa-angle-down icon-on-right"></i>
                                         </button>
@@ -85,7 +87,7 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-9">
                                         <label class="col-xs-10 col-sm-10 no-padding-left" for="question-name">Question</label>
-                                        {!! Form::text('question-name', '', array('placeholder' => 'Type your question', 'class'=>'col-xs-10 col-sm-10')) !!}
+                                        {!! Form::text('question-name', '', array('id'=>'question-name','placeholder' => 'Type your question', 'class'=>'col-xs-10 col-sm-10')) !!}
                                     </div>
                                 </div>
 
@@ -102,6 +104,21 @@
                                     <div class="options col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="clearfix form-actions">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button class="add-question btn btn-success">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  Questions shown to users  -->
+                    <div class="widget-box col-xs-12 col-sm-10 widget-result">
+                        <div class="widget-header">
+                            <h5 class="widget-title">Survey Result</h5>
+                        </div>
+                        <div class="">
+                            <div class="widget-main">
                             </div>
                         </div>
                     </div>
@@ -147,7 +164,7 @@
                     });
                 }
                 $(".btn:first-child span").text($(this).text());
-                $(".btn:first-child").val($(this).text());
+                $(".btn:first-child").val(type);
             });
 
 
@@ -169,10 +186,67 @@
 
                     $(options).append(buttons);
                 }
-
                 $(optiontext).val('');
 
             });
+
+
+
+            //Selecting the type of question
+            $('.survey-form .add-question').on('click', function(e){
+                e.preventDefault();
+
+                var qNumber = $('.question').length + 1;
+                var questionName = $('#question-name').val();
+                var qContainer = $('.widget-result .widget-main');
+                var qType = $('.btn-type').val();
+                var answerElement = '';
+
+
+                if (questionName.length > 0 && qType.length > 0){
+
+                    switch (qType) {
+                        case '1':
+                            answerElement = '<input placeholder="Type your answer" class="col-xs-12 col-sm-10" name="answer" type="text" value=""/>';
+                            break;
+                        case '2':
+                            day = "Tuesday";
+                            break;
+                        case '3':
+                            day = "Wednesday";
+                            break;
+                        case '4':
+                            day = "Thursday";
+                            break;
+                        case '5':
+                            answerElement = '<div class="input-group col-xs-12 col-sm-5">' +
+                            '                  <input class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="dd-mm-yyyy" />' +
+                            '                     <span class="input-group-addon">' +
+                            '                       <i class="fa fa-calendar bigger-110"></i>' +
+                            '                      </span>' +
+                            '               </div>';
+                            break;
+                        default:
+                            answerElement = '<input placeholder="Type your answer" class="col-xs-12 col-sm-10" name="answer" type="text" value=""/>';
+                            break;
+                    }
+
+                    var html = '<div class="row show-grid col-xs-12 col-sm-10 question">' +
+                     '              <h2 class="text-muted">' +
+                     '                  <span class="number">'+ qNumber +'</span>' +
+                     '                  <small>' +
+                     '                      <i class="ace-icon fa fa-angle-double-right"></i> ' +
+                     '                      <span class="name">' + questionName + '</span>' +
+                     '                  </small>' +
+                     '              </h2>' + answerElement
+                     '          </div>';
+
+
+                    $(qContainer).append(html);
+                }
+            });
+
+
         });
 
         //Selecting the type of question

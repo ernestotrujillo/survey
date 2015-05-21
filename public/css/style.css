@@ -20,3 +20,7 @@
 .show-grid {
     margin-bottom: 15px;
 }
+
+.widget-result .question h2 small {
+    color: #69aa46;
+}
