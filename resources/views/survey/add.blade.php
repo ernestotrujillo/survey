@@ -209,15 +209,6 @@
                         case '1':
                             answerElement = '<input placeholder="Type your answer" class="col-xs-12 col-sm-10" name="answer" type="text" value=""/>';
                             break;
-                        case '2':
-                            day = "Tuesday";
-                            break;
-                        case '3':
-                            day = "Wednesday";
-                            break;
-                        case '4':
-                            day = "Thursday";
-                            break;
                         case '5':
                             answerElement = '<div class="input-group col-xs-12 col-sm-5">' +
                             '                  <input class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="dd-mm-yyyy" />' +
