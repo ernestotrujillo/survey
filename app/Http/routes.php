@@ -34,7 +34,12 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 
 	Route::get('user/ban/{id}', 'UserController@ban');
 	Route::get('user/active/{id}', 'UserController@active');
+
+	//filter routes
 	Route::get('user/role/{id}', 'UserController@filter');
+	Route::get('user/role/{role}/unit/{unit}', 'UserController@filter');
+	Route::get('user/role/{role}/unit/{unit}/area/{area}', 'UserController@filter');
+
 	Route::resource('user', 'UserController', ['only' => ['index', 'show', 'edit'/*, 'update'*/, 'destroy']]);
 	
 	Route::resource('survey', 'Survey\SurveyController');

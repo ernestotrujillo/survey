@@ -43,17 +43,24 @@
                     <div class="col-xs-12">
                         <div class="wrapper">
                             <div class="filter-select filter-role-wrap col-sm-2 col-xs-12">
-                                <?php echo Form::select('role', array('' => '-- Tipo de cuenta --', '5' => 'Todos') +$roles, '',array('class' => 'account-type-select col-xs-12')); ?>
+                                <?php if(!isset($role)) $role = ''; ?>
+                                <?php echo Form::select('role', array('' => '-- Tipo de cuenta --', 'all' => 'Todos') +$roles, $role, array('class' => 'account-type-select col-xs-12')); ?>
                             </div>
                         </div>
                         <div class="wrapper">
                             <div class="filter-select filter-unit-wrap col-sm-2 col-xs-12 hidden">
-                                <?php echo Form::select('unit', array('' => '-- Unidad --', '5' => 'Todas') +$units, '',array('class' => 'units-select col-xs-12')); ?>
+                                <?php if(!isset($unit)) $unit = ''; ?>
+                                <?php echo Form::select('unit', array('' => '-- Unidad --', 'all' => 'Todas') +$units, $unit, array('class' => 'units-select col-xs-12')); ?>
                             </div>
                         </div>
                         <div class="wrapper">
-                            <div class="filter-select filter-area-wrap col-sm-2 col-xs-12 hidden"></div>
+                            <div class="filter-select filter-area-wrap col-sm-2 col-xs-12 hidden">
+                                <?php if(!isset($area)) $area = ''; ?>
+                                <?php if(isset($areas) && $areas != null){ ?>
+                                    <?php echo Form::select('area', array('' => '-- Area --', 'all' => 'Todas') +$areas, $area, array('class' => 'areas-select col-xs-12')); ?>
+                                <?php } ?>
                             </div>
+                        </div>
                         <div class="wrapper">
                             <div class="filter-buttom col-sm-1 col-xs-12">
                                 <button type="submit" class="btn btn-white btn-inverse btn-sm">Filtrar</button>
@@ -98,10 +105,17 @@
                         <td><?php echo $user->unumber; ?></td>
                         <td class="hidden-xs"><?php echo $user->email; ?></td>
                         <td class="hidden-xs">
-                            <?php if($user->roles[0]->id == 1) echo 'Usuario'; ?>
-                            <?php if($user->roles[0]->id == 2) echo 'Manager'; ?>
-                            <?php if($user->roles[0]->id == 3) echo 'Director'; ?>
-                            <?php if($user->roles[0]->id == 4) echo 'Administrador'; ?>
+                            <?php if(isset($user->roles)){ ?>
+                                <?php if($user->roles[0]->id == 1) echo 'Usuario'; ?>
+                                <?php if($user->roles[0]->id == 2) echo 'Manager'; ?>
+                                <?php if($user->roles[0]->id == 3) echo 'Director'; ?>
+                                <?php if($user->roles[0]->id == 4) echo 'Administrador'; ?>
+                            <?php }elseif(isset($user->role)){ ?>
+                                <?php if($user->role == 1) echo 'Usuario'; ?>
+                                <?php if($user->role == 2) echo 'Manager'; ?>
+                                <?php if($user->role == 3) echo 'Director'; ?>
+                                <?php if($user->role == 4) echo 'Administrador'; ?>
+                            <?php } ?>
                         </td>
                         <td class="hidden-xs">
                             <?php if($user->active){ ?>
@@ -227,10 +241,25 @@
             $( "#filter" ).submit(function( event )
             {
                 var account_type = $('.account-type-select').val();
-                if(account_type > 0 && account_type <= 4){
-                    window.location = '{{ URL::to('/') }}/user/role/' + account_type;
-                }else if(account_type == 5) {
-                    window.location = '{{ URL::to('/') }}/user';
+                var unit = $('.units-select').val();
+
+                if((account_type > 0) || account_type == 'all'){
+                    if(account_type > 0 && account_type <= 3){
+                        if(unit > 0 || unit == 'all'){
+                            var area = $('.areas-select').val();
+                            if(area > 0 || area == 'all'){
+                                window.location = '{{ URL::to('/') }}/user/role/' + account_type + '/unit/' + unit + '/area/' + area;
+                            }else{
+                                window.location = '{{ URL::to('/') }}/user/role/' + account_type + '/unit/' + unit;
+                            }
+                        }else{
+                            window.location = '{{ URL::to('/') }}/user/role/' + account_type;
+                        }
+                    }else{
+                        window.location = '{{ URL::to('/') }}/user/role/' + account_type;
+                    }
+                }else{
+                    alert('Seleccione un tipo de cuenta.')
                 }
 
                 event.preventDefault();
@@ -250,10 +279,11 @@
                 }
             });
 
+            var area = '<?php if(isset($area)) echo $area; ?>';
             $('.units-select').on('change', function() {
                 var unit = $(this).val();
                 var account_type = $('.account-type-select').val();
-                if(unit > 0 && unit < 4 && (account_type == 1 || account_type == 2)){
+                if(unit > 0 && (account_type == 1 || account_type == 2)){
 
                     $.ajax({
                         method: "GET",
@@ -261,13 +291,22 @@
                         success: function(areas) {
                             var html = '<select class="areas-select col-xs-12" name="area">';
                             html += '<option value="" selected="selected">-- Seleccione --</option>';
-                            html += '<option value="" selected="5">Todas</option>';
+                            if(area == 'all') {
+                                html += '<option value="all" selected="selected">Todas</option>';
+                            }else{
+                                html += '<option value="all">Todas</option>';
+                            }
                             $.each(areas, function( index, value ) {
-                                html += '<option value="'+index+'">'+value+'</option>';
+                                if(area == index){
+                                    html += '<option value="'+index+'" selected="selected">'+value+'</option>';
+                                }else{
+                                    html += '<option value="'+index+'">'+value+'</option>';
+                                }
                             });
                             html += '</select>';
                             $('.filter-area-wrap').html(html)
                             $('.filter-area-wrap').removeClass('hidden');
+                            area = '';
                         },
                         error: function(data) {
                             alert('Disculpe. Hay un error para obtener las areas de esta unidad.')
@@ -279,6 +318,18 @@
                     $('.filter-area-wrap').addClass('hidden');
                 }
             });
+
+            if($('.account-type-select').val() > 0 && $('.account-type-select').val() < 4){
+                $('.filter-unit-wrap').removeClass('hidden')
+            }
+
+            if($('.units-select').val() > 0 && ($('.account-type-select').val() == 1 || $('.account-type-select').val() == 2)){
+                if($('.areas-select').length){
+                    $('.filter-area-wrap').removeClass('hidden');
+                }else{
+                    $('.units-select').trigger('change');
+                }
+            }
         });
 
         function deleteUser(id) {

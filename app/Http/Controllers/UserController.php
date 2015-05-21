@@ -3,6 +3,9 @@
 use App\Role;
 use App\User;
 use App\Unit;
+use App\Area;
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination;
 
 use App\Http\Requests;
@@ -143,12 +146,54 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function filter($id)
+	public function filter($role, $unit = null, $area = null)
 	{
-		//$users = Role::find($id)->users()->where('users.active', '=', 1)->paginate(20);
+		if($role == 4 || $role == 'all' || $unit == null)
+		{
+			if($role == 'all'){
+				$users = User::with('roles')->paginate(20);
+			}else{
+				$users = Role::find($role)->users()->paginate(20);
+			}
+		}
+		else
+		{
+			//general query
+			$query = DB::table('users')
+				->join('role_user', 'users.id', '=', 'role_user.user_id')
+				->select('users.id', 'users.firstname', 'users.lastname', 'users.unumber', 'users.email', 'users.active', 'role_user.role_id as role')
+				->where('role_user.role_id', '=', $role);
 
-		$users = Role::find($id)->users()->paginate(20);
+			//si es director
+			if($role == 3){
+				if($unit == 'all'){
+					$users = $query->join('unit_user', 'users.id', '=', 'unit_user.user_id')
+								   ->paginate(20);
+				}else{
+					$users = $query->join('unit_user', 'users.id', '=', 'unit_user.user_id')
+								   ->where('unit_user.unit_id', '=', $unit)
+								   ->paginate(20);
+				}
+			}else if($role == 1 || $role ==2){
+				if(($area == 'all') || ($area == null && $unit != 'all')){
+					$users = $query->join('area_user', 'users.id', '=', 'area_user.user_id')
+									->join('area', 'area.id', '=', 'area_user.area_id')
+									->where('area.unit_id', '=', $unit)
+									->paginate(20);
+				}else if($unit == 'all'){
+					$users = $query->join('area_user', 'users.id', '=', 'area_user.user_id')
+									->join('area', 'area.id', '=', 'area_user.area_id')
+									->paginate(20);
+				}else{
+					$users = $query->join('area_user', 'users.id', '=', 'area_user.user_id')
+								   ->where('area_user.area_id', '=', $area)->paginate(20);
+				}
+			}else{
+				$users = $query->paginate(20);
+			}
+		}
 
+		//get all current active roles
 		$data = Role::where('active', '=', 1)->get(array('id','name'));
 		foreach ($data as $key => $value)
 		{
@@ -164,7 +209,19 @@ class UserController extends Controller {
 			$units[$value->id] = $value->name;
 		}
 
-		return view('user.list', compact('users', 'roles', 'units'));
+		if($area != null && $unit != null && $unit != 'all'){
+			//get all current active areas
+			$data = Area::where('active', '=', 1)->where('unit_id', '=', $unit)->get(array('id','name'));
+			foreach ($data as $key => $value)
+			{
+				// Create the options array
+				$areas[$value->id] = $value->name;
+			}
+		}else{
+			$areas = null;
+		}
+
+		return view('user.list', compact('users', 'roles', 'units', 'areas', 'role', 'unit', 'area'));
 
 	}
 
