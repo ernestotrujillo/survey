@@ -42,7 +42,7 @@
                         <div class="">
                             <div class="widget-main">
                                 <div class="form-group col-xs-12 col-sm-12">
-                                    {!! Form::text('name', '', array('placeholder' => 'Nombre de la encuesta', 'class'=>'col-xs-12 col-sm-10 name')) !!}
+                                    {!! Form::text('name', '', array('placeholder' => 'Nombre de la encuesta','id'=>'survey-name', 'class'=>'col-xs-12 col-sm-10 name')) !!}
                                 </div>
                                 <div class="form-group col-xs-12 col-sm-12">
                                     {!! Form::select('unit', $units, '1', array('class' => 'col-xs-12 col-sm-6 unit')) !!}
@@ -124,7 +124,7 @@
                     </div>
 					<div class="clearfix form-actions">
 						<div class="col-md-offset-3 col-md-9">
-							<button class="btn btn-info" type="submit">
+							<button class="btn btn-info create-survey">
 								<i class="ace-icon fa fa-check bigger-110"></i>
 								Enviar
 							</button>
@@ -167,7 +167,6 @@
                 $(".btn:first-child").val(type);
             });
 
-
             //Selecting the type of question
             $('.option-form .add-option').on('click', function(e){
                 e.preventDefault();
@@ -185,12 +184,12 @@
                         '</div>';
 
                     $(options).append(buttons);
+                }else{
+                    alert('Debe ingresar una opcion');
                 }
                 $(optiontext).val('');
 
             });
-
-
 
             //Selecting the type of question
             $('.survey-form .add-question').on('click', function(e){
@@ -243,7 +242,7 @@
                             break;
                     }
 
-                    var html = '<div class="row show-grid col-xs-12 col-sm-10 question">' +
+                    var html = '<div class="row show-grid col-xs-12 col-sm-10 question" qtype='+qType+' qnumber='+qNumber+' qname="'+questionName+'">' +
                      '              <h2 class="text-muted">' +
                      '                  <span class="number">'+ qNumber +'</span>' +
                      '                  <small>' +
@@ -259,9 +258,57 @@
 
                     $(qContainer).append(html);
                     $(options).html('');
+                }else{
+                    alert('Ingrese una pregunta y seleccione un tipo de pregunta');
                 }
             });
 
+            $('.survey-form .create-survey').on('click', function(e){
+                e.preventDefault();
+
+
+                var surveyName = $('#survey-name').val();
+                var qElements = $('.question');
+                var unit = $('.unit').val();
+
+                if (surveyName.length > 0 && qElements.length > 0 && unit.length > 0){
+
+                    var survey = new Object();
+                    survey.name = surveyName;
+                    survey.unit = unit;
+                    var questions = [];
+                    var qObj,qNumber, qName, qType;
+
+                    $.each(qElements, function( index, value ) {
+                        qNumber = $(value).attr('qnumber');
+                        qName = $(value).attr('qname');
+                        qType = $(value).attr('qtype');
+
+                        qObj = {};
+                        qObj['name'] =qName;
+                        qObj['type'] =qType;
+
+                        //Getting options
+                        switch (qType) {
+                            case '1':
+                                qObj['options'] = '';
+                                break;
+                            case '5':
+                               qObj['options'] = '';
+                                break;
+                            default:
+                               qObj['options'] = get_options(qNumber);
+                               break;
+                        }
+                        questions.push(qObj);
+                    });
+
+                    survey.questions  = questions;
+                }else{
+                    alert('Por favor ingrese un nombre para la encuesta, unidad y al menos una pregunta');
+                }
+
+            });
 
         });
 
@@ -304,6 +351,21 @@
             });
             var html = '<select class="form-control">'+htmlOptions+'</select>';
             return html;
+        }
+
+        function get_options(qNumber){
+
+            var optElements = $(".options[qnumber="+qNumber+"]");
+            if (optElements.length > 0){
+                var options = [];
+                $.each(optElements, function( index, value ) {
+                    options.push($(value).val());
+                });
+
+                return options;
+            }else{
+                return '';
+            }
         }
 
     </script>
