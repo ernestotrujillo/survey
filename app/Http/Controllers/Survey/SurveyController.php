@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\CreateSurveyRequest;
 use App\Survey;
 use App\User;
 use App\Unit;
@@ -45,9 +46,18 @@ class SurveyController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+    public function store(CreateSurveyRequest $request)
 	{
-		//
+
+        $survey = new Survey;
+        $survey->name = $request->input('name');
+        $survey->unit_id = $request->input('unit');
+        $survey->save();
+
+        /*foreach ($request->input('questions') as $question){
+
+        }*/
+
 	}
 
 	/**
