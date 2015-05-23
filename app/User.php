@@ -62,6 +62,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	/**
+	 * Many to many relation survey_user table.
+	 *
+	 * @return relation
+	 */
+	public function surveys()
+	{
+		return $this->belongsToMany('App\Survey');
+	}
+
+	/**
 	 * Active condition
 	 *
 	 * @return query

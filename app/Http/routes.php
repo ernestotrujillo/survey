@@ -49,7 +49,8 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 	Route::get('user/role/{role}/unit/{unit}/area/{area}', 'UserController@filter');
 
 	Route::resource('user', 'UserController', ['only' => ['index', 'show', 'edit'/*, 'update'*/, 'destroy']]);
-	
+
+	Route::get('survey/report', 'Survey\SurveyController@answerSurvey');
 	Route::resource('survey', 'Survey\SurveyController');
 });
 

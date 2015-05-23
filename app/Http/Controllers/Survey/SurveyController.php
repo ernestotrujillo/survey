@@ -89,4 +89,16 @@ class SurveyController extends Controller {
 		//
 	}
 
+	/**
+	 * Surveys answered.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function answerSurvey()
+	{
+		$surveys = Survey::with('users')->paginate(20);
+
+		return view('survey.report', compact('surveys'));
+	}
 }
