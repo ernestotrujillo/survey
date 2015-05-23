@@ -94,6 +94,7 @@ return [
 		],
 		'unumber' => [
 			'required' => 'El campo unumber es requerido',
+			'regex' => 'El formato de unumber es inválido.',
 		],
 		'firstname' => [
 			'required' => 'El campo nombre es requerido',
@@ -103,12 +104,15 @@ return [
 		],
 		'role' => [
 			'required' => 'El campo tipo de cuenta es requerido',
+			'exists'   => 'El role seleccionado es inválido.'
 		],
 		'unit' => [
 			'required' => 'El campo unidad es requerido',
+			'exists'   => 'El unit seleccionado es inválido.'
 		],
 		'area' => [
 			'required' => 'El campo area es requerido',
+			'exists'   => 'El area seleccionada es inválida.'
 		],
 	],
 

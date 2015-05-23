@@ -105,17 +105,8 @@
                         <td><?php echo $user->unumber; ?></td>
                         <td class="hidden-xs"><?php echo $user->email; ?></td>
                         <td class="hidden-xs">
-                            <?php if(isset($user->roles)){ ?>
-                                <?php if($user->roles[0]->id == 1) echo 'Usuario'; ?>
-                                <?php if($user->roles[0]->id == 2) echo 'Manager'; ?>
-                                <?php if($user->roles[0]->id == 3) echo 'Director'; ?>
-                                <?php if($user->roles[0]->id == 4) echo 'Administrador'; ?>
-                            <?php }elseif(isset($user->role)){ ?>
-                                <?php if($user->role == 1) echo 'Usuario'; ?>
-                                <?php if($user->role == 2) echo 'Manager'; ?>
-                                <?php if($user->role == 3) echo 'Director'; ?>
-                                <?php if($user->role == 4) echo 'Administrador'; ?>
-                            <?php } ?>
+                            <?php if(isset($user->role->name)){ echo $user->role->name; ?>
+                            <?php }elseif(isset($user->role_name)){ echo $user->role_name; } ?>
                         </td>
                         <td class="hidden-xs">
                             <?php if($user->active){ ?>

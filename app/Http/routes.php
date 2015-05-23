@@ -26,6 +26,12 @@ Route::resource('area', 'AreaController', ['only' => ['index']]);
 //Route::controller('area/filter/unit/{id}', 'AreaController@filterbyunit');
 
 // ADMIN ALLOWED ROUTES
+Route::group(['middleware' => ['auth', 'director']], function()
+{
+
+});
+
+// ADMIN ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'admin']], function()
 {
 	//account routes
@@ -43,7 +49,8 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 	Route::get('user/role/{role}/unit/{unit}/area/{area}', 'UserController@filter');
 
 	Route::resource('user', 'UserController', ['only' => ['index', 'show', 'edit'/*, 'update'*/, 'destroy']]);
-	
+
+	Route::get('survey/report', 'Survey\SurveyController@answerSurvey');
 	Route::resource('survey', 'Survey\SurveyController');
 });
 

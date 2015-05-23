@@ -11,7 +11,7 @@
  Target Server Version : 50622
  File Encoding         : utf-8
 
- Date: 05/20/2015 01:50:01 AM
+ Date: 05/23/2015 11:23:35 AM
 */
 
 SET NAMES utf8;
@@ -70,13 +70,13 @@ CREATE TABLE `area_user` (
   KEY `area_id` (`area_id`) USING BTREE,
   CONSTRAINT `area_id_area_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `user_id_area_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  Records of `area_user`
 -- ----------------------------
 BEGIN;
-INSERT INTO `area_user` VALUES ('2', '8', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('3', '9', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `area_user` VALUES ('4', '9', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('5', '10', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('6', '11', '2', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 COMMIT;
 
 -- ----------------------------
@@ -162,31 +162,6 @@ CREATE TABLE `question` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
---  Table structure for `role_user`
--- ----------------------------
-DROP TABLE IF EXISTS `role_user`;
-CREATE TABLE `role_user` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL,
-  `role_id` int(10) unsigned NOT NULL,
-  `current` tinyint(1) NOT NULL DEFAULT '1',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `user_role_unique` (`user_id`,`role_id`) USING BTREE,
-  KEY `role_id` (`role_id`),
-  KEY `user_id` (`user_id`) USING BTREE,
-  CONSTRAINT `role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
-
--- ----------------------------
---  Records of `role_user`
--- ----------------------------
-BEGIN;
-INSERT INTO `role_user` VALUES ('7', '7', '4', '1', '1'), ('8', '8', '1', '1', '1'), ('9', '9', '2', '1', '1'), ('10', '10', '3', '1', '1');
-COMMIT;
-
--- ----------------------------
 --  Table structure for `roles`
 -- ----------------------------
 DROP TABLE IF EXISTS `roles`;
@@ -220,7 +195,14 @@ CREATE TABLE `survey` (
   PRIMARY KEY (`id`),
   KEY `unit_id` (`unit_id`) USING BTREE,
   CONSTRAINT `survey_unit_id_fk` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+--  Records of `survey`
+-- ----------------------------
+BEGIN;
+INSERT INTO `survey` VALUES ('1', 'Encuesta de satisfacción', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('2', 'Encuesta de progreso', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `survey_image`
@@ -238,6 +220,33 @@ CREATE TABLE `survey_image` (
   KEY `survey_id` (`survey_id`) USING BTREE,
   CONSTRAINT `survey_image_survey_id_fk` FOREIGN KEY (`survey_id`) REFERENCES `survey` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+--  Table structure for `survey_user`
+-- ----------------------------
+DROP TABLE IF EXISTS `survey_user`;
+CREATE TABLE `survey_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `survey_id` int(10) unsigned NOT NULL,
+  `status` varchar(100) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_surver_user` (`user_id`,`survey_id`) USING BTREE,
+  KEY `user_id` (`user_id`) USING BTREE,
+  KEY `survey_id` (`survey_id`) USING BTREE,
+  CONSTRAINT `user_survey_survey_id` FOREIGN KEY (`survey_id`) REFERENCES `survey` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `user_survey_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+--  Records of `survey_user`
+-- ----------------------------
+BEGIN;
+INSERT INTO `survey_user` VALUES ('1', '10', '1', 'Completado', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('2', '10', '2', 'Completado', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00'), ('3', '11', '2', 'Completado', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `unit`
@@ -275,33 +284,14 @@ CREATE TABLE `unit_user` (
   KEY `unit_id` (`unit_id`) USING BTREE,
   CONSTRAINT `unit_id_user_fk` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `user_id_unit_area_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  Records of `unit_user`
 -- ----------------------------
 BEGIN;
-INSERT INTO `unit_user` VALUES ('1', '10', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `unit_user` VALUES ('2', '8', '1', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 COMMIT;
-
--- ----------------------------
---  Table structure for `user_survey`
--- ----------------------------
-DROP TABLE IF EXISTS `user_survey`;
-CREATE TABLE `user_survey` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL,
-  `survey_id` int(10) unsigned NOT NULL,
-  `status` varchar(100) DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`) USING BTREE,
-  KEY `survey_id` (`survey_id`) USING BTREE,
-  CONSTRAINT `user_survey_survey_id` FOREIGN KEY (`survey_id`) REFERENCES `survey` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `user_survey_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  Table structure for `users`
@@ -313,6 +303,7 @@ CREATE TABLE `users` (
   `lastname` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `unumber` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `role_id` int(10) unsigned NOT NULL,
   `password` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -320,14 +311,16 @@ CREATE TABLE `users` (
   `active` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`),
-  UNIQUE KEY `users_unumber_unique` (`unumber`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  UNIQUE KEY `users_unumber_unique` (`unumber`) USING BTREE,
+  KEY `users_role_id` (`role_id`) USING BTREE,
+  CONSTRAINT `user_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 --  Records of `users`
 -- ----------------------------
 BEGIN;
-INSERT INTO `users` VALUES ('7', 'Administrador', 'Administrador', '1', 'admin@gmail.com', '$2y$10$/9uq1TNZ3.8wkrLVlzg71eX5fHPqX9VZXH9ONI39y8yW2fhy0XBGm', null, '2015-05-20 03:19:00', '2015-05-20 06:17:42', '1'), ('8', 'User', 'User', '2', 'user@gmail.com', '$2y$10$SfjNQlbjB5vT7Cfu7Yr42uIxA9hmVdcVEwutOzhCUOMz/3Y5pbQke', null, '2015-05-20 03:21:04', '2015-05-20 03:55:37', '1'), ('9', 'Manager', 'Manager', '3', 'manager@gmail.com', '$2y$10$am7ynG8t6UZHVeYkbTpDKe5VAJzzxopA2nDf8mBaOHX4NnZZaxvCa', null, '2015-05-20 03:35:34', '2015-05-20 06:17:45', '0'), ('10', 'Director', 'Director', '4', 'director@gmail.com', '$2y$10$5FdVNinS6857HJ3SJOxJduIxPTB5u3uSpeCIbPATeHdaXbkY6qVz6', null, '2015-05-20 03:36:15', '2015-05-20 03:36:15', '1');
+INSERT INTO `users` VALUES ('7', 'Administrador', 'Administrador', 'u123456', 'admin@gmail.com', '4', '$2y$10$/9uq1TNZ3.8wkrLVlzg71eX5fHPqX9VZXH9ONI39y8yW2fhy0XBGm', '7GL0Mdw2HMhMU19QiONkAGdWHOWnrUdKXVdgLgp85G62vAPxaHP6SVSsPhWr', '0000-00-00 00:00:00', '2015-05-23 03:50:35', '1'), ('8', 'Director', 'Director', 'u123457', 'director@gmail.com', '3', '$2y$10$tfh8rRcQyZxUklL8Zil.mudFIY.h2Jc.g0oCO5z9QpJ.4Ml3tgxiq', null, '2015-05-23 04:13:58', '2015-05-23 07:24:13', '1'), ('9', 'Manager', 'Manager', 'u123458', 'manager@gmail.com', '2', '$2y$10$KOMMY.vooknx2g8cJ7dZD.WposKjtvFCABW9RhBqVEvq5fj74X3TK', null, '2015-05-23 15:11:10', '2015-05-23 15:11:10', '1'), ('10', 'User', 'User', 'u123459', 'user@gmail.com', '1', '$2y$10$km1oKkO.BHLLp2.j/RmouOouiYwg1GnT0QxYxn9Z3VIxuilpbsl5e', null, '2015-05-23 15:11:49', '2015-05-23 15:11:49', '1'), ('11', 'User2', 'User2', 'u123451', 'user2@gmail.com', '1', '$2y$10$7wMkyq8eG8SfNhJV9F1LregDD1JyHR/UfwV5HvKWK98HeILB9lu8G', null, '2015-05-23 15:12:40', '2015-05-23 15:12:40', '1');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

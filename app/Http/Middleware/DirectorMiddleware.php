@@ -3,7 +3,7 @@
 use Closure;
 use Session;
 
-class AdminMiddleware {
+class DirectorMiddleware {
 
 	/**
 	 * Handle an incoming request.
@@ -17,7 +17,7 @@ class AdminMiddleware {
 		if (Session::has('user'))
 		{
 			$user_session = session('user');
-			if($user_session['role'] != 4)
+			if($user_session['role'] != 3)
 			{
 				return redirect('/')
 					->with('message', array( 'type' => 'error', 'message' => 'No tiene privilegios para acceder.'));

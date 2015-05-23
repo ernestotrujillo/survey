@@ -23,7 +23,7 @@ class UserController extends Controller {
 	public function index()
 	{
 		//$users = User::paginate(20);
-		$users = User::with('roles')->paginate(20);
+		$users = User::has('role')->paginate(20);
 
 		$data = Role::where('active', '=', 1)->get(array('id','name'));
 		foreach ($data as $key => $value)
@@ -151,7 +151,7 @@ class UserController extends Controller {
 		if($role == 4 || $role == 'all' || $unit == null)
 		{
 			if($role == 'all'){
-				$users = User::with('roles')->paginate(20);
+				$users = User::with('role')->paginate(20);
 			}else{
 				$users = Role::find($role)->users()->paginate(20);
 			}
@@ -160,9 +160,9 @@ class UserController extends Controller {
 		{
 			//general query
 			$query = DB::table('users')
-				->join('role_user', 'users.id', '=', 'role_user.user_id')
-				->select('users.id', 'users.firstname', 'users.lastname', 'users.unumber', 'users.email', 'users.active', 'role_user.role_id as role')
-				->where('role_user.role_id', '=', $role);
+				->join('roles', 'users.role_id', '=', 'roles.id')
+				->select('users.id', 'users.firstname', 'users.lastname', 'users.unumber', 'users.email', 'users.active', 'users.role_id', 'roles.name as role_name')
+				->where('users.role_id', '=', $role);
 
 			//si es director
 			if($role == 3){

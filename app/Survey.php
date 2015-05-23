@@ -25,4 +25,14 @@ class Survey extends Model {
      */
     protected $guarded = ['id'];
 
+    /**
+     * Many to many relation survey_user table.
+     *
+     * @return relation
+     */
+    public function users()
+    {
+        return $this->belongsToMany('App\User');
+    }
+
 }
