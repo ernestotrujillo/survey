@@ -33,7 +33,7 @@
 
 				<!-- view handling messages -->
 				@include('errors.error')
-				{!! Form::open(array('url' => url('/user/create'),'class'=>'form-horizontal survey-form')) !!}
+				{!! Form::open(array('url' => url('/survey'), 'role'=>'form',  'class'=>'form-horizontal survey-form')) !!}
 
                     <div class="from-group widget-box col-xs-12 col-sm-10">
                         <div class="widget-header">
@@ -304,6 +304,18 @@
                     });
 
                     survey.questions  = questions;
+                    survey._token = '{{ csrf_token() }}';
+                    //$('.survey-form').submit();
+                    $.ajax({
+                        url: '{!!  url("/survey") !!}',
+                        type: "POST",
+                        dataType: 'json',
+                        data: survey,
+                        success: function(data){
+                            console.log(data);
+                        }
+                    });
+
                 }else{
                     alert('Por favor ingrese un nombre para la encuesta, unidad y al menos una pregunta');
                 }
