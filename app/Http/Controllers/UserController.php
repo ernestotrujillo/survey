@@ -33,6 +33,7 @@ class UserController extends Controller {
 		}
 
 		//get all current active units
+		$units = array();
 		$data = Unit::where('active', '=', 1)->get(array('id','name'));
 		foreach ($data as $key => $value)
 		{

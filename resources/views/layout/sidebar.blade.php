@@ -72,7 +72,7 @@
 
         <?php if($user_session['role'] == 4){ ?>
             <li class="">
-                <a href="{{ url('/') }}">
+                <a href="{{ url('/survey/report') }}">
                     <i class="menu-icon glyphicon glyphicon-stats"></i>
                     <span class="menu-text"> Reportes </span>
                 </a>
