@@ -1,3 +1,5 @@
+<?php $user_session = session('user'); ?>
+
 <div id="sidebar" class="sidebar responsive">
     <script type="text/javascript">
         try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
@@ -46,112 +48,99 @@
             <b class="arrow"></b>
         </li>
 
-        <?php
-        $user_session = session('user');
-        if($user_session['role']['id'] == 2)
-        {
-        ?>
-        <li class="">
-            <a href="{{ url('/') }}">
-                <i class="menu-icon glyphicon glyphicon-stats"></i>
-                <span class="menu-text"> Reportes </span>
-            </a>
+        <?php if($user_session['role'] == 2){ ?>
+            <li class="">
+                <a href="{{ url('/') }}">
+                    <i class="menu-icon glyphicon glyphicon-stats"></i>
+                    <span class="menu-text"> Reportes </span>
+                </a>
 
-            <b class="arrow"></b>
-        </li>
+                <b class="arrow"></b>
+            </li>
         <?php } ?>
 
-        <?php
-        $user_session = session('user');
-        if($user_session['role']['id'] == 3)
-        {
-        ?>
-        <li class="">
-            <a href="{{ url('/') }}">
-                <i class="menu-icon glyphicon glyphicon-stats"></i>
-                <span class="menu-text"> Reportes </span>
-            </a>
+        <?php if($user_session['role'] == 3){ ?>
+            <li class="">
+                <a href="{{ url('/') }}">
+                    <i class="menu-icon glyphicon glyphicon-stats"></i>
+                    <span class="menu-text"> Reportes </span>
+                </a>
 
-            <b class="arrow"></b>
-        </li>
+                <b class="arrow"></b>
+            </li>
         <?php } ?>
 
-        <?php
-            //Administrator
-            $user_session = session('user');
-            if($user_session['role']['id'] == 4)
-            {
-        ?>
-        <li class="">
-            <a href="{{ url('/') }}">
-                <i class="menu-icon glyphicon glyphicon-stats"></i>
-                <span class="menu-text"> Reportes </span>
-            </a>
+        <?php if($user_session['role'] == 4){ ?>
+            <li class="">
+                <a href="{{ url('/') }}">
+                    <i class="menu-icon glyphicon glyphicon-stats"></i>
+                    <span class="menu-text"> Reportes </span>
+                </a>
 
-            <b class="arrow"></b>
-        </li>
-        <li class="">
-            <a href="#" class="dropdown-toggle">
-                <i class="menu-icon fa fa-user"></i>
-                <span class="menu-text">
-                    Cuentas
-                </span>
-                <b class="arrow fa fa-angle-down"></b>
-            </a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa fa-user"></i>
+                    <span class="menu-text">
+                        Cuentas
+                    </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
 
-            <b class="arrow"></b>
+                <b class="arrow"></b>
 
-            <ul class="submenu">
+                <ul class="submenu">
 
-                <li class="">
-                    <a href="{{ url('/user/create') }}">
-                        <i class="menu-icon fa fa-caret-right"></i>
-                        Crear Cuenta
-                    </a>
-                    <b class="arrow"></b>
-                </li>
+                    <li class="">
+                        <a href="{{ url('/user/create') }}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Crear Cuenta
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
-                <li class="">
-                    <a href="{{ url('/user') }}">
-                        <i class="menu-icon fa fa-caret-right"></i>
-                        Usuarios
-                    </a>
-                    <b class="arrow"></b>
-                </li>
+                    <li class="">
+                        <a href="{{ url('/user') }}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Usuarios
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
-            </ul>
-        </li>
-        <li class="">
-            <a href="#" class="dropdown-toggle">
-                <i class="menu-icon fa fa-question"></i>
-                <span class="menu-text">
-                    Survey
-                </span>
-                <b class="arrow fa fa-angle-down"></b>
-            </a>
+                </ul>
+            </li>
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa fa-question"></i>
+                    <span class="menu-text">
+                        Survey
+                    </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
 
-            <b class="arrow"></b>
+                <b class="arrow"></b>
 
-            <ul class="submenu">
+                <ul class="submenu">
 
-                <li class="">
-                    <a href="{{ url('/survey/create') }}">
-                        <i class="menu-icon fa fa-caret-right"></i>
-                        Create Survey
-                    </a>
-                    <b class="arrow"></b>
-                </li>
+                    <li class="">
+                        <a href="{{ url('/survey/create') }}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Create Survey
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
-                <li class="">
-                    <a href="{{ url('/survey/index') }}">
-                        <i class="menu-icon fa fa-caret-right"></i>
-                        Survey List
-                    </a>
-                    <b class="arrow"></b>
-                </li>
+                    <li class="">
+                        <a href="{{ url('/survey/index') }}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Survey List
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
 
-            </ul>
-        </li>
+                </ul>
+            </li>
         <?php } ?>
 
     </ul><!-- /.nav-list -->

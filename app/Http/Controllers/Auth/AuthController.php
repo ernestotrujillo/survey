@@ -61,30 +61,27 @@ class AuthController extends Controller {
     public function postLogin(Request $request)
     {
         $this->validate($request, [
-            'unumber' => 'required', 'password' => 'required',
+            'unumber' => array('required', 'regex:/^[u][1-9]{6}$/'),
+            'password' => 'required',
         ]);
 
-        $unumber = $request->input('unumber');
-        $password = $request->input('password');
+        $acc = array(
+            'unumber' => $request->input('unumber'),
+            'password' => $request->input('password'),
+            'active' => 1
+        );
 
-        //$credentials = $request->only('email', 'unumber', 'password', 'active');
-
-        if ($this->auth->attempt(['unumber' => $unumber, 'password' => $password, 'active' => 1], $request->has('remember')))
+        if ($this->auth->attempt($acc, $request->has('remember')))
         {
             //set user session
             $user = $this->auth->user();
-            $role = $user->roles()->wherePivot('current', 1)->first();
-            $user_role = array(
-                'id' => $role->id,
-                'name' => $role->name
-            );
             $user_session = array(
                 'user.id' => $user->id,
                 'user.firstname' => $user->firstname,
                 'user.lastname' => $user->lastname,
                 'user.unumber' => $user->unumber,
                 'user.email' => $user->email,
-                'user.role' => $user_role
+                'user.role' => $user->role_id
             );
 
             session($user_session);
@@ -113,7 +110,7 @@ class AuthController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function getRegister($id = null)
+    public function getRegister()
     {
         $roles = array();
         $units = array();
@@ -157,25 +154,18 @@ class AuthController extends Controller {
         $role = $request->input('role');
         if($role == 1 || $role == 2)
         {
-            $v = $this->registrar->areaValidator($request->all());
-
-            if ($v->fails())
-            {
-                $this->throwValidationException(
-                    $request, $v
-                );
-            }
+            $validator = $this->registrar->areaValidator($request->all());
         }
         elseif($role == 3)
         {
-            $v = $this->registrar->unitValidator($request->all());
+            $validator = $this->registrar->unitValidator($request->all());
+        }
 
-            if ($v->fails())
-            {
-                $this->throwValidationException(
-                    $request, $v
-                );
-            }
+        if ($validator->fails())
+        {
+            $this->throwValidationException(
+                $request, $validator
+            );
         }
 
         if($this->registrar->create($request->all()))
@@ -217,7 +207,7 @@ class AuthController extends Controller {
         $v = Validator::make($request->all(), [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
-            'unumber' => 'required|max:255',
+            'unumber' => array('required', 'regex:/^[u][1-9]{6}$/'),
             'email' => 'required|email|max:255',
             'password' => 'required|confirmed|min:6',
         ]);

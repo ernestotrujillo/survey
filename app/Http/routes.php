@@ -26,6 +26,12 @@ Route::resource('area', 'AreaController', ['only' => ['index']]);
 //Route::controller('area/filter/unit/{id}', 'AreaController@filterbyunit');
 
 // ADMIN ALLOWED ROUTES
+Route::group(['middleware' => ['auth', 'director']], function()
+{
+
+});
+
+// ADMIN ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'admin']], function()
 {
 	//account routes

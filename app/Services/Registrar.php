@@ -21,24 +21,24 @@ class Registrar implements RegistrarContract {
 		return Validator::make($data, [
 			'firstname' => 'required|max:255',
 			'lastname' => 'required|max:255',
-            'unumber' => 'required|max:255|unique:users',
+			'unumber' => array('required', 'regex:/^[u][1-9]{6}$/', 'unique:users'),
 			'email' => 'required|email|max:255|unique:users',
 			'password' => 'required|confirmed|min:6',
-            'role' => 'required',
+            'role' => 'required|exists:roles,id',
 		]);
 	}
 
 	public function unitValidator(array $data)
 	{
 		return Validator::make($data, [
-			'unit' => 'required',
+			'unit' => 'required|exists:unit,id',
 		]);
 	}
 
 	public function areaValidator(array $data)
 	{
 		return Validator::make($data, [
-			'area' => 'required',
+			'area' => 'required|exists:area,id',
 		]);
 	}
 
@@ -56,20 +56,17 @@ class Registrar implements RegistrarContract {
 		try{
 			$user = new User([
 				'firstname' => $data['firstname'],
-				'lastname' => $data['firstname'],
-				'unumber' => $data['unumber'],
-				'email' => $data['email'],
-				'password' => bcrypt($data['password']),
+				'lastname'  => $data['firstname'],
+				'unumber'   => $data['unumber'],
+				'email' 	=> $data['email'],
+				'role_id' 	=> $data['role'],
+				'password' 	=> bcrypt($data['password']),
 			]);
+
 			$user->save();
 
-			//set user role
-			Role::find($data['role'])->users()->save($user);
-
-			switch ($data['role']) {
+			switch ($user->role_id) {
 				case '1':
-					Area::find($data['area'])->users()->save($user);
-					break;
 				case '2':
 					Area::find($data['area'])->users()->save($user);
 					break;
