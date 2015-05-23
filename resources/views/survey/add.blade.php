@@ -250,6 +250,9 @@
                      '                      <i class="ace-icon fa fa-angle-double-right"></i> ' +
                      '                      <span class="name">' + questionName + '</span>' +
                      '                  </small>' +
+                     '                  <button class="remove-question pull-right btn btn-danger btn-sm col-xs-1 col-sm-1" onclick="remove_question(this)">' +
+                     '                      <i class="ace-icon fa fa-minus icon-only"></i>' +
+                     '                  </button>'+
                      '              </h2>' + answerElement
                      '          </div>';
 
@@ -266,6 +269,10 @@
         function remove_option(option){
             $(option).closest('div').remove();
         };
+
+        function remove_question(question){
+            $(question).closest('div').remove();
+        }
 
         function get_checkboxes(qNumber,options){
             var html = '';
