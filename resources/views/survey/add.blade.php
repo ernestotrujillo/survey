@@ -4,7 +4,7 @@
 
 @section('breadcrumb')
 	<li>
-		Create Survey
+		Crear Encuesta
 	</li>
 @endsection
 
@@ -12,7 +12,7 @@
 
 	<div class="page-header">
 		<h1>
-			Create Survey
+			Crear Encuesta
 		</h1>
 	</div>
 
@@ -37,12 +37,12 @@
 
                     <div class="from-group widget-box col-xs-12 col-sm-10">
                         <div class="widget-header">
-                            <h5 class="widget-title">Survey Information</h5>
+                            <h5 class="widget-title">Datos de la encuesta</h5>
                         </div>
                         <div class="">
                             <div class="widget-main">
                                 <div class="form-group col-xs-12 col-sm-12">
-                                    {!! Form::text('name', '', array('placeholder' => 'Survey name', 'class'=>'col-xs-12 col-sm-10 name')) !!}
+                                    {!! Form::text('name', '', array('placeholder' => 'Nombre de la encuesta', 'class'=>'col-xs-12 col-sm-10 name')) !!}
                                 </div>
                                 <div class="form-group col-xs-12 col-sm-12">
                                     {!! Form::select('unit', $units, '1', array('class' => 'col-xs-12 col-sm-6 unit')) !!}
@@ -54,60 +54,60 @@
                     <!-- Question Builder-->
                     <div class="widget-box col-xs-12 col-sm-10">
                         <div class="widget-header">
-                            <h5 class="widget-title">Question builder</h5>
+                            <h5 class="widget-title">Constructor de preguntas</h5>
                         </div>
                         <div class="">
                             <div class="widget-main">
                                 <div class="row show-grid">
                                     <div class="col-xs-12 col-sm-3">
                                         <button data-toggle="dropdown" class="btn btn-primary btn-white dropdown-toggle btn-type" aria-expanded="true">
-                                            <span>Question Type</span>
+                                            <span>Tipo de Pregunta</span>
                                             <i class="ace-icon fa fa-angle-down icon-on-right"></i>
                                         </button>
 
                                         <ul class="dropdown-menu question-type">
                                             <li>
-                                                <a href="#" data-type="1"><i class="ace-icon glyphicon glyphicon-text-width"></i> Text</a>
+                                                <a href="#" data-type="1"><i class="ace-icon glyphicon glyphicon-text-width"></i> Texto</a>
                                             </li>
 
                                             <li>
-                                                <a href="#" data-type="2"><i class="ace-icon fa fa-check-square-o"></i>Multiple Selection</a>
+                                                <a href="#" data-type="2"><i class="ace-icon fa fa-check-square-o"></i> Selección múltiple</a>
                                             </li>
 
                                             <li>
-                                                <a href="#" data-type="3"><i class="ace-icon fa fa-circle-o"></i>Single Selection</a>
+                                                <a href="#" data-type="3"><i class="ace-icon fa fa-circle-o"></i> Selección simple</a>
                                             </li>
                                             <li>
-                                                <a href="#" data-type="4"><i class="ace-icon glyphicon glyphicon-align-justify"></i> List</a>
+                                                <a href="#" data-type="4"><i class="ace-icon glyphicon glyphicon-align-justify"></i> Lista</a>
                                             </li>
                                             <li>
-                                                <a href="#" data-type="5"><i class="ace-icon fa fa-calendar"></i> Date</a>
+                                                <a href="#" data-type="5"><i class="ace-icon fa fa-calendar"></i> Fecha</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="col-xs-12 col-sm-9">
-                                        <label class="col-xs-10 col-sm-10 no-padding-left" for="question-name">Question</label>
-                                        {!! Form::text('question-name', '', array('id'=>'question-name','placeholder' => 'Type your question', 'class'=>'col-xs-10 col-sm-10')) !!}
+                                        <label class="col-xs-10 col-sm-10 no-padding-left" for="question-name">Pregunta</label>
+                                        {!! Form::text('question-name', '', array('id'=>'question-name','placeholder' => 'Ingresa la pregunta', 'class'=>'col-xs-10 col-sm-10')) !!}
                                     </div>
                                 </div>
 
                                 <div class="row show-grid option-form ">
                                     <div class="col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3">
-                                        <label class="col-xs-10 col-sm-10 no-padding-left" for="question-name">Options</label>
-                                        {!! Form::text('option-input', '', array('id'=>'option-input', 'placeholder' => 'Type your option', 'class'=>'col-xs-9 col-sm-9')) !!}
+                                        <label class="col-xs-10 col-sm-10 no-padding-left" for="question-name">Opciones</label>
+                                        {!! Form::text('option-input', '', array('id'=>'option-input', 'placeholder' => 'ingresa la opción', 'class'=>'col-xs-9 col-sm-9')) !!}
                                         <button class="add-option btn btn-success btn-sm col-xs-1 col-sm-1">
                                             <i class="ace-icon fa fa-plus icon-only"></i>
                                         </button>
                                     </div>
                                 </div>
                                 <div class="row show-grid">
-                                    <div class="options col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3">
+                                    <div class="options-ctn col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3">
                                     </div>
                                 </div>
                             </div>
                             <div class="clearfix form-actions">
                                 <div class="col-md-offset-3 col-md-9">
-                                    <button class="add-question btn btn-success">Add</button>
+                                    <button class="add-question btn btn-success">Agregar</button>
                                 </div>
                             </div>
                         </div>
@@ -115,7 +115,7 @@
                     <!--  Questions shown to users  -->
                     <div class="widget-box col-xs-12 col-sm-10 widget-result">
                         <div class="widget-header">
-                            <h5 class="widget-title">Survey Result</h5>
+                            <h5 class="widget-title">Encuesta resultante</h5>
                         </div>
                         <div class="">
                             <div class="widget-main">
@@ -153,7 +153,7 @@
 
                 var type = $(this).data("type");
                 var optionForm = $('.row.option-form');
-                var options = $('.row .options');
+                var options = $('.row .options-ctn');
                 $(options).html('');
 
                 if ((type == 2 || type == 3 || type == 4 ) && $(optionForm).is(':not(:visible)')){
@@ -173,7 +173,7 @@
                 e.preventDefault();
 
                 var optiontext = $('#option-input');
-                var options = $('.row .options');
+                var options = $('.row .options-ctn');
 
                 if ($(optiontext).val().length > 0){
 
@@ -201,13 +201,34 @@
                 var qContainer = $('.widget-result .widget-main');
                 var qType = $('.btn-type').val();
                 var answerElement = '';
-
+                var options = $('.row .options-ctn');
 
                 if (questionName.length > 0 && qType.length > 0){
-
+                    var opciones = $("input[name='question-list[]']");
                     switch (qType) {
                         case '1':
-                            answerElement = '<input placeholder="Type your answer" class="col-xs-12 col-sm-10" name="answer" type="text" value=""/>';
+                            answerElement = '<input placeholder="Type your answer" class="col-xs-12 col-sm-10 options" name="answer" type="text" value=""/>';
+                            break;
+                        case '2':
+                            if (opciones.length > 0){
+                                answerElement = get_checkboxes(qNumber,opciones);
+                            }else{
+                                alert('Por favor ingresa las opciones');
+                            }
+                            break;
+                        case '3':
+                            if (opciones.length > 0){
+                                answerElement = get_radiobuttons(qNumber,opciones);
+                            }else{
+                                alert('Por favor ingresa las opciones');
+                            }
+                            break;
+                        case '4':
+                            if (opciones.length > 0){
+                                answerElement = get_list(qNumber,opciones);
+                            }else{
+                                alert('Por favor ingresa las opciones');
+                            }
                             break;
                         case '5':
                             answerElement = '<div class="input-group col-xs-12 col-sm-5">' +
@@ -218,7 +239,7 @@
                             '               </div>';
                             break;
                         default:
-                            answerElement = '<input placeholder="Type your answer" class="col-xs-12 col-sm-10" name="answer" type="text" value=""/>';
+                            answerElement = '<input placeholder="Type your answer" class="col-xs-12 col-sm-10 options" name="answer" type="text" value=""/>';
                             break;
                     }
 
@@ -234,6 +255,7 @@
 
 
                     $(qContainer).append(html);
+                    $(options).html('');
                 }
             });
 
@@ -245,6 +267,37 @@
             $(option).closest('div').remove();
         };
 
+        function get_checkboxes(qNumber,options){
+            var html = '';
+            $.each(options, function( index, value ) {
+              html += '<div class="checkbox"><label>' +
+                                  '    <input class="options" name="options" qnumber='+qNumber+' value='+$(value).val()+' type="checkbox" class="ace">' +
+                                  '    <span class="lbl">'+$(value).val()+'</span>' +
+                                  '</label></div>';
+            });
+            return html;
+        }
+
+        function get_radiobuttons(qNumber,options){
+            var html = '';
+            $.each(options, function( index, value ) {
+              html += '<div class="radio"><label>' +
+                                  '    <input class="options" name="options" qnumber='+qNumber+' value='+$(value).val()+' type="radio" class="ace">' +
+                                  '    <span class="lbl">'+$(value).val()+'</span>' +
+                                  '</label></div>';
+            });
+            return html;
+        }
+
+        function get_list(qNumber,options){
+
+            var htmlOptions = '';
+            $.each(options, function( index, value ) {
+              htmlOptions += '    <option class="options" value='+$(value).val()+' qnumber='+qNumber+' >'+$(value).val()+'</option>';
+            });
+            var html = '<select class="form-control">'+htmlOptions+'</select>';
+            return html;
+        }
 
     </script>
 @endsection
