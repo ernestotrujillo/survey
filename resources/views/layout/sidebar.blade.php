@@ -114,7 +114,7 @@
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-question"></i>
                     <span class="menu-text">
-                        Survey
+                        Encuestas
                     </span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -126,7 +126,7 @@
                     <li class="">
                         <a href="{{ url('/survey/create') }}">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            Create Survey
+                            Crear Encuesta
                         </a>
                         <b class="arrow"></b>
                     </li>
@@ -134,7 +134,7 @@
                     <li class="">
                         <a href="{{ url('/survey') }}">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            Survey List
+                            Encuestas
                         </a>
                         <b class="arrow"></b>
                     </li>
