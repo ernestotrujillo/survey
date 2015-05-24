@@ -69,10 +69,6 @@
                                                                         <label>Usuario:</label>
                                                                         <?php echo $answer->firstname .' '. $answer->lastname; ?>
                                                                     </div>
-                                                                    <div class="unit">
-                                                                        <label>Area:</label>
-                                                                        <?php echo $answer->area_name; ?>
-                                                                    </div>
                                                                     <div class="time">
                                                                         <?php echo $answer->created_at; ?>
                                                                     </div>
@@ -86,7 +82,7 @@
                                             <div class="hr hr8"></div>
 
                                             <!--div class="center">
-                                                <a href="{{ url('/director/survey/report') }}" class="btn btn-sm btn-white btn-info">
+                                                <a href="{{ url('/manager/survey/report') }}" class="btn btn-sm btn-white btn-info">
                                                     Ver todas las encuestas &nbsp;
                                                     <i class="ace-icon fa fa-arrow-right"></i>
                                                 </a>
@@ -143,7 +139,7 @@
                             <div class="widget-header">
                                 <h4 class="widget-title lighter smaller">
                                     <i class="ace-icon fa fa-signal blue"></i>
-                                    Encuestas completadas en mi Unidad
+                                    Encuestas completadas en mi Area
                                 </h4>
                             </div>
 
@@ -156,7 +152,7 @@
                                             </div>
                                         </div>
                                         <div class="right-btn">
-                                            <a href="{{ url('/director/survey/report') }}" class="btn btn-sm btn-white btn-info">Ver reporte
+                                            <a href="{{ url('/manager/survey/report') }}" class="btn btn-sm btn-white btn-info">Ver reporte
                                                 <i class="ace-icon fa fa-arrow-right"></i>
                                             </a>
                                         </div>
@@ -188,7 +184,7 @@
                         value: '.$stadistic->count.',
                         color:"'.$colors[$key].'",
                         highlight: "'.$colors[$key].'",
-                        label: "'.$stadistic->name.'"
+                        label: "'.$stadistic->firstname. ' ' .$stadistic->lastname.'"
                     },';
                 }
             }

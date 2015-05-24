@@ -19,8 +19,7 @@ class AdminMiddleware {
 			$user_session = session('user');
 			if($user_session['role'] != 4)
 			{
-				return redirect('/')
-					->with('message', array( 'type' => 'error', 'message' => 'No tiene privilegios para acceder.'));
+				return response('Unauthorized.', 401);
 			}
 		}
 		else

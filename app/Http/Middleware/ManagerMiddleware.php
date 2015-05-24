@@ -3,7 +3,7 @@
 use Closure;
 use Session;
 
-class DirectorMiddleware {
+class ManagerMiddleware {
 
 	/**
 	 * Handle an incoming request.
@@ -17,7 +17,7 @@ class DirectorMiddleware {
 		if (Session::has('user'))
 		{
 			$user_session = session('user');
-			if($user_session['role'] != 3)
+			if($user_session['role'] != 2)
 			{
 				return response('Unauthorized.', 401);
 			}

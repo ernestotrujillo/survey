@@ -43,6 +43,14 @@ class HomeController extends Controller {
 			{
 				return redirect('/director');
 			}
+			else if($user_session['role'] == 2)
+			{
+				return redirect('/manager');
+			}
+			else
+			{
+				return redirect()->guest('login');
+			}
 		}
 		else
 		{

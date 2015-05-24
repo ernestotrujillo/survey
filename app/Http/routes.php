@@ -24,17 +24,30 @@ Route::get('area/filter/unit/{id}', 'AreaController@filterByUnit');
 Route::resource('area', 'AreaController', ['only' => ['index']]);
 //Route::controller('area/filter/unit/{id}', 'AreaController@filterbyunit');
 
-// ADMIN ALLOWED ROUTES
+// MANAGER ALLOWED ROUTES
+Route::group(['middleware' => ['auth', 'manager']], function()
+{
+	Route::get('manager', 'DashboardController@managerDashboard');
+	Route::get('manager/survey/report', 'Survey\SurveyController@roleFilter');
+	Route::get('manager/survey/report/unit/{unit}', 'Survey\SurveyController@roleFilter');
+	Route::get('manager/survey/report/unit/{unit}/area/{area}', 'Survey\SurveyController@roleFilter');
+
+});
+
+// DIRECTOR ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'director']], function()
 {
-	Route::get('/director', 'DashboardController@directorDashboard');
+	Route::get('director', 'DashboardController@directorDashboard');
+	Route::get('director/survey/report', 'Survey\SurveyController@roleFilter');
+	Route::get('director/survey/report/unit/{unit}', 'Survey\SurveyController@roleFilter');
+	Route::get('director/survey/report/unit/{unit}/area/{area}', 'Survey\SurveyController@roleFilter');
 
 });
 
 // ADMIN ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'admin']], function()
 {
-	Route::get('/admin', 'DashboardController@adminDashboard');
+	Route::get('admin', 'DashboardController@adminDashboard');
 
 	//account routes
 	Route::get('user/create', 'Auth\AuthController@getregister');
@@ -63,6 +76,7 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 
 
 });
+
 
 /*Route::controllers([
 	'auth' => 'Auth\AuthController',

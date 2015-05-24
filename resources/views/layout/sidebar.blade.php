@@ -1,5 +1,3 @@
-<?php $user_session = session('user'); ?>
-
 <div id="sidebar" class="sidebar responsive">
     <script type="text/javascript">
         try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
@@ -50,7 +48,7 @@
 
         <?php if($user_session['role'] == 2){ ?>
             <li class="">
-                <a href="{{ url('/') }}">
+                <a href="{{ url('/manager/survey/report') }}">
                     <i class="menu-icon glyphicon glyphicon-stats"></i>
                     <span class="menu-text"> Reportes </span>
                 </a>
@@ -61,7 +59,7 @@
 
         <?php if($user_session['role'] == 3){ ?>
             <li class="">
-                <a href="{{ url('/') }}">
+                <a href="{{ url('/director/survey/report') }}">
                     <i class="menu-icon glyphicon glyphicon-stats"></i>
                     <span class="menu-text"> Reportes </span>
                 </a>
