@@ -28,9 +28,9 @@ class SurveyController extends Controller {
 	{
 
         if ($unit){
-            $surveys = Survey::where('active', '=', 1)->where('unit_id','=',$unit)->paginate(20);
+            $surveys = Survey::where('unit_id','=',$unit)->paginate(20);
         }else {
-            $surveys = Survey::where('active', '=', 1)->paginate(20);
+            $surveys = Survey::paginate(20);
         }
 
         //get all current active units
@@ -206,8 +206,40 @@ class SurveyController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		//
+        $survey = Survey::find($id);
+        $affectedRows = $survey->delete();
+
+        return response()->json(array('deleted' => $affectedRows));
 	}
+
+    /**
+     * Deactivate survey.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function deactivate($id)
+    {
+        $survey = Survey::find($id);
+        $survey->active = 0;
+        $survey->save();
+
+        return response()->json(array('survey' => $survey));
+    }
+    /**
+     * Activate survey.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function activate($id)
+    {
+        $survey = Survey::find($id);
+        $survey->active = 1;
+        $survey->save();
+
+        return response()->json(array('survey' => $survey));
+    }
 
 	/**
 	 * Surveys answered.
