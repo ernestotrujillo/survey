@@ -89,9 +89,12 @@ class SurveyController extends Controller {
             }
         }
 
-        return redirect('/survey/report')
-            ->with('message', array( 'type' => 'success', 'message' => 'Encuesta creada con éxito'));
-
+        $data = Unit::where('active', '=', 1)->get(array('id','name'));
+        foreach ($data as $key => $value)
+        {
+            $units[$value->id] = $value->name;
+        }
+        return view('survey.add',array("units"=>$units,'message', array( 'type' => 'success', 'message' => 'Encuesta creada con éxito')));
 	}
 
 	/**
@@ -113,7 +116,39 @@ class SurveyController extends Controller {
 	 */
 	public function edit($id)
 	{
-		//
+        $survey = Survey::find($id);
+
+        if($survey == null){
+            return redirect('/survey')
+                ->with('message', array( 'type' => 'error', 'message' => 'Usuario no existe'));
+        }else{
+            $data = Unit::where('active', '=', 1)->get(array('id','name'));
+            foreach ($data as $key => $value)
+            {
+                $units[$value->id] = $value->name;
+            }
+
+            $data = Question::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','type','survey_id'));
+            foreach ($data as $key => $question)
+            {
+                $options = [];
+                $data = Option::where('active', '=', 1)->where('question_id', '=', $question->id)->get(array('id','name','question_id'));
+                foreach ($data as $key => $value)
+                {
+                    $options[$value->id] = $value->name;
+                }
+                if (isset($options)){
+                    $question['options']=$options;
+                }else{
+                    $question['options']='';
+                }
+                $questions[]= $question;
+
+                //$questions[$value->id] = $value;
+            }
+            return view('survey.update', compact('units','questions','survey'));
+        }
+
 	}
 
 	/**

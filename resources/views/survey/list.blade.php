@@ -95,7 +95,7 @@
 
                         <td>
                             <div class="hidden-sm hidden-xs btn-group">
-                                <a href="javascript:editSurvey('{{ $survey->id }}');" class="blue" title="Editar">
+                                <a href="{{ URL::to('/survey/'.$survey->id.'/edit') }}" class="blue" title="Editar">
                                     <i class="ace-icon glyphicon glyphicon-edit"></i>
                                 </a>
 
