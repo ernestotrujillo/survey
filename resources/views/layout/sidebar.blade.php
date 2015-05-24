@@ -132,7 +132,7 @@
                     </li>
 
                     <li class="">
-                        <a href="{{ url('/survey/index') }}">
+                        <a href="{{ url('/survey') }}">
                             <i class="menu-icon fa fa-caret-right"></i>
                             Encuestas
                         </a>

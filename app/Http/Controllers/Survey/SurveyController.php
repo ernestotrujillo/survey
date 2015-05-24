@@ -5,13 +5,17 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\CreateSurveyRequest;
 use App\Survey;
+use App\Question;
+use App\Option;
 use App\User;
 use App\Unit;
 use App\Area;
+
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination;
+//use PhpSpec\Console\Prompter\Question;
 
 class SurveyController extends Controller {
 
@@ -22,7 +26,16 @@ class SurveyController extends Controller {
 	 */
 	public function index()
 	{
+        $surveys = Survey::where('active', '=', 1)->paginate(20);
 
+        //get all current active units
+        $data = Unit::where('active', '=', 1)->get(array('id','name'));
+        foreach ($data as $key => $value)
+        {
+            $units[$value->id] = $value->name;
+        }
+
+        return view('survey.list', compact('surveys', 'units'));
 	}
 
 	/**
@@ -54,9 +67,25 @@ class SurveyController extends Controller {
         $survey->unit_id = $request->input('unit');
         $survey->save();
 
-        /*foreach ($request->input('questions') as $question){
+        foreach ($request->input('questions') as $question){
+            $qObject = new Question;
+            $qObject->name = $question['name'];
+            $qObject->type = $question['type'];
+            $qObject->survey_id = $survey->id;
+            $qObject->save();
 
-        }*/
+            if ($question['options']){
+                foreach ($question['options'] as $option){
+                    $oObject = new Option;
+                    $oObject->name = $option;
+                    $oObject->question_id = $qObject->id;
+                    $oObject->save();
+                }
+            }
+        }
+
+        return redirect('/survey/report')
+            ->with('message', array( 'type' => 'success', 'message' => 'Encuesta creada con éxito'));
 
 	}
 
