@@ -154,82 +154,13 @@
             //filters
             $( "#filter" ).submit(function( event )
             {
-                var account_type = $('.account-type-select').val();
+                event.preventDefault();
                 var unit = $('.units-select').val();
 
-                if((account_type > 0) || account_type == 'all'){
-                    if(account_type > 0 && account_type <= 3){
-                        if(unit > 0 || unit == 'all'){
-                            var area = $('.areas-select').val();
-                            if(area > 0 || area == 'all'){
-                                window.location = '{{ URL::to('/') }}/user/role/' + account_type + '/unit/' + unit + '/area/' + area;
-                            }else{
-                                window.location = '{{ URL::to('/') }}/user/role/' + account_type + '/unit/' + unit;
-                            }
-                        }else{
-                            window.location = '{{ URL::to('/') }}/user/role/' + account_type;
-                        }
-                    }else{
-                        window.location = '{{ URL::to('/') }}/user/role/' + account_type;
-                    }
+                if(unit > 0){
+                    window.location = '{{ URL::to('/') }}/survey/unit/' + unit;
                 }else{
-                    alert('Seleccione un tipo de cuenta.')
-                }
-
-                event.preventDefault();
-            });
-
-            $('.account-type-select').on('change', function() {
-                var account_type = $(this).val();
-                if(account_type == 1 || account_type == 2) {
-                    $('.units-select').val('').trigger('change');
-                    $('.filter-unit-wrap').removeClass('hidden');
-                }else if(account_type == 3){
-                    $('.units-select').val('').trigger('change');
-                    $('.filter-unit-wrap').removeClass('hidden');
-                }else{
-                    $('.units-select').val('').trigger('change');
-                    $('.filter-unit-wrap').addClass('hidden');
-                }
-            });
-
-            var area = '<?php if(isset($area)) echo $area; ?>';
-            $('.units-select').on('change', function() {
-                var unit = $(this).val();
-                var account_type = $('.account-type-select').val();
-                if(unit > 0 && (account_type == 1 || account_type == 2)){
-
-                    $.ajax({
-                        method: "GET",
-                        url: "{{ URL::to('/') }}/area/filter/unit/"+unit,
-                        success: function(areas) {
-                            var html = '<select class="areas-select col-xs-12" name="area">';
-                            html += '<option value="" selected="selected">-- Seleccione --</option>';
-                            if(area == 'all') {
-                                html += '<option value="all" selected="selected">Todas</option>';
-                            }else{
-                                html += '<option value="all">Todas</option>';
-                            }
-                            $.each(areas, function( index, value ) {
-                                if(area == index){
-                                    html += '<option value="'+index+'" selected="selected">'+value+'</option>';
-                                }else{
-                                    html += '<option value="'+index+'">'+value+'</option>';
-                                }
-                            });
-                            html += '</select>';
-                            $('.filter-area-wrap').html(html)
-                            $('.filter-area-wrap').removeClass('hidden');
-                            area = '';
-                        },
-                        error: function(data) {
-                            alert('Disculpe. Hay un error para obtener las areas de esta unidad.')
-                        }
-                    });
-
-                }else{
-                    $('.areas-select').val('');
-                    $('.filter-area-wrap').addClass('hidden');
+                    window.location = '{{ URL::to('/') }}/survey';
                 }
             });
 
@@ -265,40 +196,5 @@
             }
         }
 
-        function banUser(id) {
-            if (confirm('¿Esta seguro de bloquear al usuario?')) {
-                $.ajax({
-                    type: 'GET',
-                    url: '{{ URL::to('/') }}/user/ban/' + id, //resource
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(data) {
-                        if (data) window.location = 'user';
-                    },
-                    error:function(data) {
-                        alert('Disculpe. Ocurrió un error')
-                    }
-                });
-            }
-        }
-
-        function activeUser(id) {
-            if (confirm('¿Esta seguro de activar el usuario?')) {
-                $.ajax({
-                    type: 'GET',
-                    url: '{{ URL::to('/') }}/user/active/' + id, //resource
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(data) {
-                        if (data) window.location = 'user';
-                    },
-                    error:function(data) {
-                        alert('Disculpe. Ocurrió un error')
-                    }
-                });
-            }
-        }
     </script>
 @endsection
