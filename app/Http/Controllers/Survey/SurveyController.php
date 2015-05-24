@@ -12,7 +12,7 @@ use App\Unit;
 use App\Area;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination;
 //use PhpSpec\Console\Prompter\Question;
@@ -194,5 +194,36 @@ class SurveyController extends Controller {
 		}
 
 		return view('survey.report', compact('users', 'units', 'areas', 'unit', 'area'));
+	}
+
+	public function roleFilter($unit = null, $area = null)
+	{
+		//check role of the user to set default unit or area
+		$user = Auth::user();
+
+		if($user->role_id == 3)
+		{
+			$unit_query = DB::table('unit_user')
+				->select(DB::raw('unit_user.unit_id as id'))
+				->where('unit_user.user_id', '=', $user->id)
+				->where('unit_user.active', '=', 1)
+				->first();
+
+			$unit = $unit_query->id;
+		}
+		else if($user->role_id == 2)
+		{
+			$area_query = DB::table('area_user')
+				->select(DB::raw('area_user.area_id as area_id, area.unit_id as unit_id'))
+				->join('area', 'area.id', '=', 'area_user.area_id')
+				->where('area_user.user_id', '=', $user->id)
+				->where('area_user.active', '=', 1)
+				->first();
+
+			$unit = $area_query->unit_id;
+			$area = $area_query->area_id;
+		}
+
+		return $this->answerSurvey($unit, $area);
 	}
 }

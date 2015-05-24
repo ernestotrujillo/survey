@@ -30,7 +30,7 @@
 
 .dashboard-unit-stadistic .right-btn{ float:right; }
 
-#answer-tab .elem{ border-bottom: 1px solid #EFEFEF; }
+#answer-tab .elem{ border-bottom: 1px solid #EFEFEF; position: relative; }
 #answer-tab .elem .name,
 #answer-tab .elem .unit,
 #answer-tab .elem label{ font-size: 12px; line-height: 12px; }

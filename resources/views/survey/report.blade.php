@@ -9,13 +9,15 @@
 @endsection
 
 @section('content')
-
+    <?php $user_session = session('user'); ?>
     <div class="page-header">
         <h1>
             Reportes de encuestas
-            <a href="{{ url('/survey/create') }}" class="btn btn-sm btn-light">
-                <i class="ace-icon glyphicon glyphicon-plus"></i> Agregar encuesta
-            </a>
+            <?php if($user_session['role'] == 4){ ?>
+                <a href="{{ url('/survey/create') }}" class="btn btn-sm btn-light">
+                    <i class="ace-icon glyphicon glyphicon-plus"></i> Agregar encuesta
+                </a>
+            <?php } ?>
         </h1>
 
     </div>
@@ -38,11 +40,11 @@
             <!-- view handling messages -->
             @include('errors.error')
 
-                <form id="filter" role="form" method="POST" action="{{ url('/user/filter') }}">
+                <form id="filter" role="form" method="POST" action="{{ url('/survey/report') }}">
                     <div class="filter-users row">
                         <div class="col-xs-12">
                             <div class="wrapper">
-                                <div class="filter-select filter-unit-wrap col-sm-2 col-xs-12">
+                                <div class="filter-select filter-unit-wrap col-sm-2 col-xs-12 <?php if($user_session['role'] != 4) echo 'hidden'; ?>">
                                     <?php if(!isset($unit)) $unit = ''; ?>
                                     <?php echo Form::select('unit', array('' => '-- Unidad --', 'all' => 'Todas') +$units, $unit, array('class' => 'units-select col-xs-12')); ?>
                                 </div>
@@ -188,17 +190,18 @@
             $( "#filter" ).submit(function( event )
             {
                 var unit = $('.units-select').val();
+                var url = '<?php if($user_session['role'] == 3) echo 'director/'; ?>';
 
                 if((unit > 0) || unit == 'all'){
                     if(unit != 'all'){
                         var area = $('.areas-select').val();
                         if(area > 0){
-                            window.location = '{{ URL::to('/') }}/survey/report/unit/' + unit + '/area/' + area;
+                            window.location = '{{ URL::to('/') }}/'+ url +'survey/report/unit/' + unit + '/area/' + area;
                         }else{
-                            window.location = '{{ URL::to('/') }}/survey/report/unit/' + unit;
+                            window.location = '{{ URL::to('/') }}/'+ url +'survey/report/unit/' + unit;
                         }
                     }else{
-                        window.location = '{{ URL::to('/') }}/survey/report';
+                        window.location = '{{ URL::to('/') }}/'+ url +'survey/report';
                     }
                 }else{
                     alert('Por favor! seleccione un unit.')
@@ -246,14 +249,17 @@
                 }
             });
 
-            if($('.units-select').val() > 0){
-                if($('.areas-select').length){
-                    $('.filter-area-wrap').removeClass('hidden');
-                }else{
-                    $('.units-select').trigger('change');
+            <?php if($user_session['role'] != 2) { ?>
+                if($('.units-select').val() > 0){
+                    if($('.areas-select').length){
+                        $('.filter-area-wrap').removeClass('hidden');
+                    }else{
+                        $('.units-select').trigger('change');
+                    }
                 }
-            }
-
+            <?php }else{ ?>
+                $('.filter-buttom').addClass('hidden');
+            <?php } ?>
         });
 
         function deleteUser(id) {
