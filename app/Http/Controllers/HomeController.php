@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use Session;
+
 class HomeController extends Controller {
 
 	/*
@@ -30,7 +32,24 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		return view('home');
+		if (Session::has('user'))
+		{
+			$user_session = session('user');
+			if($user_session['role'] == 4)
+			{
+				return redirect('/admin');
+			}
+			else if($user_session['role'] == 3)
+			{
+				return redirect('/director');
+			}
+		}
+		else
+		{
+			return redirect()->guest('login');
+		}
+
+		//return view('home');
 	}
 
 }

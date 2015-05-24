@@ -10,6 +10,8 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::get('/', 'HomeController@index');
+//Route::get('home', 'HomeController@index');
 
 //Login routes
 Route::get('login', 'Auth\AuthController@getlogin');
@@ -25,14 +27,14 @@ Route::resource('area', 'AreaController', ['only' => ['index']]);
 // ADMIN ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'director']], function()
 {
+	Route::get('/director', 'DashboardController@directorDashboard');
 
 });
 
 // ADMIN ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'admin']], function()
 {
-	Route::get('/', 'DashboardController@adminDashboard');
-	Route::get('home', 'DashboardController@adminDashboard');
+	Route::get('/admin', 'DashboardController@adminDashboard');
 
 	//account routes
 	Route::get('user/create', 'Auth\AuthController@getregister');
@@ -57,9 +59,6 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 	Route::resource('survey', 'Survey\SurveyController');
     Route::resource('survey/unit/{unit}', 'Survey\SurveyController');
 });
-
-/*Route::get('/', 'HomeController@index');
-Route::get('home', 'HomeController@index');*/
 
 /*Route::controllers([
 	'auth' => 'Auth\AuthController',

@@ -70,8 +70,8 @@
                                                                         <?php echo $answer->firstname .' '. $answer->lastname; ?>
                                                                     </div>
                                                                     <div class="unit">
-                                                                        <label>Unit:</label>
-                                                                        <?php echo $answer->unit_name; ?>
+                                                                        <label>Area:</label>
+                                                                        <?php echo $answer->area_name; ?>
                                                                     </div>
                                                                     <div class="time">
                                                                         <?php echo $answer->created_at; ?>
@@ -143,7 +143,7 @@
                             <div class="widget-header">
                                 <h4 class="widget-title lighter smaller">
                                     <i class="ace-icon fa fa-signal blue"></i>
-                                    Encuestas completadas por Unidad
+                                    Encuestas completadas en mi Unidad
                                 </h4>
                             </div>
 

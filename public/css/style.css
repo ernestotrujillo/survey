@@ -30,6 +30,13 @@
 
 .dashboard-unit-stadistic .right-btn{ float:right; }
 
+#answer-tab .elem{ border-bottom: 1px solid #EFEFEF; }
+#answer-tab .elem .name,
+#answer-tab .elem .unit,
+#answer-tab .elem label{ font-size: 12px; line-height: 12px; }
+
+#answer-tab .elem .time{ position: absolute; right: 0; bottom: 4px; font-size: 12px; color: #9B9B9B; }
+
 /* Survey Style */
 .survey-form input.name{
     border: none;
