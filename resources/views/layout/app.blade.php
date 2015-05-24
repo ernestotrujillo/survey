@@ -18,6 +18,7 @@
 	<!-- ace styles -->
 	<link rel="stylesheet" href="{{ asset('/css/ace.css') }}" class="ace-main-stylesheet" id="main-ace-style" />
 
+    <link rel="stylesheet" href="{{ asset('/css/dropzone.css') }}" />
 	<!--[if lte IE 9]>
 	<link rel="stylesheet" href="{{ asset('/css/ace-part2.css') }}" class="ace-main-stylesheet" />
 	<![endif]-->
@@ -32,7 +33,7 @@
 	<script src="{{ asset('/js/ace-extra.js') }}"></script>
 
 	<link rel="stylesheet" href="{{ asset('/css/style.css') }}" />
-	<link rel="stylesheet" href="{{ asset('/css/dropzone.css') }}" />
+
 	<!--link href="{{ asset('/css/app.css') }}" rel="stylesheet"-->
 
 	<!-- Fonts -->

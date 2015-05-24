@@ -34,14 +34,9 @@
 				<!-- view handling messages -->
 				@include('errors.error')
 
-                {!! Form::open(array('id'=>'dropzone', 'url' => url('/survey'), 'role'=>'form',  'class'=>'dropzone dropzone')) !!}
-                <div class="fallback">
-                    {!! Form::file('file') !!}
-                </div>
-
                 {!! Form::close() !!}
 
-				{!! Form::open(array('url' => url('/survey'), 'role'=>'form',  'class'=>'form-horizontal survey-form')) !!}
+				{!! Form::open(array('url' => url('/survey'), 'role'=>'form',  'class'=>'form-horizontal survey-form dropzone')) !!}
 
                 @include("survey.form",['submitButtonText'=>'Crear Encuesta'])
 
@@ -54,6 +49,8 @@
 @section('script')
     <script type="text/javascript">
         jQuery(function($) {
+
+
 
             //Selecting the type of question
             $('.question-type li a').on('click', function(e){
