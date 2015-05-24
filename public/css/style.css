@@ -4,7 +4,31 @@
 .filter-users .filter-buttom{ padding: 0; margin: 2px 0 2px 0; }
 .filter-users .filter-buttom button{ width: 100%; }
 
+/* Dashboard */
+.dashboard-unit-stadistic{
+    float: left;
+    width: 100%;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
 
+.chart-stadistic_unit .pie-legend{
+    float: left;
+    list-style: none;
+    font-size: 14px;
+}
+
+.chart-stadistic_unit .pie-legend li{ margin: 10px 10px 0 0; }
+
+.chart-stadistic_unit .pie-legend li span{
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin: 3px;
+}
+
+.dashboard-unit-stadistic .right-btn{ float:right; }
 
 /* Survey Style */
 .survey-form input.name{

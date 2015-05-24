@@ -11,9 +11,6 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
-Route::get('home', 'HomeController@index');
-
 //Login routes
 Route::get('login', 'Auth\AuthController@getlogin');
 Route::post('login', 'Auth\AuthController@postlogin');
@@ -34,6 +31,9 @@ Route::group(['middleware' => ['auth', 'director']], function()
 // ADMIN ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'admin']], function()
 {
+	Route::get('/', 'DashboardController@adminDashboard');
+	Route::get('home', 'DashboardController@adminDashboard');
+
 	//account routes
 	Route::get('user/create', 'Auth\AuthController@getregister');
 	Route::post('user', 'Auth\AuthController@postregister');
@@ -55,6 +55,9 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 	Route::get('survey/report/unit/{unit}/area/{area}', 'Survey\SurveyController@answerSurvey');
 	Route::resource('survey', 'Survey\SurveyController');
 });
+
+/*Route::get('/', 'HomeController@index');
+Route::get('home', 'HomeController@index');*/
 
 /*Route::controllers([
 	'auth' => 'Auth\AuthController',

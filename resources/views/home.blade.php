@@ -34,7 +34,7 @@
 					<div class="widget-box transparent" id="recent-box">
 						<div class="widget-header">
 							<h4 class="widget-title lighter smaller">
-								<i class="ace-icon fa fa-rss orange"></i>RECENT
+								<i class="ace-icon fa fa-rss orange"></i>Últimas iteracciones
 							</h4>
 
 							<div class="widget-toolbar no-border">
@@ -53,7 +53,7 @@
 						<div class="widget-body">
 							<div class="widget-main padding-4">
 								<div class="tab-content padding-8">
-									<div id="task-tab" class="tab-pane">
+									<div id="task-tab" class="tab-pane active">
 
 										<!-- #section:pages/dashboard.tasks -->
 										<ul id="tasks" class="item-list ui-sortable">
@@ -282,165 +282,101 @@
 					<div class="widget-box">
 						<div class="widget-header">
 							<h4 class="widget-title lighter smaller">
-								<i class="ace-icon fa fa-comment blue"></i>
-								Conversation
+								<i class="ace-icon fa fa-signal blue"></i>
+								Encuestas completadas por Unidad
 							</h4>
 						</div>
 
 						<div class="widget-body">
 							<div class="widget-main no-padding">
-								<!-- #section:pages/dashboard.conversations -->
-								<div class="dialogs ace-scroll"><div class="scroll-track scroll-active" style="display: block; height: 300px;"><div class="scroll-bar" style="height: 236px; top: 64px;"></div></div><div class="scroll-content" style="max-height: 300px;">
-										<div class="itemdiv dialogdiv">
-											<div class="user">
-												<img alt="Alexa's Avatar" src="../assets/avatars/avatar1.png">
-											</div>
-
-											<div class="body">
-												<div class="time">
-													<i class="ace-icon fa fa-clock-o"></i>
-													<span class="green">4 sec</span>
-												</div>
-
-												<div class="name">
-													<a href="#">Alexa</a>
-												</div>
-												<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.</div>
-
-												<div class="tools">
-													<a href="#" class="btn btn-minier btn-info">
-														<i class="icon-only ace-icon fa fa-share"></i>
-													</a>
-												</div>
-											</div>
-										</div>
-
-										<div class="itemdiv dialogdiv">
-											<div class="user">
-												<img alt="John's Avatar" src="../assets/avatars/avatar.png">
-											</div>
-
-											<div class="body">
-												<div class="time">
-													<i class="ace-icon fa fa-clock-o"></i>
-													<span class="blue">38 sec</span>
-												</div>
-
-												<div class="name">
-													<a href="#">John</a>
-												</div>
-												<div class="text">Raw denim you probably haven't heard of them jean shorts Austin.</div>
-
-												<div class="tools">
-													<a href="#" class="btn btn-minier btn-info">
-														<i class="icon-only ace-icon fa fa-share"></i>
-													</a>
-												</div>
-											</div>
-										</div>
-
-										<div class="itemdiv dialogdiv">
-											<div class="user">
-												<img alt="Bob's Avatar" src="../assets/avatars/user.jpg">
-											</div>
-
-											<div class="body">
-												<div class="time">
-													<i class="ace-icon fa fa-clock-o"></i>
-													<span class="orange">2 min</span>
-												</div>
-
-												<div class="name">
-													<a href="#">Bob</a>
-													<span class="label label-info arrowed arrowed-in-right">admin</span>
-												</div>
-												<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.</div>
-
-												<div class="tools">
-													<a href="#" class="btn btn-minier btn-info">
-														<i class="icon-only ace-icon fa fa-share"></i>
-													</a>
-												</div>
-											</div>
-										</div>
-
-										<div class="itemdiv dialogdiv">
-											<div class="user">
-												<img alt="Jim's Avatar" src="../assets/avatars/avatar4.png">
-											</div>
-
-											<div class="body">
-												<div class="time">
-													<i class="ace-icon fa fa-clock-o"></i>
-													<span class="grey">3 min</span>
-												</div>
-
-												<div class="name">
-													<a href="#">Jim</a>
-												</div>
-												<div class="text">Raw denim you probably haven't heard of them jean shorts Austin.</div>
-
-												<div class="tools">
-													<a href="#" class="btn btn-minier btn-info">
-														<i class="icon-only ace-icon fa fa-share"></i>
-													</a>
-												</div>
-											</div>
-										</div>
-
-										<div class="itemdiv dialogdiv">
-											<div class="user">
-												<img alt="Alexa's Avatar" src="../assets/avatars/avatar1.png">
-											</div>
-
-											<div class="body">
-												<div class="time">
-													<i class="ace-icon fa fa-clock-o"></i>
-													<span class="green">4 min</span>
-												</div>
-
-												<div class="name">
-													<a href="#">Alexa</a>
-												</div>
-												<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-
-												<div class="tools">
-													<a href="#" class="btn btn-minier btn-info">
-														<i class="icon-only ace-icon fa fa-share"></i>
-													</a>
-												</div>
-											</div>
-										</div>
-									</div></div>
-
-								<!-- /section:pages/dashboard.conversations -->
-								<form>
-									<div class="form-actions">
-										<div class="input-group">
-											<input placeholder="Type your message here ..." type="text" class="form-control" name="message">
-															<span class="input-group-btn">
-																<button class="btn btn-sm btn-info no-radius" type="button">
-																	<i class="ace-icon fa fa-share"></i>
-																	Send
-																</button>
-															</span>
-										</div>
+								<div class="chart-ocupaciones-wraper col-md-8">
+									<div id="canvas-holder">
+										<canvas id="chart-area" width="500" height="500"/>
 									</div>
-								</form>
-							</div><!-- /.widget-main -->
-						</div><!-- /.widget-body -->
+								</div>
+							</div><!-- /.widget-main chart -->
+						</div><!-- /.widget-body chart -->
 					</div><!-- /.widget-box -->
 				</div><!-- /.col -->
-			</div>
+
+			</div><!-- end of row -->
 
 		</div><!-- /.col -->
 	</div><!-- /.row -->
 @endsection
 
 @section('script')
+	<script src="{{ asset('/js/chart.min.js') }}"></script>
+
+	<script>
+
+		<?php $colors = array( "#AAB7D5", "#3E6A98", "#4D82B9", "#d08770", "#ebcb8b", "#a3be8c", "#96b5b4", "#8fa1b3", "#b48ead" ); ?>
+
+		/*var doughnutData = [
+			<?php
+                /*foreach($ocupaciones as $key => $ocupacion){
+                    $key = $key % 10;
+                    echo '{
+                            value: '.$ocupacion["count"].',
+                            color:"'.$colors[$key].'",
+                            highlight: "'.$colors[$key].'",
+                            label: "'.$ocupacion["name"].'"
+                        },';
+                }*/
+            ?>
+		];*/
+
+	</script>
+
 	<script type="text/javascript">
 		jQuery(function($) {
 
+			var doughnutData = [
+				{
+					value: 300,
+					color:"#F7464A",
+					highlight: "#FF5A5E",
+					label: "Red"
+				},
+				{
+					value: 50,
+					color: "#46BFBD",
+					highlight: "#5AD3D1",
+					label: "Green"
+				},
+				{
+					value: 100,
+					color: "#FDB45C",
+					highlight: "#FFC870",
+					label: "Yellow"
+				}
+			]
+
+			var ctx = document.getElementById("chart-area").getContext("2d");
+			window.myDoughnut = new Chart(ctx).Pie(doughnutData, {
+				responsive : true,
+				animationEasing : "easeOutBounce"
+				//animation: false
+			});
+
+			var helpers = Chart.helpers;
+
+			var legendHolder = document.createElement('div');
+			legendHolder.innerHTML = myDoughnut.generateLegend();
+			helpers.each(legendHolder.firstChild.childNodes, function(legendNode, index){
+				helpers.addEvent(legendNode, 'mouseover', function(){
+					var activeSegment = myDoughnut.segments[index];
+					activeSegment.save();
+					activeSegment.fillColor = activeSegment.highlightColor;
+					myDoughnut.showTooltip([activeSegment]);
+					activeSegment.restore();
+				});
+			});
+			helpers.addEvent(legendHolder.firstChild, 'mouseout', function(){
+				myDoughnut.draw();
+			});
+			console.log(legendHolder.outerHTML)
+			jQuery("#canvas-holder").append(legendHolder.firstChild);
 		});
 	</script>
 @endsection
