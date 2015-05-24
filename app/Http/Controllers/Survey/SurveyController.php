@@ -26,7 +26,16 @@ class SurveyController extends Controller {
 	 */
 	public function index()
 	{
+        $surveys = Survey::where('active', '=', 1)->paginate(20);
 
+        //get all current active units
+        $data = Unit::where('active', '=', 1)->get(array('id','name'));
+        foreach ($data as $key => $value)
+        {
+            $units[$value->id] = $value->name;
+        }
+
+        return view('survey.list', compact('surveys', 'units'));
 	}
 
 	/**
@@ -75,7 +84,7 @@ class SurveyController extends Controller {
             }
         }
 
-        return redirect('/survey/create')
+        return redirect('/survey/report')
             ->with('message', array( 'type' => 'success', 'message' => 'Encuesta creada con éxito'));
 
 	}
