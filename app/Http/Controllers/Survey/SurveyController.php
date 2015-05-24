@@ -160,15 +160,15 @@ class SurveyController extends Controller {
 	public function update($id, CreateSurveyRequest $request)
 	{
         $survey = Survey::findOrFail($id);
-
-        $survey = new Survey;
-        $survey->id = $id;
         $survey->name = $request->input('name');
         $survey->unit_id = $request->input('unit_id');
-        //$survey->save();
+        $survey->save();
 
         $questions =  json_decode($request->input('qInput'));
-        /*foreach ($questions as $question){
+
+        $desactivateOld = DB::table('question')->where('survey_id', '=', $id)->update(array("active"=>0));
+
+        foreach ($questions as $question){
             $qObject = new Question;
             $qObject->name = $question->name;
             $qObject->type = $question->type;
@@ -183,7 +183,7 @@ class SurveyController extends Controller {
                     $oObject->save();
                 }
             }
-        }*/
+        }
 
         $data = Unit::where('active', '=', 1)->get(array('id','name'));
         foreach ($data as $key => $value)

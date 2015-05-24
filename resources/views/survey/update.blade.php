@@ -36,9 +36,11 @@
 				{!! Form::model($survey, array('method'=>'PUT', 'url' => url('/survey/'.$survey->id), 'role'=>'form',  'class'=>'form-horizontal survey-form')) !!}
                 <input type="hidden" id="surveyId" name="surveyId" value="{{ $survey->id }}">
                 <input type="hidden" id="qInput" name="qInput" value="">
-                @foreach ($questions as $question)
-                    <input name="respQuestions[]" id="respQuestions" type="hidden" value='{{$question}}'>
-                @endforeach
+                @if (isset($questions))
+                    @foreach ($questions as $question)
+                        <input name="respQuestions[]" id="respQuestions" type="hidden" value='{{$question}}'>
+                    @endforeach
+                @endif
 
                 @include("survey.form",['submitButtonText'=>'Modificar Encuesta'])
 
