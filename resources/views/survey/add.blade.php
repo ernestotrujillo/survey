@@ -33,6 +33,14 @@
 
 				<!-- view handling messages -->
 				@include('errors.error')
+
+                {!! Form::open(array('id'=>'dropzone', 'url' => url('/survey'), 'role'=>'form',  'class'=>'dropzone dropzone')) !!}
+                <div class="fallback">
+                    {!! Form::file('file') !!}
+                </div>
+
+                {!! Form::close() !!}
+
 				{!! Form::open(array('url' => url('/survey'), 'role'=>'form',  'class'=>'form-horizontal survey-form')) !!}
 
                 @include("survey.form",['submitButtonText'=>'Crear Encuesta'])
@@ -221,6 +229,7 @@
                 }
 
             });
+
 
         });
 

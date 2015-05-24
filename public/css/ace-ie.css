@@ -18,7 +18,7 @@
 
 #cboxLoadingGraphic > .ace-icon, #cboxLoadingGraphic > .fa , #cboxLoadingGraphic > .glyphicon {
  display:inline-block;
- background:#FFF url('images/loading.gif') no-repeat center; 
+ background:#FFF url('../images/loading.gif') no-repeat center;
 }
 #cboxLoadingGraphic > .ace-icon:before, #cboxLoadingGraphic > .fa:before, #cboxLoadingGraphic > .glyphicon:before {
  display:none;
@@ -28,7 +28,7 @@
   display:inline-block;
   width:24px;
   height:24px;
-  background:transparent url('images/loading.gif') no-repeat center; 
+  background:transparent url('../images/loading.gif') no-repeat center;
 }
 .widget-box-overlay > .loading-icon:before {
   display:none;
@@ -243,7 +243,7 @@ input[type=checkbox].ace.ace-switch ~ .lbl {
   display: inline-block;
   width: 32px;
   height: 32px;
-  background: transparent url('images/loading.gif') no-repeat center; 
+  background: transparent url('../images/loading.gif') no-repeat center;
 }
 .ace-file-overlay  > .ace-icon:before, .ace-file-overlay  > .fa:before, .ace-file-overlay  > .glyphicon:before {
   display: none;
