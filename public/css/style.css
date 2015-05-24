@@ -53,6 +53,31 @@
     background: none;
 }
 
+.survey-form .fallback2{
+    display: inline-block;
+}
+
+.survey-form.dropzone .dz-default.dz-message {
+    position: relative;
+    margin:0
+}
+.survey-form.dropzone.dz-clickable.dz-started .fallback2 {
+    display: none;
+}
+
+.dropzone a.dz-remove, .dropzone-previews a.dz-remove {
+    border: none;
+    border-radius: 0;
+    color: #FFF;
+    background: #D15B47;
+    cursor: pointer;
+}
+.dropzone a.dz-remove:hover, .dropzone-previews a.dz-remove:hover {
+    color: #FFF;
+    background: #B74635;
+}
+
+
 .show-grid {
     margin-bottom: 15px;
 }
@@ -60,4 +85,6 @@
 .widget-result .question h2 small {
     color: #69aa46;
 }
+
+
 

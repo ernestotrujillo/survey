@@ -292,7 +292,7 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       method: "post",
       withCredentials: false,
       parallelUploads: 2,
-      uploadMultiple: false,
+      uploadMultiple: true,
       maxFilesize: 256,
       paramName: "file",
       createImageThumbnails: true,
@@ -305,10 +305,10 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       ignoreHiddenFiles: true,
       acceptedFiles: null,
       acceptedMimeTypes: null,
-      autoProcessQueue: true,
+      autoProcessQueue: false,
       autoQueue: true,
-      addRemoveLinks: false,
-      previewsContainer: null,
+      addRemoveLinks: true,
+      previewsContainer: '.previewsContainer',
       dictDefaultMessage: "Drop files here to upload",
       dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
       dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
@@ -416,9 +416,10 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       },
       addedfile: function(file) {
         var node, removeFileEvent, removeLink, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
-        if (this.element === this.previewsContainer) {
+        /*if (this.element === this.previewsContainer) {
           this.element.classList.add("dz-started");
-        }
+        }*/
+          this.element.classList.add("dz-started");
         if (this.previewsContainer) {
           file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
           file.previewTemplate = file.previewElement;
@@ -688,7 +689,7 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
         this.element.setAttribute("enctype", "multipart/form-data");
       }
       if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) {
-        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
+          $(this.element).find(".fallback2").append(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
       }
       if (this.clickableElements.length) {
         setupHiddenFileInput = (function(_this) {
@@ -698,6 +699,7 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
             }
             _this.hiddenFileInput = document.createElement("input");
             _this.hiddenFileInput.setAttribute("type", "file");
+            _this.hiddenFileInput.setAttribute("name", "pictures");
             if ((_this.options.maxFiles == null) || _this.options.maxFiles > 1) {
               _this.hiddenFileInput.setAttribute("multiple", "multiple");
             }
@@ -711,7 +713,8 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
             _this.hiddenFileInput.style.left = "0";
             _this.hiddenFileInput.style.height = "0";
             _this.hiddenFileInput.style.width = "0";
-            document.body.appendChild(_this.hiddenFileInput);
+            //document.body.appendChild(_this.hiddenFileInput);
+            $('form').append(_this.hiddenFileInput);
             return _this.hiddenFileInput.addEventListener("change", function() {
               var file, files, _i, _len;
               files = _this.hiddenFileInput.files;

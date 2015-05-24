@@ -19,30 +19,25 @@
 	<div class="row">
 		<div class="col-xs-12">
 
-			<!-- PAGE CONTENT BEGINS -->
-				@if (count($errors) > 0)
-					<div class="alert alert-danger">
-						<strong>Whoops!</strong> There were some problems with your input.<br><br>
-						<ul>
-							@foreach ($errors->all() as $error)
-								<li>{!! $error !!}</li>
-							@endforeach
-						</ul>
-					</div>
-				@endif
+			    <!-- PAGE CONTENT BEGINS -->
+                @if (count($errors) > 0)
+                    <div class="alert alert-danger">
+                        Disculpe! Exíste un problema.<br><br>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-				<!-- view handling messages -->
-				@include('errors.error')
-
-                {!! Form::open(array('id'=>'dropzone', 'url' => url('/survey'), 'role'=>'form',  'class'=>'dropzone dropzone')) !!}
-                <div class="fallback">
-                    {!! Form::file('file') !!}
-                </div>
+                            <!-- view handling messages -->
+                @include('errors.error')
 
                 {!! Form::close() !!}
 
-				{!! Form::open(array('url' => url('/survey'), 'role'=>'form',  'class'=>'form-horizontal survey-form')) !!}
-
+				{!! Form::open(array('method'=>'POST' , 'url' => url('/survey'), 'files'=>true, 'role'=>'form',  'class'=>'form-horizontal survey-form dropzone')) !!}
+                <input type="hidden" id="qInput" name="qInput" value="">
                 @include("survey.form",['submitButtonText'=>'Crear Encuesta'])
 
 				{!! Form::close() !!}
@@ -54,6 +49,8 @@
 @section('script')
     <script type="text/javascript">
         jQuery(function($) {
+
+
 
             //Selecting the type of question
             $('.question-type li a').on('click', function(e){
@@ -181,9 +178,6 @@
 
                 if (surveyName.length > 0 && qElements.length > 0 && unit.length > 0){
 
-                    var survey = new Object();
-                    survey.name = surveyName;
-                    survey.unit_id = unit;
                     var questions = [];
                     var qObj,qNumber, qName, qType;
 
@@ -211,10 +205,11 @@
                         questions.push(qObj);
                     });
 
-                    survey.questions  = questions;
-                    survey._token = '{{ csrf_token() }}';
-                    //$('.survey-form').submit();
-                    $.ajax({
+                    var qInput = $('#qInput');
+                    $(qInput).val(JSON.stringify(questions));
+
+                    $('.survey-form').submit();
+                    /*$.ajax({
                         url: '{!!  url("/survey") !!}',
                         type: "POST",
                         dataType: 'json',
@@ -222,7 +217,7 @@
                         success: function(data){
                             console.log(data);
                         }
-                    });
+                    });*/
 
                 }else{
                     alert('Por favor ingrese un nombre para la encuesta, unidad y al menos una pregunta');
