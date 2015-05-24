@@ -60,12 +60,6 @@
                 <table id="simple-table" class="table table-striped table-bordered table-hover dataTable">
                     <thead>
                     <tr>
-                        <th class="center">
-                            <label class="pos-rel">
-                                <input type="checkbox" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </th>
                         <th>Nombre</th>
                         <th>Unidad</th>
                         <th class="hidden-sm hidden-xs">Estado</th>
@@ -76,20 +70,13 @@
                     <tbody>
                     <?php foreach ($surveys as $survey): ?>
                     <tr>
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="checkbox" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
                         <td>{!! $survey->name !!}</td>
                         <td>{!! $survey->unit_id !!}</td>
                         <td class="hidden-xs">
                             <?php if($survey->active){ ?>
-                                    <span class="label label-success label-white middle">Activo</span>
+                                    <span class="label label-success label-white middle">Activa</span>
                             <?php }else{ ?>
-                                <span class="label label-danger label-white middle">Bloqueado</span>
+                                <span class="label label-danger label-white middle">Inactiva</span>
                             <?php } ?>
                         </td>
 
