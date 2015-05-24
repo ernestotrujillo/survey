@@ -53,7 +53,9 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 	Route::get('survey/report', 'Survey\SurveyController@answerSurvey');
 	Route::get('survey/report/unit/{unit}', 'Survey\SurveyController@answerSurvey');
 	Route::get('survey/report/unit/{unit}/area/{area}', 'Survey\SurveyController@answerSurvey');
+
 	Route::resource('survey', 'Survey\SurveyController');
+    Route::resource('survey/unit/{unit}', 'Survey\SurveyController');
 });
 
 /*Route::controllers([

@@ -24,9 +24,14 @@ class SurveyController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($unit = null)
 	{
-        $surveys = Survey::where('active', '=', 1)->paginate(20);
+
+        if ($unit){
+            $surveys = Survey::where('active', '=', 1)->where('unit_id','=',$unit)->paginate(20);
+        }else {
+            $surveys = Survey::where('active', '=', 1)->paginate(20);
+        }
 
         //get all current active units
         $data = Unit::where('active', '=', 1)->get(array('id','name'));
