@@ -30,6 +30,7 @@ class Kernel extends HttpKernel {
 		'admin' => 'App\Http\Middleware\AdminMiddleware',
 		'director' => 'App\Http\Middleware\DirectorMiddleware',
 		'manager' => 'App\Http\Middleware\ManagerMiddleware',
+		'user' => 'App\Http\Middleware\UserMiddleware',
 	];
 
 }

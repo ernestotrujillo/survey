@@ -24,6 +24,15 @@ Route::get('area/filter/unit/{id}', 'AreaController@filterByUnit');
 Route::resource('area', 'AreaController', ['only' => ['index']]);
 //Route::controller('area/filter/unit/{id}', 'AreaController@filterbyunit');
 
+// USER ALLOWED ROUTES
+Route::group(['middleware' => ['auth', 'user']], function()
+{
+	Route::get('dashboard', 'DashboardController@userDashboard');
+	Route::get('dashboard/mysurveys', 'Survey\SurveyController@mySurveyList');
+	Route::get('dashboard/surveys', 'Survey\SurveyController@surveyList');
+
+});
+
 // MANAGER ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'manager']], function()
 {
@@ -31,7 +40,6 @@ Route::group(['middleware' => ['auth', 'manager']], function()
 	Route::get('manager/survey/report', 'Survey\SurveyController@roleFilter');
 	Route::get('manager/survey/report/unit/{unit}', 'Survey\SurveyController@roleFilter');
 	Route::get('manager/survey/report/unit/{unit}/area/{area}', 'Survey\SurveyController@roleFilter');
-
 });
 
 // DIRECTOR ALLOWED ROUTES
@@ -41,7 +49,6 @@ Route::group(['middleware' => ['auth', 'director']], function()
 	Route::get('director/survey/report', 'Survey\SurveyController@roleFilter');
 	Route::get('director/survey/report/unit/{unit}', 'Survey\SurveyController@roleFilter');
 	Route::get('director/survey/report/unit/{unit}/area/{area}', 'Survey\SurveyController@roleFilter');
-
 });
 
 // ADMIN ALLOWED ROUTES
@@ -73,7 +80,6 @@ Route::group(['middleware' => ['auth', 'admin']], function()
     Route::get('survey/activate/{id}', 'Survey\SurveyController@activate');
     Route::resource('survey', 'Survey\SurveyController');
     Route::resource('survey/unit/{unit}', 'Survey\SurveyController');
-
 
 });
 

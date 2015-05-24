@@ -158,6 +158,11 @@ class DashboardController extends Controller {
         return view('dashboard.manager', compact('stadistics', 'last_survey_answer'));
     }
 
+    public function userDashboard()
+    {
+        return view('dashboard.user');
+    }
+
     public function rangeMonth($datestr) {
         $dt = strtotime($datestr);
         $res['start'] = date('Y-m-d H:i:s', strtotime('first day of this month', $dt));

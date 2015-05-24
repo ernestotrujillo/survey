@@ -104,6 +104,50 @@
                                     <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                 </a>
                             </div>
+
+                            <div class="hidden-md hidden-lg">
+                                <div class="inline pos-rel">
+                                    <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                                        <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                        <li>
+                                            <a href="{{ URL::to('/survey/'.$survey->id.'/edit') }}" class="tooltip-info" data-rel="tooltip" title="Editar">
+                                                <span class="blue">
+                                                    <i class="ace-icon glyphicon glyphicon-edit"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="javascript:deleteSurvey('{{ $survey->id }}');" class="tooltip-success" data-rel="tooltip" title="Eliminar">
+                                                <span class="red">
+                                                    <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        <?php if($survey->active == 1){ ?>
+                                        <li>
+                                            <a href="javascript:javascript:deactivateSurvey('{{ $survey->id }}');" class="tooltip-error" data-rel="tooltip" title="Bloquear">
+                                                <span class="red">
+                                                    <i class="ace-icon fa fa-ban"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <?php }else{ ?>
+                                        <li>
+                                            <a href="javascript:activeSurvey('{{ $survey->id }}');" class="tooltip-error" data-rel="tooltip" title="Activar">
+                                                <span class="green">
+                                                    <i class="ace-icon glyphicon glyphicon-ok"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <?php } ?>
+                                    </ul>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>

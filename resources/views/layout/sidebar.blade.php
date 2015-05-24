@@ -46,6 +46,40 @@
             <b class="arrow"></b>
         </li>
 
+        <?php if($user_session['role'] == 1){ ?>
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon glyphicon glyphicon-stats"></i>
+                        <span class="menu-text">
+                            Reportes
+                        </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+
+                    <li class="">
+                        <a href="{{ url('/dashboard/mysurveys') }}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Mis Reportes
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li class="">
+                        <a href="{{ url('/dashboard/surveys') }}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Nuevo Reporte
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                </ul>
+            </li>
+        <?php } ?>
+
         <?php if($user_session['role'] == 2){ ?>
             <li class="">
                 <a href="{{ url('/manager/survey/report') }}">

@@ -79,6 +79,8 @@
                                                                 </div>
                                                             </div>
                                                         <?php endforeach; ?>
+                                                    <?php }else{ ?>
+                                                        <div>No hay iteraciones.</div>
                                                     <?php } ?>
                                                 </div>
                                             </div>
