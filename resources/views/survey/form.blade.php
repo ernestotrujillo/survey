@@ -10,6 +10,7 @@
             <div class="form-group col-xs-12 col-sm-12">
                 {!! Form::select('unit_id', $units, null, array('class' => 'col-xs-12 col-sm-6 unit')) !!}
             </div>
+            <input name="file[]" type="file" id="exampleInputFile" multiple>
             <div class="fallback">
                 {!! Form::file('file') !!}
             </div>
@@ -115,8 +116,8 @@
 
                 addRemoveLinks : true,
                 dictDefaultMessage :
-                '<span class="bigger-150 bolder"><i class="ace-icon fa fa-caret-right red"></i> Drop files</span> to upload \
-                <span class="smaller-80 grey">(or click)</span> <br /> \
+                '<span class="bigger-150 bolder"><i class="ace-icon fa fa-caret-right red"></i> Arrastra imagenes</span> para subir \
+                <span class="smaller-80 grey">(o haz click)</span> <br /> \
                 <i class="upload-icon ace-icon fa fa-cloud-upload blue fa-3x"></i>',
                 dictResponseError: 'Error while uploading file!',
 

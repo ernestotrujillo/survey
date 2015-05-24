@@ -7,9 +7,15 @@ use App\Http\Requests\CreateSurveyRequest;
 use App\Survey;
 use App\Question;
 use App\Option;
+Use App\SurveyImage;
 use App\User;
 use App\Unit;
 use App\Area;
+Use Input;
+Use File;
+Use Validator;
+Use Session;
+Use Redirect;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -70,17 +76,58 @@ class SurveyController extends Controller {
         $survey = new Survey;
         $survey->name = $request->input('name');
         $survey->unit_id = $request->input('unit_id');
-        $survey->save();
 
-        foreach ($request->input('questions') as $question){
+        $files = $request->file('file');
+        if($files) {
+            $file_count = count($files);
+            $uploadcount = 0;
+            foreach ($files as $file) {
+                if (File::exists($file)) {
+                    $rules = array('file' => 'required|mimes:png,gif,jpeg'); //'required|mimes:png,gif,jpeg,txt,pdf,doc'
+                    $validator = Validator::make(array('file' => $file), $rules);
+                    if ($validator->passes()) {
+                        //$extension = $file->getClientOriginalExtension();
+
+                        $destinationPath = 'uploads';
+                        $filename = $file->getFilename().$file->getClientOriginalName();
+                        $upload_success = $file->move($destinationPath, $filename);
+                        $uploadcount++;
+                    }
+                }
+
+            }
+
+            if ($uploadcount != $file_count) {
+                return Redirect::back()->with('message', array('type' => 'error', 'message' => 'Error subiendo archivos'));
+            } else {
+                foreach ($files as $file) {
+                    $survey->save();
+
+                    $surveyImg = new SurveyImage();
+                    //$surveyImg->original_filename = $file->getClientOriginalName();
+                    $extension = $file->getClientOriginalExtension();
+                    $surveyImg->name = $file->getClientOriginalName();
+                    $surveyImg->image = $file->getFilename().$file->getClientOriginalName();
+                    $surveyImg->survey_id = $survey->id;
+                    $surveyImg->save();
+                }
+
+            }
+        }else{
+            $survey->save();
+        }
+
+        $questions =  json_decode($request->input('qInput'));
+
+        foreach ($questions as $question){
             $qObject = new Question;
-            $qObject->name = $question['name'];
-            $qObject->type = $question['type'];
+            $qObject->name = $question->name;
+            $qObject->type = $question->type;
             $qObject->survey_id = $survey->id;
             $qObject->save();
 
-            if ($question['options']){
-                foreach ($question['options'] as $option){
+            if ($question->options){
+                foreach ($question->options as $option){
                     $oObject = new Option;
                     $oObject->name = $option;
                     $oObject->question_id = $qObject->id;
@@ -94,8 +141,12 @@ class SurveyController extends Controller {
         {
             $units[$value->id] = $value->name;
         }
-        return view('survey.add',array("units"=>$units,'message', array( 'type' => 'success', 'message' => 'Encuesta creada con éxito')));
-	}
+
+        return redirect('/survey')
+            ->with('message', array( 'type' => 'success', 'message' => 'Encuesta creada con éxito'))
+            ->with('units', $units);
+
+    }
 
 	/**
 	 * Display the specified resource.
