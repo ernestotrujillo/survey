@@ -60,15 +60,9 @@
                 <table id="simple-table" class="table table-striped table-bordered table-hover dataTable">
                     <thead>
                     <tr>
-                        <th class="center">
-                            <label class="pos-rel">
-                                <input type="checkbox" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </th>
                         <th>Nombre</th>
                         <th>Unidad</th>
-                        <th class="hidden-xs">Estado</th>
+                        <th class="hidden-sm hidden-xs">Estado</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
@@ -76,28 +70,35 @@
                     <tbody>
                     <?php foreach ($surveys as $survey): ?>
                     <tr>
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="checkbox" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
                         <td>{!! $survey->name !!}</td>
-                        <td>{!! $survey->unit !!}</td>
+                        <td>{!! $survey->unit_id !!}</td>
                         <td class="hidden-xs">
                             <?php if($survey->active){ ?>
-                                    <span class="label label-success label-white middle">Activo</span>
+                                    <span class="label label-success label-white middle">Activa</span>
                             <?php }else{ ?>
-                                <span class="label label-danger label-white middle">Bloqueado</span>
+                                <span class="label label-danger label-white middle">Inactiva</span>
                             <?php } ?>
                         </td>
 
-                        <td>
+                        <td class="hidden-sm hidden-xs">
                             <div class="hidden-sm hidden-xs btn-group">
-                                <a href="javascript:editSurvey('{{ $survey->id }}');" class="blue" title="Editar">
+                                <a href="{{ URL::to('/survey/'.$survey->id.'/edit') }}" class="blue" title="Editar">
                                     <i class="ace-icon glyphicon glyphicon-edit"></i>
                                 </a>
+
+                                <?php if($survey->active == 1){ ?>
+                                    <a href="javascript:deactivateSurvey('{{ $survey->id }}');" class="tooltip-error" data-rel="tooltip" title="Desactivar">
+                                        <span class="red">
+                                            <i class="ace-icon fa fa-ban"></i>
+                                        </span>
+                                    </a>
+                                <?php }else{ ?>
+                                    <a href="javascript:activeSurvey('{{ $survey->id }}');" class="tooltip-error" data-rel="tooltip" title="Activar">
+                                        <span class="green">
+                                            <i class="ace-icon glyphicon glyphicon-ok"></i>
+                                        </span>
+                                    </a>
+                                <?php } ?>
 
                                 <a href="javascript:deleteSurvey('{{ $survey->id }}');" class="red" title="Eliminar">
                                     <i class="ace-icon fa fa-trash-o bigger-120"></i>
@@ -177,17 +178,52 @@
             }
         });
 
-        function deleteUser(id) {
-            if (confirm('¿Esta seguro de eliminar el usuario?')) {
+        function deleteSurvey(id) {
+            if (confirm('¿Esta seguro de eliminar la encuesta?')) {
                 $.ajax({
-                    type: 'POST',
-                    url: '{{ URL::to('/') }}/user/' + id, //resource
+                    type: 'DELETE',
+                    url: '{{ URL::to('/survey') }}/' + id, //resource
                     data: {
-                        _method: 'DELETE',
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(data) {
-                        if (data.deleted > 0) window.location = 'user';
+                        if (data.deleted > 0) window.location = 'survey';
+                    },
+                    error:function(data) {
+                        alert('Disculpe. Ocurrió un error')
+                    }
+                });
+            }
+        }
+
+        function deactivateSurvey(id) {
+            if (confirm('¿Esta seguro de desactivar la encuesta?')) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ URL::to('/survey') }}/deactivate/' + id, //resource
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(data) {
+                        if (data) window.location = 'survey';
+                    },
+                    error:function(data) {
+                        alert('Disculpe. Ocurrió un error')
+                    }
+                });
+            }
+        }
+
+        function activeSurvey(id) {
+            if (confirm('¿Esta seguro de activar la encuesta?')) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ URL::to('/survey') }}/activate/' + id, //resource
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(data) {
+                        if (data) window.location = 'survey';
                     },
                     error:function(data) {
                         alert('Disculpe. Ocurrió un error')

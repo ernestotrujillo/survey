@@ -12620,7 +12620,7 @@ td .lbl:only-child {
   }
 }
 .light-login {
-  background: #dfe0e2 url('images/pattern.jpg') repeat;
+  background: #dfe0e2 url('../images/pattern.jpg') repeat;
 }
 .light-login .widget-box {
   padding: 1px 1px 0;
@@ -12644,7 +12644,7 @@ td .lbl:only-child {
   background-color: rgba(120, 110, 100, 0.4);
 }
 .blur-login {
-  background: #394557 url('images/meteorshower2.jpg') repeat;
+  background: #394557 url('../images/meteorshower2.jpg') repeat;
 }
 .invoice-info {
   line-height: 24px !important;

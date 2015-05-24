@@ -33,6 +33,7 @@
 	<script src="{{ asset('/js/ace-extra.js') }}"></script>
 
 	<link rel="stylesheet" href="{{ asset('/css/style.css') }}" />
+	<link rel="stylesheet" href="{{ asset('/css/dropzone.css') }}" />
 	<!--link href="{{ asset('/css/app.css') }}" rel="stylesheet"-->
 
 	<!-- Fonts -->
@@ -310,6 +311,7 @@
 	<script src="{{ asset('/js/ace/ace.settings-skin.js') }}"></script>
 	<script src="{{ asset('/js/ace/ace.widget-on-reload.js') }}"></script>
 	<script src="{{ asset('/js/ace/ace.searchbox-autocomplete.js') }}"></script>
+	<script src="{{ asset('/js/dropzone.js') }}"></script>
 
 	<!-- inline scripts related to this page -->
 	@yield('script')

@@ -28,9 +28,9 @@ class SurveyController extends Controller {
 	{
 
         if ($unit){
-            $surveys = Survey::where('active', '=', 1)->where('unit_id','=',$unit)->paginate(20);
+            $surveys = Survey::where('unit_id','=',$unit)->paginate(20);
         }else {
-            $surveys = Survey::where('active', '=', 1)->paginate(20);
+            $surveys = Survey::paginate(20);
         }
 
         //get all current active units
@@ -69,7 +69,7 @@ class SurveyController extends Controller {
 
         $survey = new Survey;
         $survey->name = $request->input('name');
-        $survey->unit_id = $request->input('unit');
+        $survey->unit_id = $request->input('unit_id');
         $survey->save();
 
         foreach ($request->input('questions') as $question){
@@ -89,9 +89,12 @@ class SurveyController extends Controller {
             }
         }
 
-        return redirect('/survey/report')
-            ->with('message', array( 'type' => 'success', 'message' => 'Encuesta creada con éxito'));
-
+        $data = Unit::where('active', '=', 1)->get(array('id','name'));
+        foreach ($data as $key => $value)
+        {
+            $units[$value->id] = $value->name;
+        }
+        return view('survey.add',array("units"=>$units,'message', array( 'type' => 'success', 'message' => 'Encuesta creada con éxito')));
 	}
 
 	/**
@@ -113,7 +116,39 @@ class SurveyController extends Controller {
 	 */
 	public function edit($id)
 	{
-		//
+        $survey = Survey::find($id);
+
+        if($survey == null){
+            return redirect('/survey')
+                ->with('message', array( 'type' => 'error', 'message' => 'Usuario no existe'));
+        }else{
+            $data = Unit::where('active', '=', 1)->get(array('id','name'));
+            foreach ($data as $key => $value)
+            {
+                $units[$value->id] = $value->name;
+            }
+
+            $data = Question::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','type','survey_id'));
+            foreach ($data as $key => $question)
+            {
+                $options = [];
+                $data = Option::where('active', '=', 1)->where('question_id', '=', $question->id)->get(array('id','name','question_id'));
+                foreach ($data as $key => $value)
+                {
+                    $options[$value->id] = $value->name;
+                }
+                if (isset($options)){
+                    $question['options']=$options;
+                }else{
+                    $question['options']='';
+                }
+                $questions[]= $question;
+
+                //$questions[$value->id] = $value;
+            }
+            return view('survey.update', compact('units','questions','survey'));
+        }
+
 	}
 
 	/**
@@ -122,9 +157,45 @@ class SurveyController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, CreateSurveyRequest $request)
 	{
-		//
+        $survey = Survey::findOrFail($id);
+        $survey->name = $request->input('name');
+        $survey->unit_id = $request->input('unit_id');
+        $survey->save();
+
+        $questions =  json_decode($request->input('qInput'));
+
+        $desactivateOld = DB::table('question')->where('survey_id', '=', $id)->update(array("active"=>0));
+
+        foreach ($questions as $question){
+            $qObject = new Question;
+            $qObject->name = $question->name;
+            $qObject->type = $question->type;
+            $qObject->survey_id = $id;
+            $qObject->save();
+
+            if ($question->options){
+                foreach ($question->options as $option){
+                    $oObject = new Option;
+                    $oObject->name = $option;
+                    $oObject->question_id = $qObject->id;
+                    $oObject->save();
+                }
+            }
+        }
+
+        $data = Unit::where('active', '=', 1)->get(array('id','name'));
+        foreach ($data as $key => $value)
+        {
+            $units[$value->id] = $value->name;
+        }
+        //return view('survey.list',array("units"=>$units,'message', array( 'type' => 'success', 'message' => 'Encuesta modificada con éxito')));
+
+
+        return redirect('/survey')
+            ->with('message', array( 'type' => 'success', 'message' => 'Encuesta modificada con éxito'))
+            ->with('units', $units);
 	}
 
 	/**
@@ -135,8 +206,40 @@ class SurveyController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		//
+        $survey = Survey::find($id);
+        $affectedRows = $survey->delete();
+
+        return response()->json(array('deleted' => $affectedRows));
 	}
+
+    /**
+     * Deactivate survey.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function deactivate($id)
+    {
+        $survey = Survey::find($id);
+        $survey->active = 0;
+        $survey->save();
+
+        return response()->json(array('survey' => $survey));
+    }
+    /**
+     * Activate survey.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function activate($id)
+    {
+        $survey = Survey::find($id);
+        $survey->active = 1;
+        $survey->save();
+
+        return response()->json(array('survey' => $survey));
+    }
 
 	/**
 	 * Surveys answered.
