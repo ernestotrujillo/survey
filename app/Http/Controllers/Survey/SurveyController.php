@@ -69,7 +69,7 @@ class SurveyController extends Controller {
 
         $survey = new Survey;
         $survey->name = $request->input('name');
-        $survey->unit_id = $request->input('unit');
+        $survey->unit_id = $request->input('unit_id');
         $survey->save();
 
         foreach ($request->input('questions') as $question){
@@ -157,9 +157,45 @@ class SurveyController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, CreateSurveyRequest $request)
 	{
-		//
+        $survey = Survey::findOrFail($id);
+
+        $survey = new Survey;
+        $survey->id = $id;
+        $survey->name = $request->input('name');
+        $survey->unit_id = $request->input('unit_id');
+        //$survey->save();
+
+        $questions =  json_decode($request->input('qInput'));
+        /*foreach ($questions as $question){
+            $qObject = new Question;
+            $qObject->name = $question->name;
+            $qObject->type = $question->type;
+            $qObject->survey_id = $id;
+            $qObject->save();
+
+            if ($question->options){
+                foreach ($question->options as $option){
+                    $oObject = new Option;
+                    $oObject->name = $option;
+                    $oObject->question_id = $qObject->id;
+                    $oObject->save();
+                }
+            }
+        }*/
+
+        $data = Unit::where('active', '=', 1)->get(array('id','name'));
+        foreach ($data as $key => $value)
+        {
+            $units[$value->id] = $value->name;
+        }
+        //return view('survey.list',array("units"=>$units,'message', array( 'type' => 'success', 'message' => 'Encuesta modificada con éxito')));
+
+
+        return redirect('/survey')
+            ->with('message', array( 'type' => 'success', 'message' => 'Encuesta modificada con éxito'))
+            ->with('units', $units);
 	}
 
 	/**

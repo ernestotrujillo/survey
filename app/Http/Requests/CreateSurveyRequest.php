@@ -23,7 +23,7 @@ class CreateSurveyRequest extends Request {
 	{
 		return [
 			"name"=>"required|max:250",
-            "unit"=>"required"
+            "unit_id"=>"required"
 		];
 	}
 
