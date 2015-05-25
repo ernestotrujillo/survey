@@ -175,7 +175,7 @@ class SurveyController extends Controller {
 
         if($survey == null){
             return redirect('/survey')
-                ->with('message', array( 'type' => 'error', 'message' => 'Usuario no existe'));
+                ->with('message', array( 'type' => 'error', 'message' => 'Encuesta no existe'));
         }else{
             $data = Unit::where('active', '=', 1)->get(array('id','name'));
             foreach ($data as $key => $value)
@@ -449,6 +449,62 @@ class SurveyController extends Controller {
         $affectedRows = DB::table('survey_user')->where('id', '=', $id)->delete();
 
         return response()->json(array('deleted' => $affectedRows));
+    }
+
+    /**
+     * Show the survey form for answer.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function getSurvey($id)
+    {
+        //check role of the user to set default unit or area
+        $user = Auth::user();
+        $survey = Survey::find($id);
+
+        if($survey == null)
+        {
+            return redirect('/dashboard/surveys')
+                ->with('message', array( 'type' => 'error', 'message' => 'Encuesta no existe'));
+        }
+        else
+        {
+            $area_query = DB::table('area_user')
+                ->select(DB::raw('area_user.area_id as area_id, area.unit_id as unit_id'))
+                ->join('area', 'area.id', '=', 'area_user.area_id')
+                ->where('area_user.user_id', '=', $user->id)
+                ->where('area_user.active', '=', 1)
+                ->first();
+
+            $unit = $area_query->unit_id;
+
+            if($survey->unit_id != $unit)
+            {
+                return redirect('/dashboard/surveys')
+                    ->with('message', array( 'type' => 'error', 'message' => 'No tiene acceso a esa pregunta'));
+            }
+
+            $data = Question::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','type','survey_id'));
+            foreach ($data as $key => $question)
+            {
+                $options = [];
+                $data = Option::where('active', '=', 1)->where('question_id', '=', $question->id)->get(array('id','name','question_id'));
+                foreach ($data as $key => $value)
+                {
+                    $options[$value->id] = $value->name;
+                }
+                if (isset($options)){
+                    $question['options']=$options;
+                }else{
+                    $question['options']='';
+                }
+                $questions[]= $question;
+
+            }
+            return view('survey.answer', compact('survey', 'questions'));
+        }
+
     }
 
 }
