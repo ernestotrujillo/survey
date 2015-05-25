@@ -19,6 +19,7 @@
 	<!-- ace styles -->
 	<link rel="stylesheet" href="{{ asset('/css/ace.css') }}" class="ace-main-stylesheet" id="main-ace-style" />
 
+	<link rel="stylesheet" href="{{ asset('/css/datepicker.css') }}" />
     <link rel="stylesheet" href="{{ asset('/css/dropzone.css') }}" />
 
     <link rel="stylesheet" href="{{ asset('/css/colobox.css') }}" />
@@ -315,6 +316,7 @@
 	<script src="{{ asset('/js/ace/ace.widget-on-reload.js') }}"></script>
 	<script src="{{ asset('/js/ace/ace.searchbox-autocomplete.js') }}"></script>
 	<script src="{{ asset('/js/jquery.colorbox.js') }}"></script>
+	<script src="{{ asset('/js/ace/date-time/bootstrap-datepicker.js') }}"></script>
 	{{--<script src="{{ asset('/js/dropzone.js') }}"></script>--}}
 
 	<!-- inline scripts related to this page -->

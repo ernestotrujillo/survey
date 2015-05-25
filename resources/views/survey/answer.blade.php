@@ -12,7 +12,7 @@
 
     <div class="page-header">
         <h1>
-            Encuesta
+            <?php if(isset($survey)) echo $survey->name; ?>
         </h1>
     </div>
 
@@ -33,9 +33,7 @@
 
             @include('errors.error')
 
-            @include('errors.error')
-
-            <form class="form-horizontal" role="form" method="POST" action="{{ url('/user') }}">
+            <form class="form-horizontal answer-view-form" role="form" method="POST" action="">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 @if (isset($questions))
@@ -124,13 +122,12 @@
             function draw_question(question){
                 var qNumber = $('.question').length + 1;
                 var questionName = question.name;
-                var qContainer = $('.questions-list');
                 var qType = question.type;
-                var answerElement = '';
-                var options = $('.row .options-ctn');
                 var qId = question.id;
+                var qContainer = $('.questions-list');
 
                 if (questionName.length > 0 && qType.length > 0){
+                    var answerElement = '';
                     var opciones = question.options;
                     if (typeof question.options == "object" ){
                         switch (qType) {
@@ -154,7 +151,7 @@
                                 break;
                             case '5':
                                 answerElement = '<div class="input-group col-xs-12 col-sm-5">' +
-                                '                  <input class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="dd-mm-yyyy" />' +
+                                '                  <input class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" />' +
                                 '                     <span class="input-group-addon">' +
                                 '                       <i class="fa fa-calendar bigger-110"></i>' +
                                 '                      </span>' +
@@ -177,12 +174,21 @@
 
                     }
                     $(qContainer).append(html);
-                    $(options).html('');
-                }else{
-                    alert('Ingrese una pregunta y seleccione un tipo de pregunta');
                 }
             }
 
+            $( ".answer-view-form" ).submit(function( event )
+            {
+                alert('not yet')
+                event.preventDefault();
+            });
+
+            $(document).on('focus',".date-picker", function(){
+                $(this).datepicker({
+                    autoclose: true,
+                    todayHighlight: true
+                });
+            });
         });
     </script>
 @endsection

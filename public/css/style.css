@@ -37,6 +37,12 @@
 
 #answer-tab .elem .time{ position: absolute; right: 0; bottom: 4px; font-size: 12px; color: #9B9B9B; }
 
+.answer-view-form .question{
+    padding-bottom: 16px;
+    border-top: 1px dashed #ccc;
+    margin: 10px 0;
+}
+
 /* Survey Style */
 .survey-form input.name{
     border: none;
