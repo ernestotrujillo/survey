@@ -227,9 +227,10 @@ class SurveyController extends Controller {
         $survey->save();
 
         $questions =  json_decode($request->input('qInput'));
+        $questId =  json_decode($request->input('qIdInput'));
         $imgsId =  json_decode($request->input('imgsInput'));
 
-        $desactivateOld = DB::table('question')->where('survey_id', '=', $id)->update(array("active"=>0));
+        $desactivateOld = DB::table('question')->where('survey_id', '=', $id)->whereNotIn('id', $questId)->update(array("active"=>0));
         $removeOldImgs = DB::table('survey_image')->where('survey_id', '=', $id)->whereNotIn('id', $imgsId)->update(array("active"=>0));
 
         //Images section

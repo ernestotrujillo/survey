@@ -70,7 +70,12 @@
 .survey-form.dropzone.dz-clickable.dz-started .fallback2 {
     display: none;
 }
-.survey-form .add-file{
+.survey-form .add-file, .survey-form .rem-file{
+    position:absolute;
+    right:-34px;
+}
+
+.survey-form .rem-file::active{
     position:absolute;
     right:-34px;
 }
