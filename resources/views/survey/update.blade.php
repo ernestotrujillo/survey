@@ -178,6 +178,7 @@
 
 
                     $(qContainer).append(html);
+                    $('#question-name').val('');
                     $(options).html('');
                 }else{
                     alert('Ingrese una pregunta y seleccione un tipo de pregunta');
@@ -261,11 +262,12 @@
 
             $('.survey-form .add-file').on('click', function(e){
                 e.preventDefault();
+                var inputFile = '<div class="row col-xs-12 col-sm-7">' +
+                    '<button class="rem-file btn btn-danger btn-sm col-xs-1 col-sm-1" onclick="remove_file(this)">' +
+                      '<i class="ace-icon fa fa-minus icon-only"></i>' +
+                      '</button><input name="file[]" type="file" multiple=""/></div>';
 
-
-                var inputFile = '<input name="file[]" type="file" multiple=""/>';
-
-                var parentCtn = $(this).parent('.row');
+                var parentCtn = $(this).parents('.widget-main');
 
                 $(parentCtn).append(inputFile);
 
@@ -301,6 +303,10 @@
 
         function remove_question(question){
             $(question).closest('div').remove();
+        }
+
+        function remove_file(file){
+            $(file).closest('.row').remove();
         }
 
         function get_checkboxes(qNumber,options){

@@ -32,7 +32,7 @@
                     </ul>
                 @endif
             </div>
-            <div class="row show-grid col-xs-12 col-sm-6">
+            <div class="row col-xs-12 col-sm-7">
                 <button class="add-file btn btn-success btn-sm col-xs-1 col-sm-1">
                     <i class="ace-icon fa fa-plus icon-only"></i>
                 </button>
