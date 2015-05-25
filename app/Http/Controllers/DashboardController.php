@@ -160,7 +160,40 @@ class DashboardController extends Controller {
 
     public function userDashboard()
     {
-        return view('dashboard.user');
+        //check role of the user to set default unit or area
+        $user = Auth::user();
+
+        $area_query = DB::table('area_user')
+            ->select(DB::raw('area_user.area_id as area_id, area.unit_id as unit_id'))
+            ->join('area', 'area.id', '=', 'area_user.area_id')
+            ->where('area_user.user_id', '=', $user->id)
+            ->where('area_user.active', '=', 1)
+            ->first();
+
+        $unit = $area_query->unit_id;
+        $area = $area_query->area_id;
+
+        // Encuestas no realizadas
+        $surveys_count = DB::table('survey')
+            ->select(DB::raw('count(id) as count'))
+            ->where('unit_id', '=', $unit)
+            ->where('active', '=', 1)
+            ->whereNotIn('id', function($query) use ($user)
+            {
+                $query->select(DB::raw('id'))
+                    ->from('survey_user')
+                    ->where('user_id', '=', $user->id);
+            })
+            ->get();
+
+        //encuestas realizadas
+        $mysurveys_count = DB::table('survey_user')
+            ->select(DB::raw('count(survey.id) as count'))
+            ->join('survey', 'survey.id', '=', 'survey_user.survey_id')
+            ->where('survey_user.user_id', '=', $user->id)
+            ->get();
+
+        return view('dashboard.user', compact('survey_count', 'mysurveys_count'));
     }
 
     public function rangeMonth($datestr) {

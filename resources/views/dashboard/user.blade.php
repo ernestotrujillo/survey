@@ -179,19 +179,20 @@
         <?php $colors = array( "#68BC31", "#2091CF", "#DA5430", "#FEE074", "#AF4E96", "#a3be8c", "#96b5b4", "#8fa1b3", "#b48ead" ); ?>
 
         var doughnutData = [
-        <?php
-            if(isset($stadistics)){
-                foreach($stadistics as $key => $stadistic){
-                    $key = $key % 10;
-                    echo '{
-                        value: '.$stadistic->count.',
-                        color:"'.$colors[$key].'",
-                        highlight: "'.$colors[$key].'",
-                        label: "'.$stadistic->firstname. ' ' .$stadistic->lastname.'"
-                    },';
-                }
-            }
-        ?>
+            <?php if(isset($mysurveys_count) && isset($surveys_count)) { ?>
+            {
+                value: '<?php echo $mysurveys_count; ?>',
+                color: "#68BC31",
+                highlight: "#68BC31",
+                label: "Realizadas"
+            },
+            {
+                value: '<?php echo $surveys_count; ?>',
+                color: "#2091CF",
+                highlight: "#2091CF",
+                label: "No Realizadas"
+            },
+            <?php } ?>
          ];
 
     </script>
