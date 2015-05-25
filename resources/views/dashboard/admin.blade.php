@@ -58,7 +58,7 @@
                                             <!-- #section:pages/dashboard.comments -->
                                             <div class="comments ace-scroll" style="position: relative;">
                                                 <div class="scroll-content" style="max-height: 300px;">
-                                                    <?php if(isset($last_survey_answer)){ ?>
+                                                    <?php if(isset($last_survey_answer) && count($last_survey_answer) > 0){ ?>
                                                         <?php foreach ($last_survey_answer as $answer): ?>
                                                             <div class="itemdiv commentdiv">
                                                                 <div class="elem">
@@ -94,7 +94,7 @@
                                                 </a>
                                             </div>
 
-                                            <div class="hr hr-double hr8"></div>
+                                            <div class="hr hr8"></div>
 
                                             <!-- /section:pages/dashboard.comments -->
                                         </div>
@@ -154,10 +154,12 @@
                                     <div class="dialogs dashboard-unit-stadistic">
                                         <div class="chart-stadistic_unit row">
                                             <div id="canvas-holder" class="col-xs-7 col-sm-7 col-md-7 col-md-offset-1">
-                                                <canvas id="chart-area" width="100%" height="100%"/>
+                                                <canvas id="chart-area" width="100%" height="100%">
+                                                </canvas>
                                             </div>
                                         </div>
-                                        <div class="right-btn">
+                                        <div class="hr hr8"></div>
+                                        <div class="center">
                                             <a href="{{ url('/survey/report') }}" class="btn btn-sm btn-white btn-info">Ver reporte
                                                 <i class="ace-icon fa fa-arrow-right"></i>
                                             </a>
@@ -202,31 +204,37 @@
     <script type="text/javascript">
         jQuery(function($) {
 
-            var ctx = document.getElementById("chart-area").getContext("2d");
-            window.myDoughnut = new Chart(ctx).Pie(doughnutData, {
-                responsive : true,
-                animationEasing : "easeOutBounce"
-                //animation: false
-            });
-
-            var helpers = Chart.helpers;
-
-            var legendHolder = document.createElement('div');
-            legendHolder.innerHTML = myDoughnut.generateLegend();
-            helpers.each(legendHolder.firstChild.childNodes, function(legendNode, index){
-                helpers.addEvent(legendNode, 'mouseover', function(){
-                    var activeSegment = myDoughnut.segments[index];
-                    activeSegment.save();
-                    activeSegment.fillColor = activeSegment.highlightColor;
-                    myDoughnut.showTooltip([activeSegment]);
-                    activeSegment.restore();
+            if(doughnutData.length > 0){
+                var ctx = document.getElementById("chart-area").getContext("2d");
+                window.myDoughnut = new Chart(ctx).Pie(doughnutData, {
+                    responsive : true,
+                    animationEasing : "easeOutBounce"
+                    //animation: false
                 });
-            });
-            helpers.addEvent(legendHolder.firstChild, 'mouseout', function(){
-                myDoughnut.draw();
-            });
-            console.log(legendHolder.outerHTML)
-            jQuery(".chart-stadistic_unit").append(legendHolder.firstChild);
+
+                var helpers = Chart.helpers;
+
+                var legendHolder = document.createElement('div');
+                legendHolder.innerHTML = myDoughnut.generateLegend();
+                helpers.each(legendHolder.firstChild.childNodes, function(legendNode, index){
+                    helpers.addEvent(legendNode, 'mouseover', function(){
+                        var activeSegment = myDoughnut.segments[index];
+                        activeSegment.save();
+                        activeSegment.fillColor = activeSegment.highlightColor;
+                        myDoughnut.showTooltip([activeSegment]);
+                        activeSegment.restore();
+                    });
+                });
+                helpers.addEvent(legendHolder.firstChild, 'mouseout', function(){
+                    myDoughnut.draw();
+                });
+                console.log(legendHolder.outerHTML)
+                jQuery(".chart-stadistic_unit").append(legendHolder.firstChild);
+            }
+            else
+            {
+                $('#canvas-holder').html('No hay data disponible')
+            }
         });
     </script>
 @endsection

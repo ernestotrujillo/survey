@@ -105,11 +105,11 @@
 
                         <td>
                             <div class="hidden-sm hidden-xs btn-group">
-                                <a href="{{ URL::to('/user/edit/'.$user->survey_id) }}" class="blue" title="Ver">
+                                <a href="javascript:void(0);" data-id="{{ $user->survey_user_id }}" class="view-answers blue" title="Ver">
                                     <i class="ace-icon glyphicon glyphicon-eye-open"></i>
                                 </a>
 
-                                <a href="javascript:deleteUser('{{ $user->survey_id }}');" class="red" title="Eliminar">
+                                <a href="javascript:deleteSurveyAnswer('{{ $user->survey_user_id }}');" class="red" title="Eliminar">
                                     <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                 </a>
                             </div>
@@ -122,7 +122,7 @@
 
                                     <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                         <li>
-                                            <a href="{{ URL::to('/user/edit/'.$user->survey_id) }}" class="tooltip-info" data-rel="tooltip" title="Ver">
+                                            <a href="javascript:void(0);" data-id="{{ $user->survey_user_id }}" class="tooltip-info view-answers" data-rel="tooltip" title="Ver">
                                                 <span class="blue">
                                                     <i class="ace-icon glyphicon glyphicon-eye-open"></i>
                                                 </span>
@@ -130,7 +130,7 @@
                                         </li>
 
                                         <li>
-                                            <a href="javascript:deleteUser('{{ $user->survey_id }}');" class="tooltip-success" data-rel="tooltip" title="Eliminar">
+                                            <a href="javascript:deleteSurveyAnswer('{{ $user->survey_user_id }}');" class="tooltip-success" data-rel="tooltip" title="Eliminar">
                                                 <span class="red">
                                                     <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                                 </span>
@@ -161,6 +161,29 @@
 
         </div><!-- /.col -->
     </div><!-- /.row -->
+
+    <!-- MODALES -->
+    <div id="modal-answers" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="smaller lighter blue no-margin">Respuestas</h3>
+                </div>
+
+                <div class="modal-body">
+                    Respuestas
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
 @endsection
 
 @section('script')
@@ -260,23 +283,30 @@
             <?php }else{ ?>
                 $('.filter-buttom').addClass('hidden');
             <?php } ?>
+
+
+            //select/deselect a row when the checkbox is checked/unchecked
+            $('#simple-table').on('click', '.view-answers' , function(event){
+                event.preventDefault();
+                $('#modal-answers').modal('show')
+            });
+
         });
 
-        function deleteUser(id) {
-            if (confirm('¿Esta seguro de eliminar el usuario?')) {
+        function deleteSurveyAnswer(id) {
+            if (confirm('¿Esta seguro de eliminar la encuesta?')) {
                 $.ajax({
-                    /*type: 'POST',
-                    url: '{{ URL::to('/') }}/user/' + id, //resource
+                    type: 'POST',
+                    url: '{{ URL::to('/') }}/survey/user/delete/' + id, //resource
                     data: {
-                        _method: 'DELETE',
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(data) {
-                        if (data.deleted > 0) window.location = 'user';
+                        if (data.deleted > 0) window.location = '{{ URL::to('/') }}/survey/report';
                     },
                     error:function(data) {
                         alert('Disculpe. Ocurrió un error')
-                    }*/
+                    }
                 });
             }
         }

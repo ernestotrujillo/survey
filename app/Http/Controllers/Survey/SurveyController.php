@@ -440,4 +440,11 @@ class SurveyController extends Controller {
         return view('user.my_survey_list', compact('surveys'));
     }
 
+    public function deleteSurveyUser($id)
+    {
+        $affectedRows = DB::table('survey_user')->where('id', '=', $id)->delete();
+
+        return response()->json(array('deleted' => $affectedRows));
+    }
+
 }
