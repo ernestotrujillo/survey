@@ -10,12 +10,20 @@
             <div class="form-group col-xs-12 col-sm-12">
                 {!! Form::select('unit_id', $units, null, array('class' => 'col-xs-12 col-sm-6 unit')) !!}
             </div>
-            <input name="file[]" type="file" id="exampleInputFile" multiple>
-            <div class="fallback">
+
+            <div class="row show-grid col-xs-12 col-sm-6">
+                <button class="add-file btn btn-success btn-sm col-xs-1 col-sm-1">
+                    <i class="ace-icon fa fa-plus icon-only"></i>
+                </button>
+                <input name="file[]" type="file" id="id-input-file-2" multiple=""/>
+            </div>
+
+
+            {{--<div class="fallback">
                 {!! Form::file('file') !!}
             </div>
             <div class="fallback2"></div>
-            <div class="previewsContainer"></div>
+            <div class="previewsContainer"></div>--}}
         </div>
     </div>
 </div>
@@ -105,6 +113,7 @@
     </div>
 </div>
 
+{{--
 <script type="text/javascript">
     jQuery(function($){
 
@@ -136,4 +145,4 @@
         }
 
     });
-</script>
+</script>--}}

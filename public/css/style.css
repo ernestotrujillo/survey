@@ -64,6 +64,10 @@
 .survey-form.dropzone.dz-clickable.dz-started .fallback2 {
     display: none;
 }
+.survey-form .add-file{
+    position:absolute;
+    right:-34px;
+}
 
 .dropzone a.dz-remove, .dropzone-previews a.dz-remove {
     border: none;

@@ -232,6 +232,45 @@
 
             });
 
+            $('#id-input-file-1 , #id-input-file-2').ace_file_input({
+                no_file:'No File ...',
+                btn_choose:'Choose',
+                btn_change:'Change',
+                droppable:false,
+                onchange:null,
+                thumbnail: 'true | large',
+                whitelist:'gif|png|jpg|jpeg',
+                blacklist:'exe|php'
+                //onchange:''
+                //
+            });
+
+            $('.survey-form .add-file').on('click', function(e){
+                e.preventDefault();
+
+
+                var inputFile = '<input name="file[]" type="file" multiple=""/>';
+
+                var parentCtn = $(this).parent('.row');
+
+                $(parentCtn).append(inputFile);
+
+                $(parentCtn).find('input').last().ace_file_input({
+                    no_file:'No File ...',
+                    btn_choose:'Choose',
+                    btn_change:'Change',
+                    droppable:false,
+                    onchange:null,
+                    thumbnail: 'true | large',
+                    whitelist:'gif|png|jpg|jpeg',
+                    blacklist:'exe|php'
+                    //onchange:''
+                    //
+                });
+
+
+            });
+
         });
 
         //Selecting the type of question

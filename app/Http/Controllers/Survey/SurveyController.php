@@ -93,6 +93,8 @@ class SurveyController extends Controller {
                         $upload_success = $file->move($destinationPath, $filename);
                         $uploadcount++;
                     }
+                }elseif ($file == null){
+                    $uploadcount++;
                 }
 
             }
@@ -100,16 +102,18 @@ class SurveyController extends Controller {
             if ($uploadcount != $file_count) {
                 return Redirect::back()->with('message', array('type' => 'error', 'message' => 'Error subiendo archivos'));
             } else {
+                $survey->save();
                 foreach ($files as $file) {
-                    $survey->save();
 
-                    $surveyImg = new SurveyImage();
-                    //$surveyImg->original_filename = $file->getClientOriginalName();
-                    $extension = $file->getClientOriginalExtension();
-                    $surveyImg->name = $file->getClientOriginalName();
-                    $surveyImg->image = $file->getFilename().$file->getClientOriginalName();
-                    $surveyImg->survey_id = $survey->id;
-                    $surveyImg->save();
+                    if ($file) {
+                        $surveyImg = new SurveyImage();
+                        //$surveyImg->original_filename = $file->getClientOriginalName();
+                        $extension = $file->getClientOriginalExtension();
+                        $surveyImg->name = $file->getClientOriginalName();
+                        $surveyImg->image = $file->getFilename() . $file->getClientOriginalName();
+                        $surveyImg->survey_id = $survey->id;
+                        $surveyImg->save();
+                    }
                 }
 
             }
