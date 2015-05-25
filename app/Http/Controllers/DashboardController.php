@@ -180,20 +180,27 @@ class DashboardController extends Controller {
             ->where('active', '=', 1)
             ->whereNotIn('id', function($query) use ($user)
             {
-                $query->select(DB::raw('id'))
+                $query->select(DB::raw('survey_id'))
                     ->from('survey_user')
                     ->where('user_id', '=', $user->id);
             })
-            ->get();
+            ->first();
 
         //encuestas realizadas
         $mysurveys_count = DB::table('survey_user')
             ->select(DB::raw('count(survey.id) as count'))
             ->join('survey', 'survey.id', '=', 'survey_user.survey_id')
             ->where('survey_user.user_id', '=', $user->id)
+            ->first();
+
+        //encuestas realizadas
+        $last_survey_answer = DB::table('survey_user')
+            ->select(DB::raw('survey.name as survey_name, survey_user.created_at as created_at'))
+            ->join('survey', 'survey.id', '=', 'survey_user.survey_id')
+            ->where('survey_user.user_id', '=', $user->id)
             ->get();
 
-        return view('dashboard.user', compact('survey_count', 'mysurveys_count'));
+        return view('dashboard.user', compact('surveys_count', 'mysurveys_count', 'last_survey_answer'));
     }
 
     public function rangeMonth($datestr) {

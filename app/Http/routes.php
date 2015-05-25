@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth', 'user']], function()
 	Route::get('dashboard/surveys', 'Survey\SurveyController@surveyList');
 
 	Route::get('survey/answer/{id}', 'Survey\SurveyController@getSurvey');
+    Route::post('survey/answer', 'Survey\SurveyController@postAnswers');
 
 });
 

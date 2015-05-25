@@ -65,10 +65,6 @@
                                                                     <div class="text">
                                                                         <h4 class="blue lighter"><?php echo $answer->survey_name; ?></h4>
                                                                     </div>
-                                                                    <div class="name">
-                                                                        <label>Usuario:</label>
-                                                                        <?php echo $answer->firstname .' '. $answer->lastname; ?>
-                                                                    </div>
                                                                     <div class="time">
                                                                         <?php echo $answer->created_at; ?>
                                                                     </div>
@@ -181,13 +177,13 @@
         var doughnutData = [
             <?php if(isset($mysurveys_count) && isset($surveys_count)) { ?>
             {
-                value: '<?php echo $mysurveys_count; ?>',
+                value: '<?php echo $mysurveys_count->count; ?>',
                 color: "#68BC31",
                 highlight: "#68BC31",
                 label: "Realizadas"
             },
             {
-                value: '<?php echo $surveys_count; ?>',
+                value: '<?php echo $surveys_count->count; ?>',
                 color: "#2091CF",
                 highlight: "#2091CF",
                 label: "No Realizadas"

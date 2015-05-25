@@ -465,7 +465,7 @@ class SurveyController extends Controller {
             ->where('active', '=', 1)
             ->whereNotIn('id', function($query) use ($user)
             {
-                $query->select(DB::raw('id'))
+                $query->select(DB::raw('survey_id'))
                     ->from('survey_user')
                     ->where('user_id', '=', $user->id);
             })
@@ -524,40 +524,118 @@ class SurveyController extends Controller {
         }
         else
         {
-            $area_query = DB::table('area_user')
-                ->select(DB::raw('area_user.area_id as area_id, area.unit_id as unit_id'))
-                ->join('area', 'area.id', '=', 'area_user.area_id')
-                ->where('area_user.user_id', '=', $user->id)
-                ->where('area_user.active', '=', 1)
+            $survey_user = DB::table('survey_user')
+                ->select(DB::raw('id'))
+                ->where('user_id', '=', $user->id)
+                ->where('survey_id', '=', $id)
                 ->first();
 
-            $unit = $area_query->unit_id;
-
-            if($survey->unit_id != $unit)
+            if(empty($survey_user))
             {
-                return redirect('/dashboard/surveys')
-                    ->with('message', array( 'type' => 'error', 'message' => 'No tiene acceso a esa pregunta'));
-            }
+                $area_query = DB::table('area_user')
+                    ->select(DB::raw('area_user.area_id as area_id, area.unit_id as unit_id'))
+                    ->join('area', 'area.id', '=', 'area_user.area_id')
+                    ->where('area_user.user_id', '=', $user->id)
+                    ->where('area_user.active', '=', 1)
+                    ->first();
 
-            $data = Question::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','type','survey_id'));
-            foreach ($data as $key => $question)
-            {
-                $options = [];
-                $data = Option::where('active', '=', 1)->where('question_id', '=', $question->id)->get(array('id','name','question_id'));
-                foreach ($data as $key => $value)
+                $unit = $area_query->unit_id;
+
+                if($survey->unit_id != $unit)
                 {
-                    $options[$value->id] = $value->name;
+                    return redirect('/dashboard/surveys')
+                        ->with('message', array( 'type' => 'error', 'message' => 'No tiene acceso a esa pregunta'));
                 }
-                if (isset($options)){
-                    $question['options']=$options;
-                }else{
-                    $question['options']='';
-                }
-                $questions[]= $question;
 
+                $data = Question::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','type','survey_id'));
+                foreach ($data as $key => $question)
+                {
+                    $options = [];
+                    $data = Option::where('active', '=', 1)->where('question_id', '=', $question->id)->get(array('id','name','question_id'));
+                    foreach ($data as $key => $value)
+                    {
+                        $options[$value->id] = $value->name;
+                    }
+                    if (isset($options)){
+                        $question['options']=$options;
+                    }else{
+                        $question['options']='';
+                    }
+                    $questions[]= $question;
+
+                }
+                return view('survey.answer', compact('survey', 'questions'));
             }
-            return view('survey.answer', compact('survey', 'questions'));
+            else
+            {
+                return redirect('/dashboard/mysurveys')
+                    ->with('message', array( 'type' => 'error', 'message' => 'Esta encuesta ya fue realizada.'));
+            }
         }
+
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function postAnswers()
+    {
+        //check role of the user to set default unit or area
+        $user = Auth::user();
+        if (Input::has('data'))
+        {
+            $data = Input::get('data');
+
+            DB::transaction(function() use($data, $user)
+            {
+                $survey_id = $data['survey_id'];
+                $question_count = $data['question_count'];
+                $answers = $data['answers'];
+                $status = $data['status'];
+                $now = date('Y-m-d H:i:s', strtotime("now"));
+
+                $id = DB::table('survey_user')->insertGetId(
+                    ['survey_id' => $survey_id, 'user_id' => $user->id, 'status' => $status, 'created_at' => $now, 'updated_at' => $now]
+                );
+
+                $cicle = null;
+                foreach($answers as $value)
+                {
+                    $answerdb = null;
+                    switch ($value['question_type']) {
+                        case '1':
+                        case '5':
+                            $answerdb = ['value' => $value['value'], 'survey_user' => $id, 'question_id' => $value['question_id'], 'created_at' => $now, 'updated_at' => $now];
+                            break;
+                        case '2':
+                            $select = implode("-", $value['value']);
+                            $answerdb = ['value' => $select, 'survey_user' => $id, 'question_id' => $value['question_id'], 'created_at' => $now, 'updated_at' => $now];
+                            break;
+                        case '3':
+                        case '4':
+                            $answerdb = ['value' => $value['value'], 'survey_user' => $id, 'question_id' => $value['question_id'], 'option_id' => $value['value'], 'created_at' => $now, 'updated_at' => $now];
+                            break;
+                        case '6':
+                            $cicle = $value['value'];
+                            break;
+                    }
+                    if($answerdb != null)
+                        DB::table('answer')->insert($answerdb);
+                }
+
+                DB::table('survey_user')
+                    ->where('id', $id)
+                    ->update(['cicle' => $cicle]);
+
+            });
+
+            return response()->json(array('success' => true));
+        }
+
+        return redirect('/dashboard/surveys')
+            ->with('message', array( 'type' => 'error', 'message' => 'Disculpe! Hay un error en los datos.'));
 
     }
 
