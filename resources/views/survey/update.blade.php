@@ -36,6 +36,7 @@
 				{!! Form::model($survey, array('method'=>'PUT', 'url' => url('/survey/'.$survey->id), 'files'=>true, 'role'=>'form',  'class'=>'form-horizontal survey-form')) !!}
                 <input type="hidden" id="surveyId" name="surveyId" value="{{ $survey->id }}">
                 <input type="hidden" id="qInput" name="qInput" value="">
+                <input type="hidden" id="qIdInput" name="qIdInput" value="">
                 <input type="hidden" id="imgsInput" name="imgsInput" value="">
                 @if (isset($questions))
                     @foreach ($questions as $question)
@@ -210,14 +211,16 @@
 
                     //Getting questions
                     var questions = [];
-                    var qObj,qNumber, qName, qType;
+                    var oldQuestions = [];
+                    var qId,qObj,qNumber, qName, qType;
 
                     $.each(qElements, function( index, value ) {
-                        qNumber = $(value).attr('qnumber');
+                        qId = $(value).attr('qid');
                         qName = $(value).attr('qname');
                         qType = $(value).attr('qtype');
 
                         qObj = {};
+                        qObj['id'] =qId;
                         qObj['name'] =qName;
                         qObj['type'] =qType;
 
@@ -233,11 +236,19 @@
                                qObj['options'] = get_options(qNumber);
                                break;
                         }
-                        questions.push(qObj);
+
+                        if(typeof qId !='undefined' &&  qId.length > 0){
+                            oldQuestions.push(qId);
+                        }else{
+                            questions.push(qObj);
+                        }
                     });
 
                     var qInput = $('#qInput');
                     $(qInput).val(JSON.stringify(questions));
+
+                    var qIdInput = $('#qIdInput');
+                    $(qIdInput).val(JSON.stringify(oldQuestions));
 
                     $('.survey-form').submit();
 
@@ -392,6 +403,7 @@
             var qNumber = $('.question').length + 1;
             var questionName = question.name;
             var qContainer = $('.widget-result .widget-main');
+            var qId = question.id;
             var qType = question.type;
             var answerElement = '';
             var options = $('.row .options-ctn');
@@ -437,7 +449,7 @@
                             break;
                     }
 
-                    var html = '<div class="row show-grid col-xs-12 col-sm-10 question" qtype='+qType+' qnumber='+qNumber+' qname="'+questionName+'">' +
+                    var html = '<div class="row show-grid col-xs-12 col-sm-10 question" qId='+qId+' qtype='+qType+' qnumber='+qNumber+' qname="'+questionName+'">' +
                      '              <h2 class="text-muted">' +
                      '                  <span class="number">'+ qNumber +'</span>' +
                      '                  <small>' +
