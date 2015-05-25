@@ -36,7 +36,7 @@
 
                 {!! Form::close() !!}
 
-				{!! Form::open(array('method'=>'POST' , 'url' => url('/survey'), 'files'=>true, 'role'=>'form',  'class'=>'form-horizontal survey-form dropzone')) !!}
+				{!! Form::open(array('method'=>'POST' , 'url' => url('/survey'), 'files'=>true, 'role'=>'form',  'class'=>'form-horizontal survey-form')) !!}
                 <input type="hidden" id="qInput" name="qInput" value="">
                 @include("survey.form",['submitButtonText'=>'Crear Encuesta'])
 
