@@ -55,7 +55,7 @@
                             </td>
                             <td class="hidden-xs"><?php echo $survey->created_at; ?></td>
 
-                            <td class="hidden-sm hidden-xs">
+                            <td>
                                 <div class="hidden-sm hidden-xs btn-group">
                                     <a href="{{ URL::to('/survey/'.$survey->survey_user_id.'/edit') }}" class="blue" title="ver">
                                         <i class="ace-icon glyphicon glyphicon-eye-open"></i>

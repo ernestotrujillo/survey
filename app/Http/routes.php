@@ -37,6 +37,8 @@ Route::group(['middleware' => ['auth', 'user']], function()
 	Route::get('dashboard/mysurveys', 'Survey\SurveyController@mySurveyList');
 	Route::get('dashboard/surveys', 'Survey\SurveyController@surveyList');
 
+	Route::get('survey/answer/{id}', 'Survey\SurveyController@getSurvey');
+
 });
 
 // MANAGER ALLOWED ROUTES
