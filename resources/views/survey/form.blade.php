@@ -10,7 +10,28 @@
             <div class="form-group col-xs-12 col-sm-12">
                 {!! Form::select('unit_id', $units, null, array('class' => 'col-xs-12 col-sm-6 unit')) !!}
             </div>
-
+            <div class="gallery row show-grid col-xs-12 col-sm-12">
+                @if(isset($surveyImgs))
+                    <ul class="ace-thumbnails clearfix surveyImgs">
+                        @foreach ($surveyImgs as $image)
+                            <li>
+                                <div>
+                                    <img value="{{ $image->id }}" width="150" height="150" alt="150x150" src="{{ url('uploads')}}/{{ $image->image }}" />
+                                    <div class="text">
+                                        <div class="inner">
+                                            <span>{{ $image->name }}</span>
+                                            <br />
+                                            <a href="#" class="delete-img">
+                                                <i class="ace-icon fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
             <div class="row show-grid col-xs-12 col-sm-6">
                 <button class="add-file btn btn-success btn-sm col-xs-1 col-sm-1">
                     <i class="ace-icon fa fa-plus icon-only"></i>
@@ -112,7 +133,7 @@
         </button>
     </div>
 </div>
-
+<!-- inline scripts related to this page -->
 {{--
 <script type="text/javascript">
     jQuery(function($){

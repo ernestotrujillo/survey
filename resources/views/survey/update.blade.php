@@ -33,9 +33,10 @@
 
 				<!-- view handling messages -->
 				@include('errors.error')
-				{!! Form::model($survey, array('method'=>'PUT', 'url' => url('/survey/'.$survey->id), 'role'=>'form',  'class'=>'form-horizontal survey-form')) !!}
+				{!! Form::model($survey, array('method'=>'PUT', 'url' => url('/survey/'.$survey->id), 'files'=>true, 'role'=>'form',  'class'=>'form-horizontal survey-form')) !!}
                 <input type="hidden" id="surveyId" name="surveyId" value="{{ $survey->id }}">
                 <input type="hidden" id="qInput" name="qInput" value="">
+                <input type="hidden" id="imgsInput" name="imgsInput" value="">
                 @if (isset($questions))
                     @foreach ($questions as $question)
                         <input name="respQuestions[]" id="respQuestions" type="hidden" value='{{$question}}'>
@@ -54,7 +55,6 @@
 @section('script')
     <script type="text/javascript">
         jQuery(function($) {
-
             var questions = $('input[name="respQuestions[]"]');
 
             if (questions.length > 0){
@@ -194,6 +194,20 @@
                 var unit = $('.unit').val();
 
                 if (surveyName.length > 0 && qElements.length > 0 && unit.length > 0){
+
+                    //getting images list
+                    var surveyImgs = $('.surveyImgs img');
+
+                    if (surveyImgs.length > 0 ){
+                        var images = [];
+                        $.each(surveyImgs, function( index, value ) {
+                            images.push($(value).attr('value'));
+                        });
+                        var imgsInput = $('#imgsInput');
+                        $(imgsInput).val(JSON.stringify(images));
+                    }
+
+                    //Getting questions
                     var questions = [];
                     var qObj,qNumber, qName, qType;
 
@@ -271,6 +285,13 @@
 
             });
 
+            $('.survey-form a.delete-img').on('click', function(e){
+                e.preventDefault();
+
+                var parentCtn = $(this).parents('li');
+
+                $(parentCtn).remove();
+            });
         });
 
         //Selecting the type of question

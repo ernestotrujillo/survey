@@ -173,6 +173,13 @@ class SurveyController extends Controller {
 	{
         $survey = Survey::find($id);
 
+        $surveyImgsData = SurveyImage::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','image','survey_id'));
+        foreach ($surveyImgsData as $key => $value)
+        {
+            $surveyImgs[$value->id] = $value;
+        }
+
+
         if($survey == null){
             return redirect('/survey')
                 ->with('message', array( 'type' => 'error', 'message' => 'Encuesta no existe'));
@@ -201,7 +208,7 @@ class SurveyController extends Controller {
 
                 //$questions[$value->id] = $value;
             }
-            return view('survey.update', compact('units','questions','survey'));
+            return view('survey.update', compact('units','questions','survey','surveyImgs'));
         }
 
 	}
@@ -220,9 +227,55 @@ class SurveyController extends Controller {
         $survey->save();
 
         $questions =  json_decode($request->input('qInput'));
+        $imgsId =  json_decode($request->input('imgsInput'));
 
         $desactivateOld = DB::table('question')->where('survey_id', '=', $id)->update(array("active"=>0));
+        $removeOldImgs = DB::table('survey_image')->where('survey_id', '=', $id)->whereNotIn('id', $imgsId)->update(array("active"=>0));
 
+        //Images section
+        $files = $request->file('file');
+        if($files) {
+            $file_count = count($files);
+            $uploadcount = 0;
+            foreach ($files as $file) {
+                if (File::exists($file)) {
+                    $rules = array('file' => 'required|mimes:png,gif,jpeg'); //'required|mimes:png,gif,jpeg,txt,pdf,doc'
+                    $validator = Validator::make(array('file' => $file), $rules);
+                    if ($validator->passes()) {
+                        //$extension = $file->getClientOriginalExtension();
+
+                        $destinationPath = 'uploads';
+                        $filename = $file->getFilename().$file->getClientOriginalName();
+                        $upload_success = $file->move($destinationPath, $filename);
+                        $uploadcount++;
+                    }
+                }elseif ($file == null){
+                    $uploadcount++;
+                }
+
+            }
+
+            if ($uploadcount != $file_count) {
+                return Redirect::back()->with('message', array('type' => 'error', 'message' => 'Error subiendo archivos'));
+            } else {
+                $survey->save();
+                foreach ($files as $file) {
+
+                    if ($file) {
+                        $surveyImg = new SurveyImage();
+                        //$surveyImg->original_filename = $file->getClientOriginalName();
+                        $extension = $file->getClientOriginalExtension();
+                        $surveyImg->name = $file->getClientOriginalName();
+                        $surveyImg->image = $file->getFilename() . $file->getClientOriginalName();
+                        $surveyImg->survey_id = $survey->id;
+                        $surveyImg->save();
+                    }
+                }
+
+            }
+        }
+
+        // Questions section
         foreach ($questions as $question){
             $qObject = new Question;
             $qObject->name = $question->name;
