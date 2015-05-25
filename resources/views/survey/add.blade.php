@@ -49,9 +49,6 @@
 @section('script')
     <script type="text/javascript">
         jQuery(function($) {
-
-
-
             //Selecting the type of question
             $('.question-type li a').on('click', function(e){
                 e.preventDefault();
@@ -207,17 +204,8 @@
 
                     var qInput = $('#qInput');
                     $(qInput).val(JSON.stringify(questions));
-
+                    console.log( $( '.survey-form' ).serialize() );
                     $('.survey-form').submit();
-                    /*$.ajax({
-                        url: '{!!  url("/survey") !!}',
-                        type: "POST",
-                        dataType: 'json',
-                        data: survey,
-                        success: function(data){
-                            console.log(data);
-                        }
-                    });*/
 
                 }else{
                     alert('Por favor ingrese un nombre para la encuesta, unidad y al menos una pregunta');
@@ -225,6 +213,44 @@
 
             });
 
+            $('#id-input-file-1 , #id-input-file-2').ace_file_input({
+                no_file:'No File ...',
+                btn_choose:'Choose',
+                btn_change:'Change',
+                droppable:false,
+                onchange:null,
+                thumbnail: 'true | large',
+                whitelist:'gif|png|jpg|jpeg',
+                blacklist:'exe|php'
+                //onchange:''
+                //
+            });
+
+            $('.survey-form .add-file').on('click', function(e){
+                e.preventDefault();
+
+
+                var inputFile = '<input name="file[]" type="file" multiple=""/>';
+
+                var parentCtn = $(this).parent('.row');
+
+                $(parentCtn).append(inputFile);
+
+                $(parentCtn).find('input').last().ace_file_input({
+                    no_file:'No File ...',
+                    btn_choose:'Choose',
+                    btn_change:'Change',
+                    droppable:false,
+                    onchange:null,
+                    thumbnail: 'true | large',
+                    whitelist:'gif|png|jpg|jpeg',
+                    blacklist:'exe|php'
+                    //onchange:''
+                    //
+                });
+
+
+            });
 
         });
 
