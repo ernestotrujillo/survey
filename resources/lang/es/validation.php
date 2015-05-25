@@ -91,6 +91,8 @@ return [
 		],
 		'password' => [
 			'required' => 'El campo password es requerido',
+			'confirmed' => 'Debe confirmar el pasword correctamente',
+			'min' => 'El password debe poseer al menos 6 caracteres',
 		],
 		'unumber' => [
 			'required' => 'El campo unumber es requerido',

@@ -22,7 +22,11 @@ Route::get('logout', 'Auth\AuthController@getlogout');
 //Area routes
 Route::get('area/filter/unit/{id}', 'AreaController@filterByUnit');
 Route::resource('area', 'AreaController', ['only' => ['index']]);
-//Route::controller('area/filter/unit/{id}', 'AreaController@filterbyunit');
+
+
+Route::get('profile', 'Auth\AuthController@getprofile');
+Route::post('profile', 'Auth\AuthController@postprofile');
+Route::post('profile/password', 'Auth\AuthController@postpassword');
 
 // USER ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'user']], function()

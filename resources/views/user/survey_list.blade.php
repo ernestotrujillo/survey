@@ -127,7 +127,7 @@
                 if(this.checked) $row.addClass(active_class);
                 else $row.removeClass(active_class);
             });
-            
+
         });
 
         function deleteSurvey(id) {

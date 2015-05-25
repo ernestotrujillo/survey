@@ -75,12 +75,13 @@
 				</div><!-- /.widget-main -->
 
 				<div class="toolbar clearfix">
-					<div>
+					&nbsp
+					<!--div>
 						<a href="{{ url('/password/email') }}" class="forgot-password-link">
 							<i class="ace-icon fa fa-arrow-left"></i>
 							Olvidé mi contraseña
 						</a>
-					</div>
+					</div-->
 				</div>
 			</div><!-- /.widget-body -->
 		</div><!-- /.login-box -->

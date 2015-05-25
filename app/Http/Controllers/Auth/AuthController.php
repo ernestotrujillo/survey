@@ -9,6 +9,7 @@ use Input;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
@@ -251,6 +252,69 @@ class AuthController extends Controller {
     public function loginPath()
     {
         return property_exists($this, 'loginPath') ? $this->loginPath : '/login';
+    }
+
+    public function getProfile()
+    {
+        $user = Auth::user();
+
+        if($user == null){
+            return redirect('/user')
+                ->with('message', array( 'type' => 'error', 'message' => 'Usuario no existe'));
+        }else{
+            return view('auth.profile', compact('user'));
+        }
+    }
+
+    public function postProfile(Request $request)
+    {
+        $v = Validator::make($request->all(), [
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'email' => 'required|email|max:255',
+        ]);
+
+        if ($v->fails())
+        {
+            $this->throwValidationException(
+                $request, $v
+            );
+        }
+        else
+        {
+            $user = Auth::user();
+            $user->firstname = Input::get('firstname');
+            $user->lastname = Input::get('lastname');
+            $user->email = Input::get('email');
+            $user->save();
+
+            return redirect('/profile')
+                ->with('message', array( 'type' => 'success', 'message' => 'Datos actualizados.'));
+        }
+    }
+
+    public function postPassword(Request $request)
+    {
+
+        $v = Validator::make($request->all(), [
+            'password' => 'required|confirmed|min:6',
+        ]);
+
+        if ($v->fails())
+        {
+            $this->throwValidationException(
+                $request, $v
+            );
+        }
+        else
+        {
+            $user = Auth::user();
+            $user->password = bcrypt(Input::get('password'));
+            $user->save();
+
+            return redirect('/profile')
+                ->with('message', array( 'type' => 'success', 'message' => 'Clave actualizada.'));
+        }
     }
 
 }
