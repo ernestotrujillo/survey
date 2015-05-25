@@ -1,10 +1,10 @@
 @extends('layout.app')
 
-@section('title', 'Responder Encuesta')
+@section('title', 'Editar Encuesta')
 
 @section('breadcrumb')
     <li>
-        Responder Encuesta
+        Editar Encuesta
     </li>
 @endsection
 

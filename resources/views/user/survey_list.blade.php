@@ -42,7 +42,6 @@
                         <tr>
                             <th>Encuesta</th>
                             <th>Fecha</th>
-                            <th class="hidden-xs">Cicle</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -52,10 +51,6 @@
                         <tr>
                             <td><?php echo $survey->name; ?></td>
                             <td><?php echo $survey->created_at; ?></td>
-                            <td class="hidden-xs">
-                                <?php echo 'cicle'; ?>
-                            </td>
-
                             <td>
                                 <div class="hidden-sm hidden-xs btn-group">
                                     <a href="{{ URL::to('/survey/answer/'.$survey->id) }}" class="green" title="Contestar">

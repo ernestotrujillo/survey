@@ -43,6 +43,7 @@
                             <th>Encuesta</th>
                             <th>Status</th>
                             <th class="hidden-sm hidden-xs">Fecha</th>
+                            <th class="hidden-xs">Cicle</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -54,13 +55,15 @@
                                 <?php echo $survey->status; ?>
                             </td>
                             <td class="hidden-xs"><?php echo $survey->created_at; ?></td>
-
+                            <td class="hidden-xs">
+                                <?php echo (empty($survey->cicle) ? '-' : $survey->cicle ); ?>
+                            </td>
                             <td>
                                 <div class="hidden-sm hidden-xs btn-group">
                                     <a href="{{ URL::to('/survey/'.$survey->survey_user_id.'/edit') }}" class="blue" title="ver">
                                         <i class="ace-icon glyphicon glyphicon-eye-open"></i>
                                     </a>
-                                    <a href="javascript:deleteUser('{{ $survey->survey_user_id }}');" class="red" title="Eliminar">
+                                    <a href="javascript:deleteSurveyAnswer('{{ $survey->survey_user_id }}');" class="red" title="Eliminar">
                                         <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                     </a>
                                 </div>
@@ -80,7 +83,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="javascript:deleteUser('{{ $survey->survey_user_id }}');" class="tooltip-success" data-rel="tooltip" title="Eliminar">
+                                                <a href="javascript:deleteSurveyAnswer('{{ $survey->survey_user_id }}');" class="tooltip-success" data-rel="tooltip" title="Eliminar">
                                                 <span class="red">
                                                     <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                                 </span>
@@ -138,16 +141,16 @@
             });
         });
 
-        function deleteSurvey(id) {
+        function deleteSurveyAnswer(id) {
             if (confirm('¿Esta seguro de eliminar la encuesta?')) {
                 $.ajax({
-                    type: 'DELETE',
-                    url: '{{ URL::to('/survey') }}/' + id, //resource
+                    type: 'POST',
+                    url: '{{ URL::to('/') }}/survey/user/delete/' + id, //resource
                     data: {
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(data) {
-                        if (data.deleted > 0) window.location = 'survey';
+                        if (data.deleted > 0) window.location = '{{ URL::to('/') }}/dashboard/mysurveys';
                     },
                     error:function(data) {
                         alert('Disculpe. Ocurrió un error')
