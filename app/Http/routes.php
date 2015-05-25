@@ -28,6 +28,8 @@ Route::get('profile', 'Auth\AuthController@getprofile');
 Route::post('profile', 'Auth\AuthController@postprofile');
 Route::post('profile/password', 'Auth\AuthController@postpassword');
 
+Route::post('survey/user/delete/{id}', 'Survey\SurveyController@deleteSurveyUser');
+
 // USER ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'user']], function()
 {
