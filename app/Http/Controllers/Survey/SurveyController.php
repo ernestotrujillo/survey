@@ -661,22 +661,23 @@ class SurveyController extends Controller {
     {
         //check role of the user to set default unit or area
         $user = Auth::user();
-        $survey = Survey::find($id);
 
-        if($survey == null)
-        {
-            return redirect('/dashboard/surveys')
-                ->with('message', array( 'type' => 'error', 'message' => 'Encuesta no existe'));
-        }
-        else
-        {
-            $survey_user = DB::table('survey_user')
-                ->select(DB::raw('id'))
-                ->where('user_id', '=', $user->id)
-                ->where('survey_id', '=', $id)
-                ->first();
+        $survey_user = DB::table('survey_user')
+        ->select(DB::raw('*'))
+        ->where('user_id', '=', $user->id)
+        ->where('id', '=', $id)
+        ->first();
 
-            if(!empty($survey_user))
+        if(!empty($survey_user))
+        {
+            $survey = Survey::find($survey_user->survey_id);
+
+            if($survey == null)
+            {
+                return redirect('/dashboard/surveys')
+                    ->with('message', array( 'type' => 'error', 'message' => 'La encuesta no existe'));
+            }
+            else
             {
                 $area_query = DB::table('area_user')
                     ->select(DB::raw('area_user.area_id as area_id, area.unit_id as unit_id'))
@@ -693,12 +694,23 @@ class SurveyController extends Controller {
                         ->with('message', array( 'type' => 'error', 'message' => 'No tiene acceso a esa pregunta'));
                 }
 
-                $data = Question::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','type','survey_id'));
+                $data = Question::where('active', '=', 1)->where('survey_id', '=', $survey->id)->get(array('id','name','type','survey_id'));
+
                 foreach ($data as $key => $question)
                 {
                     $options = [];
-                    $data = Option::where('active', '=', 1)->where('question_id', '=', $question->id)->get(array('id','name','question_id'));
-                    foreach ($data as $key => $value)
+                    $data2 = Option::where('active', '=', 1)->where('question_id', '=', $question->id)->get(array('id','name','question_id'));
+
+                    $answer = DB::table('answer')
+                        ->select(DB::raw('id, value, survey_user, question_id, option_id'))
+                        ->where('survey_user', '=', $survey_user->id)
+                        ->where('question_id', '=', $question->id)
+                        ->orderBy('id', 'desc')
+                        ->first();
+
+                    $question['answer'] = $answer;
+
+                    foreach ($data2 as $key => $value)
                     {
                         $options[$value->id] = $value->name;
                     }
@@ -710,14 +722,79 @@ class SurveyController extends Controller {
                     $questions[]= $question;
 
                 }
-                return view('survey.answer', compact('survey', 'questions'));
-            }
-            else
-            {
-                return redirect('/dashboard/mysurveys')
-                    ->with('message', array( 'type' => 'error', 'message' => 'Esta encuesta no exíste.'));
+                return view('survey.answer_edit', compact('survey', 'questions', 'survey_user'));
             }
         }
+        else
+        {
+            return redirect('/dashboard/mysurveys')
+                ->with('message', array( 'type' => 'error', 'message' => 'La encuesta no exíste.'));
+        }
+
+    }
+
+    public function postEditAnswers()
+    {
+        //check role of the user to set default unit or area
+        $user = Auth::user();
+        if (Input::has('data'))
+        {
+            $data = Input::get('data');
+
+            DB::transaction(function() use($data, $user)
+            {
+                $survey_id = $data['survey_id'];
+                $answers = $data['answers'];
+                $status = $data['status'];
+                $now = date('Y-m-d H:i:s', strtotime("now"));
+
+                $survey_user = DB::table('survey_user')
+                    ->select(DB::raw('*'))
+                    ->where('user_id', '=', $user->id)
+                    ->where('id', '=', $data['survey_user_id'])
+                    ->first();
+
+                if(empty($survey_user)){
+                    return redirect('/dashboard/surveys')
+                        ->with('message', array( 'type' => 'error', 'message' => 'Disculpe! Hay un error en los datos.'));
+                }
+
+                foreach($answers as $value)
+                {
+                    $answerdb = null;
+                    switch ($value['question_type']) {
+                        case '1':
+                        case '5':
+                            $answerdb = ['value' => $value['value'], 'updated_at' => $now];
+                            break;
+                        case '2':
+                            $select = ($value['value'] != null ? implode("-", $value['value']) : null);
+                            $answerdb = ['value' => $select, 'updated_at' => $now];
+                            break;
+                        case '3':
+                        case '4':
+                            $answerdb = ['value' => $value['value'], 'option_id' => $value['value'], 'updated_at' => $now];
+                            break;
+                        case '6':
+                            $cicle = $value['value'];
+                            break;
+                    }
+                    if($answerdb != null)
+                        DB::table('answer')->where('id', $value['answer_id'])->update($answerdb);
+
+                }
+
+                DB::table('survey_user')
+                    ->where('id', $survey_user->id)
+                    ->update(['cicle' => $cicle, 'status' => $status]);
+
+            });
+
+            return response()->json(array('success' => true));
+        }
+
+        return redirect('/dashboard/mysurveys')
+            ->with('message', array( 'type' => 'error', 'message' => 'Disculpe! Hay un error en los datos.'));
 
     }
 

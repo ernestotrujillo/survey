@@ -60,8 +60,8 @@
                             </td>
                             <td>
                                 <div class="hidden-sm hidden-xs btn-group">
-                                    <a href="{{ URL::to('/survey/'.$survey->survey_user_id.'/edit') }}" class="blue" title="ver">
-                                        <i class="ace-icon glyphicon glyphicon-eye-open"></i>
+                                    <a href="{{ URL::to('/survey/answer/edit/'.$survey->survey_user_id) }}" class="blue" title="Editar">
+                                        <i class="ace-icon glyphicon glyphicon-edit"></i>
                                     </a>
                                     <a href="javascript:deleteSurveyAnswer('{{ $survey->survey_user_id }}');" class="red" title="Eliminar">
                                         <i class="ace-icon fa fa-trash-o bigger-120"></i>
@@ -76,9 +76,9 @@
 
                                         <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                             <li>
-                                                <a href="{{ URL::to('/user/edit/'.$survey->survey_user_id) }}" class="tooltip-info" data-rel="tooltip" title="Ver">
+                                                <a href="{{ URL::to('/survey/answer/edit/'.$survey->survey_user_id) }}" class="tooltip-info" data-rel="tooltip" title="Editar">
                                                 <span class="blue">
-                                                    <i class="ace-icon glyphicon glyphicon-eye-open"></i>
+                                                    <i class="ace-icon glyphicon glyphicon-edit"></i>
                                                 </span>
                                                 </a>
                                             </li>
