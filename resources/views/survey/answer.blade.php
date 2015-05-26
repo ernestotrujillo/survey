@@ -32,7 +32,7 @@
             @endif
 
             @include('errors.error')
-            <a class="verGaleria" href="#">Ver galeria</a>
+            <a class="verGaleria hide" href="#">Ver galeria</a>
             <form class="form-horizontal answer-view-form" role="form" method="POST" action="">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="survey_id" value="<?php echo $survey->id; ?>">
@@ -97,9 +97,10 @@
                     success: function(data) {
                     console.log(data)
                         buildGallery(data.images);
+                        $('a.verGaleria').removeClass('hide');
                     },
                     error:function(data) {
-                        $('a.verGaleria').remove();
+                        //$('a.verGaleria').remove();
                         console.log('no images');
                     }
                 });
