@@ -83,10 +83,11 @@
                     var question = $.parseJSON($(value).val());
                     draw_question(question);
                 });
-                draw_cicle(questions.length + 1);
+                var cicle = '<?php echo $survey_user->cicle; ?>';
+                draw_cicle(questions.length + 1, cicle);
             }
 
-            function draw_cicle(qnumber){
+            function draw_cicle(qnumber, cicle){
                 var html = '<div class="row show-grid col-xs-12 col-sm-12 question" qtype="6">'
                 html += '<h2 class="text-muted">';
                 html += '<span class="number"> '+qnumber+' </span>';
@@ -95,40 +96,57 @@
                 html += '<span class="name"> Cicle </span>';
                 html += '</small>';
                 html += '</h2><select class="form-control">';
-                    for(i=1;i<15;i++)
-                        html += '<option class="options" value="'+i+'">'+i+'</option>';
+                    for(i=1;i<15;i++){
+                        if(cicle != null && cicle == i){
+                            html += '<option class="options" value="'+i+'" selected="selected">'+i+'</option>';
+                        }else{
+                            html += '<option class="options" value="'+i+'">'+i+'</option>';
+                        }
+                    }
                 html += '</select>';
                 html += '</div>';
                 $(qContainer).append(html);
             }
 
-            function draw_checkboxes(options){
+            function draw_checkboxes(options, answer){
                 var html = '';
                 $.each(options, function( index, value ) {
-                    html += '<div class="checkbox"><label>' +
-                    '    <input class="options" name="options" value='+index+' type="checkbox" class="ace">' +
-                    '    <span class="lbl">'+value+'</span>' +
-                    '</label></div>';
+                    html += '<div class="checkbox"><label>';
+                    if(answer.value.indexOf(index) >= 0){
+                        html += '<input class="options" name="options" value='+index+' type="checkbox" class="ace" checked>';
+                    }else{
+                        html += '<input class="options" name="options" value='+index+' type="checkbox" class="ace">';
+                    }
+                    html += '<span class="lbl">'+value+'</span>';
+                    html += '</label></div>';
                 });
                 return html;
             }
 
-            function draw_radiobuttons(options){
+            function draw_radiobuttons(options, answer){
                 var html = '';
                 $.each(options, function( index, value ) {
-                    html += '<div class="radio"><label>' +
-                    '    <input class="options" name="options" value='+index+' type="radio" class="ace">' +
-                    '    <span class="lbl">'+value+'</span>' +
-                    '</label></div>';
+                    html += '<div class="radio"><label>'
+                    if(answer.value == index){
+                        html += '<input class="options" name="options" value='+index+' type="radio" class="ace" checked>';
+                    }else{
+                        html += '<input class="options" name="options" value='+index+' type="radio" class="ace">';
+                    }
+                    html += '<span class="lbl">'+value+'</span>';
+                    html += '</label></div>';
                 });
                 return html;
             }
 
-            function draw_list(options){
+            function draw_list(options, answer){
 
                 var htmlOptions = '';
                 $.each(options, function( index, value ) {
-                    htmlOptions += '    <option class="options" value='+index+' >'+value+'</option>';
+                    if(answer.value == index){
+                        htmlOptions += '<option class="options" value='+index+' selected="selected">'+value+'</option>';
+                    }else{
+                        htmlOptions += '<option class="options" value='+index+'>'+value+'</option>';
+                    }
                 });
                 var html = '<select class="form-control">'+htmlOptions+'</select>';
                 return html;
@@ -139,6 +157,7 @@
                 var questionName = question.name;
                 var qType = question.type;
                 var qId = question.id;
+                var answer = question.answer;
 
                 if (questionName.length > 0 && qType.length > 0){
                     var answerElement = '';
@@ -146,26 +165,31 @@
                     if (typeof question.options == "object" ){
                         switch (qType) {
                             case '1':
-                                answerElement = '<input class="col-xs-12 col-sm-12 options" name="answer" type="text" value=""/>';
+                                if(answer.value == null) answer.value = '';
+                                answerElement = '<input class="col-xs-12 col-sm-12 options" name="answer" type="text" value="'+answer.value+'"/>';
                                 break;
                             case '2':
                                 if (typeof opciones == "object"){
-                                    answerElement = draw_checkboxes(opciones);
+                                    if(answer.value == null) { answer.value = []; }else{ answer.value = answer.value.split("-") };
+                                    answerElement = draw_checkboxes(opciones, answer);
                                 }
                                 break;
                             case '3':
                                 if (typeof opciones == "object"){
-                                    answerElement = draw_radiobuttons(opciones);
+                                    if(answer.value == null) answer.value = '';
+                                    answerElement = draw_radiobuttons(opciones, answer);
                                 }
                                 break;
                             case '4':
                                 if (typeof opciones == "object"){
-                                    answerElement = draw_list(opciones);
+                                    if(answer.value == null) answer.value = '';
+                                    answerElement = draw_list(opciones, answer);
                                 }
                                 break;
                             case '5':
+                                if(answer.value == null) answer.value = '';
                                 answerElement = '<div class="input-group col-xs-12 col-sm-5">' +
-                                '                  <input class="form-control date-picker options" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" />' +
+                                '                  <input class="form-control date-picker options" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" value="'+answer.value+'"/>' +
                                 '                     <span class="input-group-addon">' +
                                 '                       <i class="fa fa-calendar bigger-110"></i>' +
                                 '                      </span>' +
@@ -176,7 +200,7 @@
                                 break;
                         }
 
-                        var html = '<div class="row show-grid col-xs-12 col-sm-12 question" qid='+qId+' qtype='+qType+' qname="'+questionName+'">' +
+                        var html = '<div class="row show-grid col-xs-12 col-sm-12 question" qid='+qId+' qtype='+qType+' qanswer="'+answer.id+'" qname="'+questionName+'">' +
                                 '              <h2 class="text-muted">' +
                                 '                  <span class="number">'+ qNumber +'</span>' +
                                 '                  <small>' +
@@ -206,6 +230,7 @@
                 $questions.each(function( index ) {
                     var question_id = $(this).attr('qid');
                     var question_type = $(this).attr('qtype');
+                    var answer = $(this).attr('qanswer');
                     var value = '';
                     if(question_type == 2)
                     {
@@ -228,24 +253,23 @@
                         draft = true;
                         value = null;
                     }
-                    answer = { question_id: question_id, question_type: question_type, value: value };
+                    answer = { question_id: question_id, question_type: question_type, value: value, answer_id: answer };
                     question_list.push(answer)
                 });
 
                 if(draft == true){
                     if (confirm('La encuesta está incompleta. Si desea continuar se guardará un draft de la misma.')) {
-                        var survey_obj = { survey_id: survey_id, question_count: question_count, answers:question_list, status:'Draft' };
+                        var survey_obj = { survey_user_id: '<?php echo $survey_user->id; ?>', survey_id: survey_id, question_count: question_count, answers:question_list, status:'Draft' };
                     }else{
                         return false;
                     }
                 }else{
-                    var survey_obj = { survey_id: survey_id, question_count: question_count, answers:question_list, status:'Completada' };
+                    var survey_obj = { survey_user_id: '<?php echo $survey_user->id; ?>', survey_id: survey_id, question_count: question_count, answers:question_list, status:'Completada' };
                 }
 
-                console.log(survey_obj);
                 $.ajax({
                     type: 'POST',
-                    url: '{{ URL::to('/') }}/survey/answer', //resource
+                    url: '{{ URL::to('/') }}/survey/answer/edit', //resource
                     data: {
                         _token: '{{ csrf_token() }}',
                         data: survey_obj
