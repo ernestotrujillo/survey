@@ -350,6 +350,18 @@ class SurveyController extends Controller {
         return response()->json(array('survey' => $survey));
     }
 
+    public function galleryPage(){
+        return view('survey.gallery');
+    }
+
+    public function gallery($id){
+        $surveyImgsData = SurveyImage::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','image','survey_id'));
+        foreach ($surveyImgsData as $key => $value)
+        {
+            $surveyImgs[$value->id] = $value;
+        }
+        return response()->json(array('images' => $surveyImgs));
+    }
 	/**
 	 * Surveys answered.
 	 *

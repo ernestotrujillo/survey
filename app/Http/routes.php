@@ -88,6 +88,9 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 
     Route::get('survey/deactivate/{id}', 'Survey\SurveyController@deactivate');
     Route::get('survey/activate/{id}', 'Survey\SurveyController@activate');
+    Route::get('survey/gallerypage', 'Survey\SurveyController@galleryPage');
+    Route::get('survey/gallery/{id}', 'Survey\SurveyController@gallery');
+
     Route::resource('survey', 'Survey\SurveyController');
     Route::resource('survey/unit/{unit}', 'Survey\SurveyController');
 

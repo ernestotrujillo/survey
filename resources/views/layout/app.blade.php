@@ -13,6 +13,8 @@
 	<link rel="stylesheet" href="{{ asset('/css/bootstrap.css') }}" />
 	<link rel="stylesheet" href="{{ asset('/css/font-awesome.css') }}" />
 
+	<link rel="stylesheet" href="{{ asset('/css/colorbox.css') }}" />
+
 	<!-- text fonts -->
 	<link rel="stylesheet" href="{{ asset('/css/ace-fonts.css') }}" />
 
@@ -22,7 +24,6 @@
 	<link rel="stylesheet" href="{{ asset('/css/datepicker.css') }}" />
     <link rel="stylesheet" href="{{ asset('/css/dropzone.css') }}" />
 
-    <link rel="stylesheet" href="{{ asset('/css/colobox.css') }}" />
 	<!--[if lte IE 9]>
 	<link rel="stylesheet" href="{{ asset('/css/ace-part2.css') }}" class="ace-main-stylesheet" />
 	<![endif]-->
@@ -292,7 +293,7 @@
 	<script src="{{ asset('/js/bootstrap.js') }}"></script>
 
 	<!-- page specific plugin scripts -->
-
+    <script src="{{ asset('/js/jquery.colorbox.js') }}"></script>
 	<!-- ace scripts -->
 	<script src="{{ asset('/js/ace/elements.scroller.js') }}"></script>
 	<script src="{{ asset('/js/ace/elements.colorpicker.js') }}"></script>
@@ -315,7 +316,6 @@
 	<script src="{{ asset('/js/ace/ace.settings-skin.js') }}"></script>
 	<script src="{{ asset('/js/ace/ace.widget-on-reload.js') }}"></script>
 	<script src="{{ asset('/js/ace/ace.searchbox-autocomplete.js') }}"></script>
-	<script src="{{ asset('/js/jquery.colorbox.js') }}"></script>
 	<script src="{{ asset('/js/ace/date-time/bootstrap-datepicker.js') }}"></script>
 	{{--<script src="{{ asset('/js/dropzone.js') }}"></script>--}}
 
