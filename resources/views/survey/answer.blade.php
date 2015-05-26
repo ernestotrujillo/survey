@@ -32,6 +32,7 @@
             @endif
 
             @include('errors.error')
+            <a class="verGaleria" href="#">Ver galeria</a>
             <form class="form-horizontal answer-view-form" role="form" method="POST" action="">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="survey_id" value="<?php echo $survey->id; ?>">
@@ -74,6 +75,96 @@
 @section('script')
     <script type="text/javascript">
         jQuery(function($) {
+
+            // ==================== GALLERY FUNCTIONS ===============
+            $('a.verGaleria').on("click", function(e){
+                e.preventDefault();
+                var imgs = $('a.survImg');
+                if (typeof imgs !="undefined" && imgs.length > 0){
+                    $('a.survImg').first().trigger('click')
+                }else{
+                    alert('No hay galeria de imagenes');
+                }
+            });
+
+            var surveyId = $("input[name='survey_id']").val();
+            if (typeof surveyId !="undefined" && surveyId.length > 0){
+                $.ajax({
+                    url: '{!!  url("/survey/gallery") !!}/'+surveyId,
+                    type: "GET",
+                    dataType: 'json',
+                    data: '',
+                    success: function(data) {
+                    console.log(data)
+                        buildGallery(data.images);
+                    },
+                    error:function(data) {
+                        alert('Disculpe. Ocurrió un error')
+                    }
+                });
+            }
+            function buildGallery(images){
+
+                var url = '{{ url("uploads/")}}/';
+                var html = '<div class="surveyGallery hide">';
+                html += '<ul class="ace-thumbnails clearfix surveyImgs">';
+                $.each(images, function( index, value ) {
+
+                    html+='<li>' +
+                     '      <div>' +
+                     '          <img  value="'+value.id+'" width="150" height="150" alt="150x150" src="'+url+value.image+'" />' +
+                     '          <div class="text">' +
+                     '              <div class="inner">' +
+                     '                  <span>'+value.name+'</span><br />' +
+                     '                  <a class="survImg" href="'+url+value.image+'" data-rel="colorbox">' +
+                     '                      <i class="ace-icon fa fa-search-plus"></i>' +
+                     '                  </a>' +
+                     '                  <a href="#" class="delete-img">' +
+                     '                      <i class="ace-icon fa fa-times"></i>' +
+                     '                  </a>' +
+                     '              </div>' +
+                     '          </div>' +
+                     '      </div>' +
+                     '  </li>';
+                });
+                html+= '</ul>';
+                html+= '</div>';
+
+                $('.page-content').append(html);
+                $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+                $("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
+
+
+                $(document).one('ajaxloadstart.page', function(e) {
+                    $('#colorbox, #cboxOverlay').remove();
+                });
+            }
+            //colorbox section
+            var $overflow = '';
+            var colorbox_params = {
+                rel: 'colorbox',
+                reposition:true,
+                scalePhotos:true,
+                scrolling:false,
+                previous:'<i class="ace-icon fa fa-arrow-left"></i>',
+                next:'<i class="ace-icon fa fa-arrow-right"></i>',
+                close:'&times;',
+                current:'{current} of {total}',
+                maxWidth:'100%',
+                maxHeight:'100%',
+                onOpen:function(){
+                    $overflow = document.body.style.overflow;
+                    document.body.style.overflow = 'hidden';
+                },
+                onClosed:function(){
+                    document.body.style.overflow = $overflow;
+                },
+                onComplete:function(){
+                    $.colorbox.resize();
+                }
+            };
+
+            // END GALLERY ===========================================
 
             var questions = $('input[name="respQuestions[]"]');
             var qContainer = $('.questions-list');

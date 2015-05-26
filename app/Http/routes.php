@@ -35,6 +35,10 @@ Route::get('survey/ajax/{id}/user/{user_id}', 'Survey\SurveyController@getSurvey
 Route::group(['middleware' => ['auth', 'user']], function()
 {
 	Route::get('dashboard', 'DashboardController@userDashboard');
+
+    Route::get('survey/gallerypage', 'Survey\SurveyController@galleryPage');
+    Route::get('survey/gallery/{id}', 'Survey\SurveyController@gallery');
+
 	Route::get('dashboard/mysurveys', 'Survey\SurveyController@mySurveyList');
 	Route::get('dashboard/surveys', 'Survey\SurveyController@surveyList');
 
@@ -91,8 +95,7 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 
     Route::get('survey/deactivate/{id}', 'Survey\SurveyController@deactivate');
     Route::get('survey/activate/{id}', 'Survey\SurveyController@activate');
-    Route::get('survey/gallerypage', 'Survey\SurveyController@galleryPage');
-    Route::get('survey/gallery/{id}', 'Survey\SurveyController@gallery');
+
 
     Route::resource('survey', 'Survey\SurveyController');
     Route::resource('survey/unit/{unit}', 'Survey\SurveyController');
