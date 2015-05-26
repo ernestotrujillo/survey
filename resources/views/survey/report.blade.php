@@ -82,6 +82,8 @@
                         <th class="hidden-xs">Unit</th>
                         <th class="hidden-xs">Area</th>
                         <th>Encuesta</th>
+                        <th class="hidden-xs">Cicle</th>
+                        <th class="hidden-xs">Status</th>
                         <th class="hidden-xs">Fecha</th>
                         <th>Acciones</th>
                     </tr>
@@ -101,11 +103,13 @@
                         <td class="hidden-xs"><?php echo $user->unit_name; ?></td>
                         <td class="hidden-xs"><?php echo $user->area_name; ?></td>
                         <td><?php echo $user->survey_name; ?></td>
+                        <td class="hidden-xs"><?php echo $user->cicle; ?></td>
+                        <td class="hidden-xs"><?php echo $user->status; ?></td>
                         <td class="hidden-xs"><?php echo $user->created_at; ?></td>
 
                         <td>
                             <div class="hidden-sm hidden-xs btn-group">
-                                <a href="javascript:void(0);" data-id="{{ $user->survey_user_id }}" class="view-answers blue" title="Ver">
+                                <a href="javascript:void(0);" data-id="{{ $user->survey_id }}" data-user-id="{{ $user->user_id }}" class="view-answers blue" title="Ver">
                                     <i class="ace-icon glyphicon glyphicon-eye-open"></i>
                                 </a>
 
@@ -122,7 +126,7 @@
 
                                     <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                         <li>
-                                            <a href="javascript:void(0);" data-id="{{ $user->survey_user_id }}" class="tooltip-info view-answers" data-rel="tooltip" title="Ver">
+                                            <a href="javascript:void(0);" data-id="{{ $user->survey_id }}" data-user-id="{{ $user->user_id }}" class="tooltip-info view-answers" data-rel="tooltip" title="Ver">
                                                 <span class="blue">
                                                     <i class="ace-icon glyphicon glyphicon-eye-open"></i>
                                                 </span>
@@ -172,7 +176,9 @@
                 </div>
 
                 <div class="modal-body">
-                    Respuestas
+                    <div class="row">
+                        <div class="answers-survey col-md-10 col-md-offset-1"></div>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -288,7 +294,28 @@
             //select/deselect a row when the checkbox is checked/unchecked
             $('#simple-table').on('click', '.view-answers' , function(event){
                 event.preventDefault();
-                $('#modal-answers').modal('show')
+                var id = $(this).attr('data-id');
+                var user_id = $(this).attr('data-user-id');
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ URL::to('/') }}/survey/ajax/' + id + '/user/' + user_id, //resource
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(data) {
+                        if (data.success)
+                        {
+                            modalSurvey(data.questions, data.survey, data.survey_user)
+                            $('#modal-answers').modal('show')
+                        }else
+                        {
+                            alert('Disculpe. Ocurrió un error')
+                        }
+                    },
+                    error:function(data) {
+                        alert('Disculpe. Ocurrió un error')
+                    }
+                });
             });
 
         });
@@ -302,7 +329,18 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(data) {
-                        if (data.deleted > 0) window.location = '{{ URL::to('/') }}/survey/report';
+                        if (data.deleted > 0)
+                        {
+                            <?php if($user_session['role'] == 4){ ?>
+                                window.location = '{{ URL::to('/') }}/survey/report';
+                            <?php } ?>
+                            <?php if($user_session['role'] == 3){ ?>
+                                window.location = '{{ URL::to('/') }}/director/survey/report';
+                            <?php } ?>
+                            <?php if($user_session['role'] == 2){ ?>
+                                window.location = '{{ URL::to('/') }}/manager/survey/report';
+                            <?php } ?>
+                        }
                     },
                     error:function(data) {
                         alert('Disculpe. Ocurrió un error')
@@ -310,5 +348,148 @@
                 });
             }
         }
+
+        var qContainer = $('.modal-body .answers-survey');
+        function modalSurvey(questions, survey, survey_user){
+            //** VER ENCUESTA EN MODAL ++//
+            qContainer.html('');
+            if (questions.length > 0){
+                $.each(questions, function( index, value ) {
+                    var question = value;
+                    draw_question(question);
+                });
+                var cicle = survey_user.cicle;
+                draw_cicle(questions.length + 1, cicle);
+            }
+        }
+
+        function draw_cicle(qnumber, cicle){
+            var html = '<div class="row show-grid col-xs-12 col-sm-12 question" qtype="6">'
+            html += '<h2 class="text-muted">';
+            html += '<span class="number"> '+qnumber+' </span>';
+            html += '<small>';
+            html += '<i class="ace-icon fa fa-angle-double-right"></i>';
+            html += '<span class="name"> Cicle </span>';
+            html += '</small>';
+            html += '</h2><select class="form-control">';
+            for(i=1;i<15;i++){
+                if(cicle != null && cicle == i){
+                    html += '<option class="options" value="'+i+'" selected="selected">'+i+'</option>';
+                }else{
+                    html += '<option class="options" value="'+i+'">'+i+'</option>';
+                }
+            }
+            html += '</select>';
+            html += '</div>';
+            $(qContainer).append(html);
+        }
+
+        function draw_checkboxes(options, answer){
+            var html = '';
+            $.each(options, function( index, value ) {
+                html += '<div class="checkbox"><label>';
+                if(answer.value.indexOf(index) >= 0){
+                    html += '<input class="options" name="options" value='+index+' type="checkbox" class="ace" checked>';
+                }else{
+                    html += '<input class="options" name="options" value='+index+' type="checkbox" class="ace">';
+                }
+                html += '<span class="lbl">'+value+'</span>';
+                html += '</label></div>';
+            });
+            return html;
+        }
+
+        function draw_radiobuttons(options, answer){
+            var html = '';
+            $.each(options, function( index, value ) {
+                html += '<div class="radio"><label>'
+                if(answer.value == index){
+                    html += '<input class="options" name="options" value='+index+' type="radio" class="ace" checked>';
+                }else{
+                    html += '<input class="options" name="options" value='+index+' type="radio" class="ace">';
+                }
+                html += '<span class="lbl">'+value+'</span>';
+                html += '</label></div>';
+            });
+            return html;
+        }
+
+        function draw_list(options, answer){
+
+            var htmlOptions = '';
+            $.each(options, function( index, value ) {
+                if(answer.value == index){
+                    htmlOptions += '<option class="options" value='+index+' selected="selected">'+value+'</option>';
+                }else{
+                    htmlOptions += '<option class="options" value='+index+'>'+value+'</option>';
+                }
+            });
+            var html = '<select class="form-control">'+htmlOptions+'</select>';
+            return html;
+        }
+
+        function draw_question(question){
+            var qNumber = $('.question').length + 1;
+            var questionName = question.name;
+            var qType = question.type;
+            var qId = question.id;
+            var answer = question.answer;
+
+            if (questionName.length > 0 && qType.length > 0){
+                var answerElement = '';
+                var opciones = question.options;
+                if (typeof question.options == "object" ){
+                    switch (qType) {
+                        case '1':
+                            if(answer.value == null) answer.value = '';
+                            answerElement = '<input class="col-xs-12 col-sm-12 options" name="answer" type="text" value="'+answer.value+'"/>';
+                            break;
+                        case '2':
+                            if (typeof opciones == "object"){
+                                if(answer.value == null) { answer.value = []; }else{ answer.value = answer.value.split("-") };
+                                answerElement = draw_checkboxes(opciones, answer);
+                            }
+                            break;
+                        case '3':
+                            if (typeof opciones == "object"){
+                                if(answer.value == null) answer.value = '';
+                                answerElement = draw_radiobuttons(opciones, answer);
+                            }
+                            break;
+                        case '4':
+                            if (typeof opciones == "object"){
+                                if(answer.value == null) answer.value = '';
+                                answerElement = draw_list(opciones, answer);
+                            }
+                            break;
+                        case '5':
+                            if(answer.value == null) answer.value = '';
+                            answerElement = '<div class="input-group col-xs-12 col-sm-5">' +
+                            '                  <input class="form-control date-picker options" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" value="'+answer.value+'"/>' +
+                            '                     <span class="input-group-addon">' +
+                            '                       <i class="fa fa-calendar bigger-110"></i>' +
+                            '                      </span>' +
+                            '               </div>';
+                            break;
+                        default:
+                            answerElement = '<input class="col-xs-12 col-sm-12 options" name="answer" type="text" value=""/>';
+                            break;
+                    }
+
+                    var html = '<div class="row show-grid col-xs-12 col-sm-12 question" qid='+qId+' qtype='+qType+' qanswer="'+answer.id+'" qname="'+questionName+'">' +
+                            '              <h2 class="text-muted">' +
+                            '                  <span class="number">'+ qNumber +'</span>' +
+                            '                  <small>' +
+                            '                      <i class="ace-icon fa fa-angle-double-right"></i> ' +
+                            '                      <span class="name">' + questionName + '</span>' +
+                            '                  </small>' +
+                            '              </h2>' + answerElement
+                    '          </div>';
+
+                }
+                $(qContainer).append(html);
+            }
+        }
+
     </script>
 @endsection

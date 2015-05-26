@@ -360,7 +360,7 @@ class SurveyController extends Controller {
 	{
 		//general query
 		$query = DB::table('survey_user')
-			->select('survey_user.id as survey_user_id', 'survey.id as survey_id', 'users.firstname', 'users.lastname', 'users.unumber', 'users.role_id', 'roles.name as role_name', 'unit.name as unit_name', 'area.name as area_name', 'survey.name as survey_name', 'survey_user.created_at', 'survey_user.updated_at')
+			->select('survey_user.id as survey_user_id', 'survey.id as survey_id', 'users.id as user_id', 'users.firstname', 'users.lastname', 'users.unumber', 'users.role_id', 'roles.name as role_name', 'unit.name as unit_name', 'area.name as area_name', 'survey.name as survey_name', 'survey_user.created_at', 'survey_user.updated_at', 'survey_user.status as status', 'survey_user.cicle as cicle')
 			->join('users', 'users.id', '=', 'survey_user.user_id')
 			->join('roles', 'roles.id', '=', 'users.role_id')
 			->join('survey', 'survey.id', '=', 'survey_user.survey_id')
@@ -783,6 +783,80 @@ class SurveyController extends Controller {
 
         return redirect('/dashboard/mysurveys')
             ->with('message', array( 'type' => 'error', 'message' => 'Disculpe! Hay un error en los datos.'));
+
+    }
+
+    public function getSurveyAjax($id, $user_id)
+    {
+        //check role of the user to set default unit or area
+        //$user = Auth::user();
+        $survey = Survey::find($id);
+
+        if($survey == null)
+        {
+            return redirect('/dashboard/surveys')
+                ->with('message', array( 'type' => 'error', 'message' => 'Encuesta no existe'));
+        }
+        else
+        {
+            $survey_user = DB::table('survey_user')
+                ->select(DB::raw('id, cicle'))
+                ->where('user_id', '=', $user_id)
+                ->where('survey_id', '=', $id)
+                ->first();
+
+            if(!empty($survey_user))
+            {
+                $area_query = DB::table('area_user')
+                    ->select(DB::raw('area_user.area_id as area_id, area.unit_id as unit_id'))
+                    ->join('area', 'area.id', '=', 'area_user.area_id')
+                    ->where('area_user.user_id', '=', $user_id)
+                    ->where('area_user.active', '=', 1)
+                    ->first();
+
+                $unit = $area_query->unit_id;
+
+                if($survey->unit_id != $unit)
+                {
+                    return redirect('/dashboard/surveys')
+                        ->with('message', array( 'type' => 'error', 'message' => 'No tiene acceso a esa pregunta'));
+                }
+
+                $data = Question::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','type','survey_id'));
+                foreach ($data as $key => $question)
+                {
+                    $options = [];
+                    $data2 = Option::where('active', '=', 1)->where('question_id', '=', $question->id)->get(array('id','name','question_id'));
+
+                    $answer = DB::table('answer')
+                        ->select(DB::raw('id, value, survey_user, question_id, option_id'))
+                        ->where('survey_user', '=', $survey_user->id)
+                        ->where('question_id', '=', $question->id)
+                        ->orderBy('id', 'desc')
+                        ->first();
+
+                    $question['answer'] = $answer;
+
+                    foreach ($data2 as $key => $value)
+                    {
+                        $options[$value->id] = $value->name;
+                    }
+                    if (isset($options)){
+                        $question['options']=$options;
+                    }else{
+                        $question['options']='';
+                    }
+                    $questions[]= $question;
+
+                }
+
+                return response()->json(array('success' => true, 'survey' => $survey, 'questions' => $questions, 'survey_user' => $survey_user));
+            }
+            else
+            {
+                return response()->json(array('success' => false));
+            }
+        }
 
     }
 
