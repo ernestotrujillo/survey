@@ -98,7 +98,8 @@
                         buildGallery(data.images);
                     },
                     error:function(data) {
-                        alert('Disculpe. Ocurrió un error')
+                        $('a.verGaleria').remove();
+                        console.log('no images');
                     }
                 });
             }
