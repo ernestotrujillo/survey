@@ -60,9 +60,11 @@
                             </td>
                             <td>
                                 <div class="hidden-sm hidden-xs btn-group">
-                                    <a href="{{ URL::to('/survey/answer/edit/'.$survey->survey_user_id) }}" class="blue" title="Editar">
-                                        <i class="ace-icon glyphicon glyphicon-edit"></i>
-                                    </a>
+                                    <?php if($survey->status == 'Draft'){ ?>
+                                        <a href="{{ URL::to('/survey/answer/edit/'.$survey->survey_user_id) }}" class="blue" title="Editar">
+                                            <i class="ace-icon glyphicon glyphicon-edit"></i>
+                                        </a>
+                                    <?php } ?>
                                     <a href="javascript:deleteSurveyAnswer('{{ $survey->survey_user_id }}');" class="red" title="Eliminar">
                                         <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                     </a>
@@ -75,13 +77,15 @@
                                         </button>
 
                                         <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-                                            <li>
-                                                <a href="{{ URL::to('/survey/answer/edit/'.$survey->survey_user_id) }}" class="tooltip-info" data-rel="tooltip" title="Editar">
-                                                <span class="blue">
-                                                    <i class="ace-icon glyphicon glyphicon-edit"></i>
-                                                </span>
-                                                </a>
-                                            </li>
+                                            <?php if($survey->status == 'Draft'){ ?>
+                                                <li>
+                                                    <a href="{{ URL::to('/survey/answer/edit/'.$survey->survey_user_id) }}" class="tooltip-info" data-rel="tooltip" title="Editar">
+                                                    <span class="blue">
+                                                        <i class="ace-icon glyphicon glyphicon-edit"></i>
+                                                    </span>
+                                                    </a>
+                                                </li>
+                                            <?php } ?>
                                             <li>
                                                 <a href="javascript:deleteSurveyAnswer('{{ $survey->survey_user_id }}');" class="tooltip-success" data-rel="tooltip" title="Eliminar">
                                                 <span class="red">

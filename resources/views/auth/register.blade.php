@@ -52,7 +52,7 @@
 					</div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right">Unumber</label>
+						<label class="col-sm-3 control-label no-padding-right">Numero de Empleado</label>
 						<div class="col-sm-9">
 							<input type="text" class="col-xs-10 col-sm-6" name="unumber" value="{{ old('unumber') }}">
 						</div>
@@ -66,14 +66,14 @@
 					</div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right">Password</label>
+						<label class="col-sm-3 control-label no-padding-right">Contraseña</label>
 						<div class="col-sm-9">
 							<input type="password" class="col-xs-10 col-sm-6" name="password">
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right">Confirmar Password</label>
+						<label class="col-sm-3 control-label no-padding-right">Confirmar Contraseña</label>
 						<div class="col-sm-9">
 							<input type="password" class="col-xs-10 col-sm-6" name="password_confirmation">
 						</div>

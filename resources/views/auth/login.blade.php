@@ -7,7 +7,7 @@
 			<span class="red">Ace</span>
 			<span class="grey" id="id-text2">Application</span>
 		</h1>
-		<h4 class="blue" id="id-company-text">&copy; Company Name</h4>
+		<!--h4 class="blue" id="id-company-text">&copy; Company Name</h4-->
 	</div>
 
 	<div class="space-6"></div>
@@ -41,14 +41,14 @@
 
 							<label class="block clearfix">
 								<span class="block input-icon input-icon-right">
-									<input type="text" class="form-control" name="unumber" placeholder="Unumber" value="{{ old('unumber') }}">
+									<input type="text" class="form-control" name="unumber" placeholder="Numero de Empleado" value="{{ old('unumber') }}">
 									<i class="ace-icon fa fa-user"></i>
 								</span>
 							</label>
 
 							<label class="block clearfix">
 								<span class="block input-icon input-icon-right">
-									<input type="password" class="form-control" name="password" placeholder="Password">
+									<input type="password" class="form-control" name="password" placeholder="Contraseña">
 									<i class="ace-icon fa fa-lock"></i>
 								</span>
 							</label>

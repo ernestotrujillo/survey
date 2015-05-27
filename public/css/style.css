@@ -101,5 +101,30 @@
     color: #69aa46;
 }
 
+.verGaleria{ font-size: 16px; }
 
+.custom-nav{  }
+
+.custom-nav > li.light-blue > a {
+    background-color: #62a8d1;
+    height: 45px;
+}
+
+.custom-nav > li > a {
+    background-color: #2e6589;
+    color: #FFF;
+    display: block;
+    line-height: inherit;
+    text-align: center;
+    height: 100%;
+    width: auto;
+    min-width: 50px;
+    padding: 0 8px;
+    position: relative;
+}
+
+.custom-nav > li.light-blue > a:hover,
+.custom-nav > li.light-blue > a:focus{
+    background-color: #62a8d1;
+}
 

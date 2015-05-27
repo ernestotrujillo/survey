@@ -9,6 +9,7 @@ use Input;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
@@ -62,7 +63,7 @@ class AuthController extends Controller {
     public function postLogin(Request $request)
     {
         $this->validate($request, [
-            'unumber' => array('required', 'regex:/^[u][1-9]{6}$/'),
+            'unumber' => array('required', 'regex:/^[u][0-9]{6}$/'),
             'password' => 'required',
         ]);
 
@@ -156,6 +157,28 @@ class AuthController extends Controller {
         if($role == 1 || $role == 2)
         {
             $validator = $this->registrar->areaValidator($request->all());
+
+            if($role == 2)
+            {
+                $role = Input::get('role');
+                $area = Input::get('area');
+
+                $user = DB::table('users')
+                    ->select(DB::raw('count(*)'))
+                    ->join('area_user', 'area_user.user_id', '=', 'users.id')
+                    ->where('users.role_id', '=', $role)
+                    ->where('area_user.area_id', '=', $area)
+                    ->first();
+
+                $validator->after(function() use ($validator, $user){
+                    // Do check here
+                    if($user != null) {
+                        $validator->errors()->add('area', 'Esta area ya tiene un manager');
+                    }
+                });
+
+            }
+
         }
         elseif($role == 3)
         {
@@ -188,13 +211,42 @@ class AuthController extends Controller {
      */
     public function getAccount($id = null)
     {
-        $user = User::find($id);
+        $user = DB::table('users')
+            ->join('area_user', 'area_user.user_id', '=', 'users.id')
+            ->join('area', 'area.id', '=', 'area_user.area_id')
+            ->select(DB::raw('users.id as id, users.firstname, users.lastname, users.unumber, users.email, users.role_id as role_id, users.active, area.id as area_id, area.unit_id as area_unit_id'))
+            ->where('users.id', '=', $id)
+            ->where('users.role_id', '=', 1)
+            ->first();
 
-        if($user == null){
+        if($user == null)
+        {
             return redirect('/user')
                 ->with('message', array( 'type' => 'error', 'message' => 'Usuario no existe'));
-        }else{
-            return view('auth.update', compact('user'));
+        }
+        else
+        {
+           /* $unit = $user->area_unit_id;
+            $area = $user->area_id;
+
+            $units = array();
+            //get all current active units
+            $data = Unit::where('active', '=', 1)->get(array('id','name'));
+            foreach ($data as $key => $value)
+            {
+                // Create the options array
+                $units[$value->id] = $value->name;
+            }
+
+            $areas = array();
+            $data = Area::where('active', '=', 1)->where('unit_id', '=', $user->area_unit_id)->get(array('id','name'));
+            foreach ($data as $key => $value)
+            {
+                // Create the options array
+                $areas[$value->id] = $value->name;
+            }*/
+
+            return view('auth.update', compact('user'/*, 'units', 'areas', 'unit', 'area'*/));
         }
     }
 
@@ -208,9 +260,8 @@ class AuthController extends Controller {
         $v = Validator::make($request->all(), [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
-            'unumber' => array('required', 'regex:/^[u][1-9]{6}$/'),
+            'unumber' => array('required', 'regex:/^[u][0-9]{6}$/'),
             'email' => 'required|email|max:255',
-            'password' => 'required|confirmed|min:6',
         ]);
 
         if ($v->fails())
@@ -219,12 +270,23 @@ class AuthController extends Controller {
                 $request, $v
             );
         }else{
+
+            /*$role = Input::get('role');
+            if($role == 1 || $role == 2)
+            {
+                $validator = $this->registrar->areaValidator($request->all());
+                if ($validator->fails()) {
+                    $this->throwValidationException(
+                        $request, $v
+                    );
+                }
+            }*/
+
             $user = User::find(Input::get('id'));
             $user->firstname = Input::get('firstname');
             $user->lastname = Input::get('lastname');
             $user->unumber = Input::get('unumber');
             $user->email = Input::get('email');
-            $user->password = bcrypt(Input::get('password'));
             $user->save();
 
             return redirect('/user')
@@ -313,6 +375,30 @@ class AuthController extends Controller {
             $user->save();
 
             return redirect('/profile')
+                ->with('message', array( 'type' => 'success', 'message' => 'Clave actualizada.'));
+        }
+    }
+
+    public function postEditPassword(Request $request)
+    {
+
+        $v = Validator::make($request->all(), [
+            'password' => 'required|confirmed|min:6',
+        ]);
+
+        if ($v->fails())
+        {
+            $this->throwValidationException(
+                $request, $v
+            );
+        }
+        else
+        {
+            $user = User::find(Input::get('id'));
+            $user->password = bcrypt(Input::get('password'));
+            $user->save();
+
+            return redirect('/user')
                 ->with('message', array( 'type' => 'success', 'message' => 'Clave actualizada.'));
         }
     }

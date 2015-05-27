@@ -32,7 +32,7 @@
             @endif
 
             @include('errors.error')
-            <a class="verGaleria hide" href="#">Ver galeria</a>
+            <a class="verGaleria hide" href="#">Ver material de apoyo <i class="ace-icon fa fa-angle-double-right"></i></a>
             <form class="form-horizontal answer-view-form" role="form" method="POST" action="">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="survey_id" value="<?php echo $survey->id; ?>">
@@ -53,13 +53,7 @@
                     <div class="col-md-offset-3 col-md-9">
                         <button class="btn btn-info" type="submit">
                             <i class="ace-icon fa fa-check bigger-110"></i>
-                            Enviar
-                        </button>
-
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn" type="reset">
-                            <i class="ace-icon fa fa-undo bigger-110"></i>
-                            Borrar
+                            Actualizar
                         </button>
                     </div>
                 </div>
@@ -187,7 +181,7 @@
                 html += '<span class="name"> Cicle </span>';
                 html += '</small>';
                 html += '</h2><select class="form-control">';
-                    for(i=1;i<15;i++){
+                    for(i=1;i<11;i++){
                         if(cicle != null && cicle == i){
                             html += '<option class="options" value="'+i+'" selected="selected">'+i+'</option>';
                         }else{

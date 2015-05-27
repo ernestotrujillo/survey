@@ -35,6 +35,7 @@
 				@include('errors.error')
 				{!! Form::model($survey, array('method'=>'PUT', 'url' => url('/survey/'.$survey->id), 'files'=>true, 'role'=>'form',  'class'=>'form-horizontal survey-form')) !!}
                 <input type="hidden" id="surveyId" name="surveyId" value="{{ $survey->id }}">
+                <input type="hidden" id="unitId" name="unit_id" value="{{ $survey->unit_id }}">
                 <input type="hidden" id="qInput" name="qInput" value="">
                 <input type="hidden" id="qIdInput" name="qIdInput" value="">
                 <input type="hidden" id="imgsInput" name="imgsInput" value="">
@@ -44,7 +45,7 @@
                     @endforeach
                 @endif
 
-                @include("survey.form",['submitButtonText'=>'Modificar Encuesta'])
+                @include("survey.form",['submitButtonText'=>'Modificar Encuesta', 'unit_id' => $survey->unit_id])
 
 
 				{!! Form::close() !!}
@@ -193,7 +194,7 @@
                 var surveyId = $('#surveyId').val();
                 var surveyName = $('#survey-name').val();
                 var qElements = $('.question');
-                var unit = $('.unit').val();
+                var unit = $('#unitId').val();
 
                 if (surveyName.length > 0 && qElements.length > 0 && unit.length > 0){
 

@@ -71,7 +71,7 @@
                     <?php foreach ($surveys as $survey): ?>
                     <tr>
                         <td>{!! $survey->name !!}</td>
-                        <td>{!! $survey->unit_id !!}</td>
+                        <td>{!! $units[$survey->unit_id] !!}</td>
                         <td class="hidden-xs">
                             <?php if($survey->active){ ?>
                                     <span class="label label-success label-white middle">Activa</span>

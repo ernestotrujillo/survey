@@ -10,8 +10,21 @@
                 <div class="form-group col-xs-12 col-sm-12">
                     {!! Form::text('name',null, array('placeholder' => 'Nombre de la encuesta','id'=>'survey-name', 'class'=>'col-xs-12 col-sm-10 name')) !!}
                 </div>
-                <div class="form-group col-xs-12 col-sm-12">
-                    {!! Form::select('unit_id', $units, null, array('class' => 'col-xs-12 col-sm-6 unit')) !!}
+                <div class="form-group unit-group col-xs-12 col-sm-12">
+                    <?php if(isset($unit_id)){ ?>
+                        <label>Unidad: </label>
+                        <?php echo $units[$unit_id]; ?>
+                    <?php }else{ ?>
+                        <label>Seleccione una Unidad:</label>
+                        <?php
+                            foreach($units as $key => $value){
+                                echo '<div class="checkbox"><label>';
+                                echo Form::checkbox('unit_id[]', $key);
+                                echo '<span class="lbl">'.$value.'</span>';
+                                echo '</label></div>';
+                            }
+                        ?>
+                    <?php } ?>
                 </div>
                 <div class="gallery row show-grid col-xs-12 col-sm-12">
                     @if(isset($surveyImgs))

@@ -34,7 +34,7 @@ Route::get('survey/ajax/{id}/user/{user_id}', 'Survey\SurveyController@getSurvey
 // USER ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'user']], function()
 {
-	Route::get('dashboard', 'DashboardController@userDashboard');
+	//Route::get('dashboard', 'DashboardController@userDashboard');
 
     Route::get('survey/gallerypage', 'Survey\SurveyController@galleryPage');
     Route::get('survey/gallery/{id}', 'Survey\SurveyController@gallery');
@@ -78,6 +78,8 @@ Route::group(['middleware' => ['auth', 'admin']], function()
 	Route::post('user', 'Auth\AuthController@postregister');
 	Route::get('user/edit/{id}', 'Auth\AuthController@getaccount');
 	Route::post('user/edit', 'Auth\AuthController@postaccount');
+
+	Route::post('user/password/edit', 'Auth\AuthController@postEditPassword');
 
 	Route::get('user/ban/{id}', 'UserController@ban');
 	Route::get('user/active/{id}', 'UserController@active');

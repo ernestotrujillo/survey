@@ -77,13 +77,14 @@
                                 <span class="lbl"></span>
                             </label>
                         </th>
-                        <th>Unumber</th>
+                        <th>Nro. Empleado</th>
                         <th>Nombre</th>
-                        <th class="hidden-xs">Unit</th>
+                        <th class="hidden-xs">Unidad</th>
                         <th class="hidden-xs">Area</th>
                         <th>Encuesta</th>
-                        <th class="hidden-xs">Cicle</th>
-                        <th class="hidden-xs">Status</th>
+                        <th>Manager</th>
+                        <th>Director</th>
+                        <th class="hidden-xs">Ciclo</th>
                         <th class="hidden-xs">Fecha</th>
                         <th>Acciones</th>
                     </tr>
@@ -103,8 +104,9 @@
                         <td class="hidden-xs"><?php echo $user->unit_name; ?></td>
                         <td class="hidden-xs"><?php echo $user->area_name; ?></td>
                         <td><?php echo $user->survey_name; ?></td>
+                        <td><?php echo (isset($manager[$user->area_id]) ? $manager[$user->area_id] : '-'); ?></td>
+                        <td><?php echo (isset($director[$user->unit_id]) ? $director[$user->unit_id] : '-'); ?></td>
                         <td class="hidden-xs"><?php echo $user->cicle; ?></td>
-                        <td class="hidden-xs"><?php echo $user->status; ?></td>
                         <td class="hidden-xs"><?php echo $user->created_at; ?></td>
 
                         <td>
@@ -184,7 +186,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal">
                         <i class="ace-icon fa fa-times"></i>
-                        Close
+                        Cerrar
                     </button>
                 </div>
             </div><!-- /.modal-content -->
@@ -371,15 +373,12 @@
             html += '<i class="ace-icon fa fa-angle-double-right"></i>';
             html += '<span class="name"> Cicle </span>';
             html += '</small>';
-            html += '</h2><select class="form-control">';
-            for(i=1;i<15;i++){
+            html += '</h2>';
+            for(i=1;i<11;i++){
                 if(cicle != null && cicle == i){
-                    html += '<option class="options" value="'+i+'" selected="selected">'+i+'</option>';
-                }else{
-                    html += '<option class="options" value="'+i+'">'+i+'</option>';
+                    html += '<h4>'+i+'</h4>';
                 }
             }
-            html += '</select>';
             html += '</div>';
             $(qContainer).append(html);
         }
@@ -387,14 +386,9 @@
         function draw_checkboxes(options, answer){
             var html = '';
             $.each(options, function( index, value ) {
-                html += '<div class="checkbox"><label>';
                 if(answer.value.indexOf(index) >= 0){
-                    html += '<input class="options" name="options" value='+index+' type="checkbox" class="ace" checked>';
-                }else{
-                    html += '<input class="options" name="options" value='+index+' type="checkbox" class="ace">';
+                    html += '<h4>'+value+'</h4><br>';
                 }
-                html += '<span class="lbl">'+value+'</span>';
-                html += '</label></div>';
             });
             return html;
         }
@@ -402,29 +396,21 @@
         function draw_radiobuttons(options, answer){
             var html = '';
             $.each(options, function( index, value ) {
-                html += '<div class="radio"><label>'
                 if(answer.value == index){
-                    html += '<input class="options" name="options" value='+index+' type="radio" class="ace" checked>';
-                }else{
-                    html += '<input class="options" name="options" value='+index+' type="radio" class="ace">';
+                    html += '<h4>'+value+'</h4>';
                 }
-                html += '<span class="lbl">'+value+'</span>';
-                html += '</label></div>';
             });
             return html;
         }
 
         function draw_list(options, answer){
 
-            var htmlOptions = '';
+            var html = '';
             $.each(options, function( index, value ) {
                 if(answer.value == index){
-                    htmlOptions += '<option class="options" value='+index+' selected="selected">'+value+'</option>';
-                }else{
-                    htmlOptions += '<option class="options" value='+index+'>'+value+'</option>';
+                    html += '<h4>'+value+'<h4>';
                 }
             });
-            var html = '<select class="form-control">'+htmlOptions+'</select>';
             return html;
         }
 
@@ -442,7 +428,7 @@
                     switch (qType) {
                         case '1':
                             if(answer.value == null) answer.value = '';
-                            answerElement = '<input class="col-xs-12 col-sm-12 options" name="answer" type="text" value="'+answer.value+'"/>';
+                            answerElement = '<h4>'+answer.value+'</h4>';
                             break;
                         case '2':
                             if (typeof opciones == "object"){
@@ -464,12 +450,7 @@
                             break;
                         case '5':
                             if(answer.value == null) answer.value = '';
-                            answerElement = '<div class="input-group col-xs-12 col-sm-5">' +
-                            '                  <input class="form-control date-picker options" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" value="'+answer.value+'"/>' +
-                            '                     <span class="input-group-addon">' +
-                            '                       <i class="fa fa-calendar bigger-110"></i>' +
-                            '                      </span>' +
-                            '               </div>';
+                            answerElement = '<h4>'+answer.value+'</h4>';
                             break;
                         default:
                             answerElement = '<input class="col-xs-12 col-sm-12 options" name="answer" type="text" value=""/>';

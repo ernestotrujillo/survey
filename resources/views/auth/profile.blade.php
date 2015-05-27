@@ -62,13 +62,7 @@
                         <div class="col-md-offset-3 col-md-9">
                             <button class="btn btn-info" type="submit">
                                 <i class="ace-icon fa fa-check bigger-110"></i>
-                                Enviar
-                            </button>
-
-                            &nbsp; &nbsp; &nbsp;
-                            <button class="btn" type="reset">
-                                <i class="ace-icon fa fa-undo bigger-110"></i>
-                                Borrar
+                                Actualizar
                             </button>
                         </div>
                     </div>
@@ -96,13 +90,7 @@
                         <div class="col-md-offset-3 col-md-9">
                             <button class="btn btn-info" type="submit">
                                 <i class="ace-icon fa fa-check bigger-110"></i>
-                                Enviar
-                            </button>
-
-                            &nbsp; &nbsp; &nbsp;
-                            <button class="btn" type="reset">
-                                <i class="ace-icon fa fa-undo bigger-110"></i>
-                                Borrar
+                                Actualizar
                             </button>
                         </div>
                     </div>

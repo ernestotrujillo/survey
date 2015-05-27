@@ -73,9 +73,15 @@ class SurveyController extends Controller {
     public function store(CreateSurveyRequest $request)
 	{
 
-        $survey = new Survey;
-        $survey->name = $request->input('name');
-        $survey->unit_id = $request->input('unit_id');
+        $units = $request->input('unit_id');
+        $surveys = array();
+        foreach($units as $unit)
+        {
+            $survey = new Survey;
+            $survey->name = $request->input('name');
+            $survey->unit_id = $unit;
+            $surveys[] = $survey;
+        }
 
         $files = $request->file('file');
         if($files) {
@@ -102,40 +108,47 @@ class SurveyController extends Controller {
             if ($uploadcount != $file_count) {
                 return Redirect::back()->with('message', array('type' => 'error', 'message' => 'Error subiendo archivos'));
             } else {
-                $survey->save();
-                foreach ($files as $file) {
-
-                    if ($file) {
-                        $surveyImg = new SurveyImage();
-                        //$surveyImg->original_filename = $file->getClientOriginalName();
-                        $extension = $file->getClientOriginalExtension();
-                        $surveyImg->name = $file->getClientOriginalName();
-                        $surveyImg->image = $file->getFilename() . $file->getClientOriginalName();
-                        $surveyImg->survey_id = $survey->id;
-                        $surveyImg->save();
+                foreach($surveys as $survey)
+                {
+                    $survey->save();
+                    foreach ($files as $file)
+                    {
+                        if ($file) {
+                            $surveyImg = new SurveyImage();
+                            //$surveyImg->original_filename = $file->getClientOriginalName();
+                            $extension = $file->getClientOriginalExtension();
+                            $surveyImg->name = $file->getClientOriginalName();
+                            $surveyImg->image = $file->getFilename() . $file->getClientOriginalName();
+                            $surveyImg->survey_id = $survey->id;
+                            $surveyImg->save();
+                        }
                     }
                 }
-
             }
         }else{
-            $survey->save();
+            foreach($surveys as $survey)
+            {
+                $survey->save();
+            }
         }
 
-        $questions =  json_decode($request->input('qInput'));
+        foreach($surveys as $survey) {
+            $questions = json_decode($request->input('qInput'));
 
-        foreach ($questions as $question){
-            $qObject = new Question;
-            $qObject->name = $question->name;
-            $qObject->type = $question->type;
-            $qObject->survey_id = $survey->id;
-            $qObject->save();
+            foreach ($questions as $question) {
+                $qObject = new Question;
+                $qObject->name = $question->name;
+                $qObject->type = $question->type;
+                $qObject->survey_id = $survey->id;
+                $qObject->save();
 
-            if ($question->options){
-                foreach ($question->options as $option){
-                    $oObject = new Option;
-                    $oObject->name = $option;
-                    $oObject->question_id = $qObject->id;
-                    $oObject->save();
+                if ($question->options) {
+                    foreach ($question->options as $option) {
+                        $oObject = new Option;
+                        $oObject->name = $option;
+                        $oObject->question_id = $qObject->id;
+                        $oObject->save();
+                    }
                 }
             }
         }
@@ -372,7 +385,7 @@ class SurveyController extends Controller {
 	{
 		//general query
 		$query = DB::table('survey_user')
-			->select('survey_user.id as survey_user_id', 'survey.id as survey_id', 'users.id as user_id', 'users.firstname', 'users.lastname', 'users.unumber', 'users.role_id', 'roles.name as role_name', 'unit.name as unit_name', 'area.name as area_name', 'survey.name as survey_name', 'survey_user.created_at', 'survey_user.updated_at', 'survey_user.status as status', 'survey_user.cicle as cicle')
+			->select('survey_user.id as survey_user_id', 'survey.id as survey_id', 'users.id as user_id', 'users.firstname', 'users.lastname', 'users.unumber', 'users.role_id', 'roles.name as role_name', 'unit.id as unit_id', 'unit.name as unit_name', 'area.id as area_id', 'area.name as area_name', 'survey.name as survey_name', 'survey_user.created_at', 'survey_user.updated_at', 'survey_user.status as status', 'survey_user.cicle as cicle')
 			->join('users', 'users.id', '=', 'survey_user.user_id')
 			->join('roles', 'roles.id', '=', 'users.role_id')
 			->join('survey', 'survey.id', '=', 'survey_user.survey_id')
@@ -417,7 +430,34 @@ class SurveyController extends Controller {
 			}
 		}
 
-		return view('survey.report', compact('users', 'units', 'areas', 'unit', 'area'));
+        $managers = DB::table('users')
+            ->join('area_user', 'area_user.user_id', '=', 'users.id')
+            ->join('area', 'area.id', '=', 'area_user.area_id')
+            ->select(DB::raw('users.firstname, users.lastname, area.id'))
+            ->where('users.role_id', '=', 2)
+            ->get();
+
+        $manager = array();
+        foreach ($managers as $value)
+        {
+            // Create the options array
+            $manager[$value->id] = $value->firstname.' '.$value->lastname;
+        }
+
+        $directors = DB::table('users')
+            ->join('unit_user', 'unit_user.user_id', '=', 'users.id')
+            ->join('unit', 'unit.id', '=', 'unit_user.unit_id')
+            ->select(DB::raw('users.firstname, users.lastname, unit.id'))
+            ->where('users.role_id', '=', 3)
+            ->get();
+        $director = array();
+        foreach ($directors as $value)
+        {
+            // Create the options array
+            $director[$value->id] = $value->firstname.' '.$value->lastname;
+        }
+
+		return view('survey.report', compact('users', 'units', 'areas', 'unit', 'area', 'manager', 'director'));
 	}
 
 	public function roleFilter($unit = null, $area = null)
@@ -475,12 +515,6 @@ class SurveyController extends Controller {
             ->select(DB::raw('*'))
             ->where('unit_id', '=', $unit)
             ->where('active', '=', 1)
-            ->whereNotIn('id', function($query) use ($user)
-            {
-                $query->select(DB::raw('survey_id'))
-                    ->from('survey_user')
-                    ->where('user_id', '=', $user->id);
-            })
             ->paginate(20);
 
         return view('user.survey_list', compact('surveys'));
@@ -536,53 +570,39 @@ class SurveyController extends Controller {
         }
         else
         {
-            $survey_user = DB::table('survey_user')
-                ->select(DB::raw('id'))
-                ->where('user_id', '=', $user->id)
-                ->where('survey_id', '=', $id)
+            $area_query = DB::table('area_user')
+                ->select(DB::raw('area_user.area_id as area_id, area.unit_id as unit_id'))
+                ->join('area', 'area.id', '=', 'area_user.area_id')
+                ->where('area_user.user_id', '=', $user->id)
+                ->where('area_user.active', '=', 1)
                 ->first();
 
-            if(empty($survey_user))
+            $unit = $area_query->unit_id;
+
+            if($survey->unit_id != $unit)
             {
-                $area_query = DB::table('area_user')
-                    ->select(DB::raw('area_user.area_id as area_id, area.unit_id as unit_id'))
-                    ->join('area', 'area.id', '=', 'area_user.area_id')
-                    ->where('area_user.user_id', '=', $user->id)
-                    ->where('area_user.active', '=', 1)
-                    ->first();
-
-                $unit = $area_query->unit_id;
-
-                if($survey->unit_id != $unit)
-                {
-                    return redirect('/dashboard/surveys')
-                        ->with('message', array( 'type' => 'error', 'message' => 'No tiene acceso a esa pregunta'));
-                }
-
-                $data = Question::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','type','survey_id'));
-                foreach ($data as $key => $question)
-                {
-                    $options = [];
-                    $data = Option::where('active', '=', 1)->where('question_id', '=', $question->id)->get(array('id','name','question_id'));
-                    foreach ($data as $key => $value)
-                    {
-                        $options[$value->id] = $value->name;
-                    }
-                    if (isset($options)){
-                        $question['options']=$options;
-                    }else{
-                        $question['options']='';
-                    }
-                    $questions[]= $question;
-
-                }
-                return view('survey.answer', compact('survey', 'questions'));
+                return redirect('/dashboard/surveys')
+                    ->with('message', array( 'type' => 'error', 'message' => 'No tiene acceso a esa pregunta'));
             }
-            else
+
+            $data = Question::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','type','survey_id'));
+            foreach ($data as $key => $question)
             {
-                return redirect('/dashboard/mysurveys')
-                    ->with('message', array( 'type' => 'error', 'message' => 'Esta encuesta ya fue realizada.'));
+                $options = [];
+                $data = Option::where('active', '=', 1)->where('question_id', '=', $question->id)->get(array('id','name','question_id'));
+                foreach ($data as $key => $value)
+                {
+                    $options[$value->id] = $value->name;
+                }
+                if (isset($options)){
+                    $question['options']=$options;
+                }else{
+                    $question['options']='';
+                }
+                $questions[]= $question;
+
             }
+            return view('survey.answer', compact('survey', 'questions'));
         }
 
     }

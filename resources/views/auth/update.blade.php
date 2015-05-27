@@ -53,7 +53,7 @@
 					</div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right">Unumber</label>
+						<label class="col-sm-3 control-label no-padding-right">Numero de Empleado</label>
 						<div class="col-sm-9">
 							<input type="text" class="col-xs-10 col-sm-6" name="unumber" value="{{ (Input::old('unumber')) ? Input::old('unumber') : $user->unumber }}">
 						</div>
@@ -65,22 +65,8 @@
 							<input type="email" class="col-xs-10 col-sm-6" name="email" value="{{ (Input::old('email')) ? Input::old('email') : $user->email }}">
 						</div>
 					</div>
-
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right">Nuevo password</label>
-						<div class="col-sm-9">
-							<input type="password" class="col-xs-10 col-sm-6" name="password">
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right">Confirmar Password</label>
-						<div class="col-sm-9">
-							<input type="password" class="col-xs-10 col-sm-6" name="password_confirmation">
-						</div>
-					</div>
-
-					<div class="clearfix form-actions">
+					
+					<div class="clearfix">
 						<div class="col-md-offset-3 col-md-9">
 							<button class="btn btn-info" type="submit">
 								<i class="ace-icon fa fa-check bigger-110"></i>
@@ -95,6 +81,41 @@
 						</div>
 					</div>
 
+				</form>
+
+				<form class="form-horizontal" role="form" method="POST" action="{{ url('/user/password/edit') }}">
+					<input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<input type="hidden" name="id" value="{{ $user->id }}">
+
+					<div class="hr hr32 hr-dotted"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right">Nuevo password</label>
+						<div class="col-sm-9">
+							<input type="password" class="col-xs-10 col-sm-6" name="password">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right">Confirmar Password</label>
+						<div class="col-sm-9">
+							<input type="password" class="col-xs-10 col-sm-6" name="password_confirmation">
+						</div>
+					</div>
+
+					<div class="clearfix">
+						<div class="col-md-offset-3 col-md-9">
+							<button class="btn btn-info" type="submit">
+								<i class="ace-icon fa fa-check bigger-110"></i>
+								Enviar
+							</button>
+
+							&nbsp; &nbsp; &nbsp;
+							<button class="btn" type="reset">
+								<i class="ace-icon fa fa-undo bigger-110"></i>
+								Borrar
+							</button>
+						</div>
+					</div>
 				</form>
 			<!-- PAGE CONTENT ENDS -->
 

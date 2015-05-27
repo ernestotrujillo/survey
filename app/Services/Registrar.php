@@ -21,7 +21,7 @@ class Registrar implements RegistrarContract {
 		return Validator::make($data, [
 			'firstname' => 'required|max:255',
 			'lastname' => 'required|max:255',
-			'unumber' => array('required', 'regex:/^[u][1-9]{6}$/', 'unique:users'),
+			'unumber' => array('required', 'regex:/^[u][0-9]{6}$/', 'unique:users'),
 			'email' => 'required|email|max:255|unique:users',
 			'password' => 'required|confirmed|min:6',
             'role' => 'required|exists:roles,id',
@@ -56,7 +56,7 @@ class Registrar implements RegistrarContract {
 		try{
 			$user = new User([
 				'firstname' => $data['firstname'],
-				'lastname'  => $data['firstname'],
+				'lastname'  => $data['lastname'],
 				'unumber'   => $data['unumber'],
 				'email' 	=> $data['email'],
 				'role_id' 	=> $data['role'],

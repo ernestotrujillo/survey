@@ -80,10 +80,11 @@
                                 <span class="lbl"></span>
                             </label>
                         </th>
+                        <th># Empleado</th>
                         <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Unumber</th>
-                        <th class="hidden-xs">Email</th>
+                        <th>Unidad</th>
+                        <th>Area</th>
+                        <th>Encargado</th>
                         <th class="hidden-xs">Cuenta</th>
                         <th class="hidden-xs">Estado</th>
                         <th>Acciones</th>
@@ -99,11 +100,29 @@
                                 <span class="lbl"></span>
                             </label>
                         </td>
-
-                        <td><?php echo $user->firstname; ?></td>
-                        <td><?php echo $user->lastname; ?></td>
                         <td><?php echo $user->unumber; ?></td>
-                        <td class="hidden-xs"><?php echo $user->email; ?></td>
+                        <td><?php echo $user->firstname; ?> <?php echo $user->lastname; ?></td>
+                        <td>
+                            <?php
+                                if(isset($user->area_unit_id)){
+                                    echo $units[$user->area_unit_id];
+                                }else{
+                                    echo (isset($units[$user->unit_id]) ? $units[$user->unit_id] : '-');
+                                }
+                            ?>
+                        </td>
+                        <td><?php echo (isset($user->area_name) ? $user->area_name : '-'); ?></td>
+                        <td>
+                            <?php
+                                if($user->role_id == 1){
+                                    echo (isset($manager[$user->area_id]) ? $manager[$user->area_id] : '-');
+                                }elseif($user->role_id == 2){
+                                    echo (isset($director[$user->area_unit_id]) ? $director[$user->area_unit_id] : '-');
+                                }else{
+                                    echo '-';
+                                }
+                            ?>
+                        </td>
                         <td class="hidden-xs">
                             <?php if(isset($user->role->name)){ echo $user->role->name; ?>
                             <?php }elseif(isset($user->role_name)){ echo $user->role_name; } ?>

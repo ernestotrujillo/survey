@@ -49,7 +49,7 @@ class HomeController extends Controller {
 			}
 			else if($user_session['role'] == 1)
 			{
-				return redirect('/dashboard');
+				return redirect('/dashboard/mysurveys');
 			}
 			else
 			{

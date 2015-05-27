@@ -22,8 +22,54 @@ class UserController extends Controller {
 	 */
 	public function index()
 	{
-		//$users = User::paginate(20);
-		$users = User::has('role')->paginate(20);
+		//$users = User::has('role')->paginate(20);
+		$users = DB::table('users')
+			->join('roles', 'roles.id', '=', 'users.role_id')
+			->leftJoin('unit_user', 'unit_user.user_id', '=', 'users.id')
+			->leftJoin('area_user', 'area_user.user_id', '=', 'users.id')
+			->leftJoin('area', 'area.id', '=', 'area_user.area_id')
+			->select(DB::raw('users.id as id, users.firstname, users.lastname, users.unumber, users.role_id as role_id, roles.name as role_name, users.active, unit_user.unit_id as unit_id, area.name as area_name, area.id as area_id, area.unit_id as area_unit_id'))
+			->paginate(20);
+
+		$managers = DB::table('users')
+			->join('area_user', 'area_user.user_id', '=', 'users.id')
+			->join('area', 'area.id', '=', 'area_user.area_id')
+			->select(DB::raw('users.firstname, users.lastname, area.id'))
+			->where('users.role_id', '=', 2)
+			->get();
+
+		$manager = array();
+		foreach ($managers as $value)
+		{
+			// Create the options array
+			$manager[$value->id] = $value->firstname.' '.$value->lastname;
+		}
+
+		$directors = DB::table('users')
+			->join('unit_user', 'unit_user.user_id', '=', 'users.id')
+			->join('unit', 'unit.id', '=', 'unit_user.unit_id')
+			->select(DB::raw('users.firstname, users.lastname, unit.id'))
+			->where('users.role_id', '=', 3)
+			->get();
+		$director = array();
+		foreach ($directors as $value)
+		{
+			// Create the options array
+			$director[$value->id] = $value->firstname.' '.$value->lastname;
+		}
+
+		$admins = DB::table('users')
+			->join('unit_user', 'unit_user.user_id', '=', 'users.id')
+			->join('unit', 'unit.id', '=', 'unit_user.unit_id')
+			->select(DB::raw('users.firstname, users.lastname, unit.id'))
+			->where('users.role_id', '=', 4)
+			->get();
+		$admin = array();
+		foreach ($admins as $value)
+		{
+			// Create the options array
+			$admin[$value->id] = $value->firstname.' '.$value->lastname;
+		}
 
 		$data = Role::where('active', '=', 1)->get(array('id','name'));
 		foreach ($data as $key => $value)
@@ -41,7 +87,7 @@ class UserController extends Controller {
 			$units[$value->id] = $value->name;
 		}
 
-		return view('user.list', compact('users', 'roles', 'units'));
+		return view('user.list', compact('users', 'roles', 'units', 'manager', 'director', 'admin'));
 	}
 
 	/**

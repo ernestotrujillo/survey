@@ -169,10 +169,11 @@
             $('.survey-form .create-survey').on('click', function(e){
                 e.preventDefault();
 
-
                 var surveyName = $('#survey-name').val();
                 var qElements = $('.question');
-                var unit = $('.unit').val();
+                var unit = $('.unit-group').find('input[type=checkbox]:checked').map(function(_, el) {
+                    return $(el).val();
+                }).get();
 
                 if (surveyName.length > 0 && qElements.length > 0 && unit.length > 0){
 
@@ -205,7 +206,6 @@
 
                     var qInput = $('#qInput');
                     $(qInput).val(JSON.stringify(questions));
-                    console.log( $( '.survey-form' ).serialize() );
                     $('.survey-form').submit();
 
                 }else{
