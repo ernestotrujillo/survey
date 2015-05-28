@@ -48,6 +48,7 @@
 	<!--[if lt IE 9]>
 	<script src="{{ asset('/js/html5shiv.js') }}"></script>
 	<script src="{{ asset('/js/respond.js') }}"></script>
+
 	<![endif]-->
 </head>
 
@@ -184,6 +185,15 @@
 </div><!-- /.main-container -->
 
 	<!-- basic scripts -->
+
+	<?php if(Auth::user()->role_id != 1){ ?>
+		<script type="text/javascript">
+			if( /iPhone/i.test(navigator.userAgent) ) {
+				alert('Disculpe No puede acceder con el dispositivo')
+				window.location = 'logout'
+			}
+		</script>
+	<?php } ?>
 
 	<!--[if !IE]> -->
 	<script type="text/javascript">
