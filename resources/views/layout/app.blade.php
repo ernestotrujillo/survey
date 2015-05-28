@@ -94,7 +94,7 @@
 				<!-- #section:basics/navbar.user_menu -->
 				<li class="light-blue">
 					<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-						<span class="user-info">
+						<span class="user-info hidden-xs">
 							<small>Bienvenido,</small>
 							{{ Auth::user()->firstname }}
 						</span>
@@ -157,14 +157,14 @@
 				</ul><!-- /.breadcrumb -->
 
 				<!-- #section:basics/content.searchbox -->
-				<div class="nav-search" id="nav-search">
+				<!--div class="nav-search" id="nav-search">
 					<form class="form-search">
 						<span class="input-icon">
 							<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
 							<i class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>
 					</form>
-				</div><!-- /.nav-search -->
+				</div--><!-- /.nav-search -->
 
 				<!-- /section:basics/content.searchbox -->
 			</div>

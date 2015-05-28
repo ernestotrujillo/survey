@@ -22,7 +22,7 @@ class Registrar implements RegistrarContract {
 			'firstname' => 'required|max:255',
 			'lastname' => 'required|max:255',
 			'unumber' => array('required', 'regex:/^[u][0-9]{6}$/', 'unique:users'),
-			'email' => 'required|email|max:255|unique:users',
+			/*'email' => 'required|email|max:255|unique:users',*/
 			'password' => 'required|confirmed|min:6',
             'role' => 'required|exists:roles,id',
 		]);

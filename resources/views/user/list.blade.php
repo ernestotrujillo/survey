@@ -74,17 +74,17 @@
                 <table id="simple-table" class="table table-striped table-bordered table-hover dataTable">
                     <thead>
                     <tr>
-                        <th class="center">
+                        <!--th class="center">
                             <label class="pos-rel">
                                 <input type="checkbox" class="ace">
                                 <span class="lbl"></span>
                             </label>
-                        </th>
+                        </th-->
                         <th># Empleado</th>
                         <th>Nombre</th>
                         <th>Unidad</th>
-                        <th>Area</th>
-                        <th>Encargado</th>
+                        <th>Distrito</th>
+                        <th>Reporta a</th>
                         <th class="hidden-xs">Cuenta</th>
                         <th class="hidden-xs">Estado</th>
                         <th>Acciones</th>
@@ -94,14 +94,14 @@
                     <tbody>
                     <?php foreach ($users as $user): ?>
                     <tr>
-                        <td class="center">
+                        <!--td class="center">
                             <label class="pos-rel">
                                 <input type="checkbox" class="ace">
                                 <span class="lbl"></span>
                             </label>
-                        </td>
+                        </td-->
                         <td><?php echo $user->unumber; ?></td>
-                        <td><?php echo $user->firstname; ?> <?php echo $user->lastname; ?></td>
+                        <td><?php echo $user->lastname; ?>, <?php echo $user->firstname; ?></td>
                         <td>
                             <?php
                                 if(isset($user->area_unit_id)){

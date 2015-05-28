@@ -43,7 +43,7 @@
                             <th>Encuesta</th>
                             <th>Status</th>
                             <th class="hidden-sm hidden-xs">Fecha</th>
-                            <th class="hidden-xs">Cicle</th>
+                            <th class="hidden-xs">Ciclo</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -65,6 +65,9 @@
                                             <i class="ace-icon glyphicon glyphicon-edit"></i>
                                         </a>
                                     <?php } ?>
+                                    <a href="javascript:void(0);" data-id="{{ $survey->survey_user_id }}" class="view-answers blue" title="Ver">
+                                        <i class="ace-icon glyphicon glyphicon-eye-open"></i>
+                                    </a>
                                     <a href="javascript:deleteSurveyAnswer('{{ $survey->survey_user_id }}');" class="red" title="Eliminar">
                                         <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                     </a>
@@ -86,6 +89,13 @@
                                                     </a>
                                                 </li>
                                             <?php } ?>
+                                            <li>
+                                                <a href="javascript:void(0);" data-id="{{ $survey->survey_user_id }}" class="tooltip-info view-answers" data-rel="tooltip" title="Ver">
+                                                    <span class="blue">
+                                                        <i class="ace-icon glyphicon glyphicon-eye-open"></i>
+                                                    </span>
+                                                </a>
+                                            </li>
                                             <li>
                                                 <a href="javascript:deleteSurveyAnswer('{{ $survey->survey_user_id }}');" class="tooltip-success" data-rel="tooltip" title="Eliminar">
                                                 <span class="red">
@@ -119,6 +129,31 @@
 
         </div><!-- /.col -->
     </div><!-- /.row -->
+
+    <!-- MODALES -->
+    <div id="modal-answers" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="smaller lighter blue no-margin">Respuestas</h3>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="answers-survey col-md-10 col-md-offset-1"></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cerrar
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
 @endsection
 
 @section('script')
@@ -143,6 +178,34 @@
                 if(this.checked) $row.addClass(active_class);
                 else $row.removeClass(active_class);
             });
+
+            //select/deselect a row when the checkbox is checked/unchecked
+            $('#simple-table').on('click', '.view-answers' , function(event){
+                event.preventDefault();
+                var id = $(this).attr('data-id');
+                var user_id = $(this).attr('data-user-id');
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ URL::to('/') }}/survey/ajax/' + id, //resource
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(data) {
+                        if (data.success)
+                        {
+                            modalSurvey(data.questions, data.survey, data.survey_user)
+                            $('#modal-answers').modal('show')
+                        }else
+                        {
+                            alert('Disculpe. Ocurrió un error')
+                        }
+                    },
+                    error:function(data) {
+                        alert('Disculpe. Ocurrió un error')
+                    }
+                });
+            });
+
         });
 
         function deleteSurveyAnswer(id) {
@@ -160,6 +223,127 @@
                         alert('Disculpe. Ocurrió un error')
                     }
                 });
+            }
+        }
+
+        var qContainer = $('.modal-body .answers-survey');
+        function modalSurvey(questions, survey, survey_user){
+            //** VER ENCUESTA EN MODAL ++//
+            qContainer.html('');
+            if (questions.length > 0){
+                $.each(questions, function( index, value ) {
+                    var question = value;
+                    draw_question(question);
+                });
+                var cicle = survey_user.cicle;
+                draw_cicle(questions.length + 1, cicle);
+            }
+        }
+
+        function draw_cicle(qnumber, cicle){
+            var html = '<div class="row show-grid col-xs-12 col-sm-12 question" qtype="6">'
+            html += '<h2 class="text-muted">';
+            html += '<span class="number"> '+qnumber+' </span>';
+            html += '<small>';
+            html += '<i class="ace-icon fa fa-angle-double-right"></i>';
+            html += '<span class="name"> Ciclo </span>';
+            html += '</small>';
+            html += '</h2>';
+            for(i=1;i<11;i++){
+                if(cicle != null && cicle == i){
+                    html += '<h4>'+i+'</h4>';
+                }
+            }
+            html += '</div>';
+            $(qContainer).append(html);
+        }
+
+        function draw_checkboxes(options, answer){
+            var html = '';
+            $.each(options, function( index, value ) {
+                if(answer.value.indexOf(index) >= 0){
+                    html += '<h4>'+value+'</h4>';
+                }
+            });
+            return html;
+        }
+
+        function draw_radiobuttons(options, answer){
+            var html = '';
+            $.each(options, function( index, value ) {
+                if(answer.value == index){
+                    html += '<h4>'+value+'</h4>';
+                }
+            });
+            return html;
+        }
+
+        function draw_list(options, answer){
+
+            var html = '';
+            $.each(options, function( index, value ) {
+                if(answer.value == index){
+                    html += '<h4>'+value+'<h4>';
+                }
+            });
+            return html;
+        }
+
+        function draw_question(question){
+            var qNumber = $('.question').length + 1;
+            var questionName = question.name;
+            var qType = question.type;
+            var qId = question.id;
+            var answer = question.answer;
+
+            if (questionName.length > 0 && qType.length > 0){
+                var answerElement = '';
+                var opciones = question.options;
+                if (typeof question.options == "object" ){
+                    switch (qType) {
+                        case '1':
+                            if(answer.value == null) answer.value = '';
+                            answerElement = '<h4>'+answer.value+'</h4>';
+                            break;
+                        case '2':
+                            if (typeof opciones == "object"){
+                                if(answer.value == null) { answer.value = []; }else{ answer.value = answer.value.split("-") };
+                                answerElement = draw_checkboxes(opciones, answer);
+                            }
+                            break;
+                        case '3':
+                            if (typeof opciones == "object"){
+                                if(answer.value == null) answer.value = '';
+                                answerElement = draw_radiobuttons(opciones, answer);
+                            }
+                            break;
+                        case '4':
+                            if (typeof opciones == "object"){
+                                if(answer.value == null) answer.value = '';
+                                answerElement = draw_list(opciones, answer);
+                            }
+                            break;
+                        case '5':
+                            if(answer.value == null) answer.value = '';
+                            answerElement = '<h4>'+answer.value+'</h4>';
+                            break;
+                        default:
+                            answerElement = '<input class="col-xs-12 col-sm-12 options" name="answer" type="text" value=""/>';
+                            break;
+                    }
+
+                    var html = '<div class="row show-grid col-xs-12 col-sm-12 question" qid='+qId+' qtype='+qType+' qanswer="'+answer.id+'" qname="'+questionName+'">' +
+                            '              <h2 class="text-muted">' +
+                            '                  <span class="number">'+ qNumber +'</span>' +
+                            '                  <small>' +
+                            '                      <i class="ace-icon fa fa-angle-double-right"></i> ' +
+                            '                      <span class="name">' + questionName + '</span>' +
+                            '                  </small>' +
+                            '              </h2>' + answerElement
+                    '          </div>';
+
+                }
+                $(qContainer).append(html);
             }
         }
 

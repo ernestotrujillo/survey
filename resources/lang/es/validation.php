@@ -97,6 +97,7 @@ return [
 		'unumber' => [
 			'required' => 'El campo unumber es requerido',
 			'regex' => 'El formato de unumber es inválido.',
+			'unique' => 'El número de empleado ya existe',
 		],
 		'firstname' => [
 			'required' => 'El campo nombre es requerido',

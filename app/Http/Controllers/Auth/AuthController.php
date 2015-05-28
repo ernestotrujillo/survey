@@ -104,7 +104,7 @@ class AuthController extends Controller {
      */
     protected function getFailedLoginMessage()
     {
-        return 'Disculpe! sus datos son inválidos.';
+        return 'Disculpe! sus datos son inválidos. Llama a Help Desk, si necesitas ayuda';
     }
 
     /**
@@ -160,11 +160,10 @@ class AuthController extends Controller {
 
             if($role == 2)
             {
-                $role = Input::get('role');
                 $area = Input::get('area');
 
                 $user = DB::table('users')
-                    ->select(DB::raw('count(*)'))
+                    ->select(DB::raw('*'))
                     ->join('area_user', 'area_user.user_id', '=', 'users.id')
                     ->where('users.role_id', '=', $role)
                     ->where('area_user.area_id', '=', $area)
@@ -212,11 +211,8 @@ class AuthController extends Controller {
     public function getAccount($id = null)
     {
         $user = DB::table('users')
-            ->join('area_user', 'area_user.user_id', '=', 'users.id')
-            ->join('area', 'area.id', '=', 'area_user.area_id')
-            ->select(DB::raw('users.id as id, users.firstname, users.lastname, users.unumber, users.email, users.role_id as role_id, users.active, area.id as area_id, area.unit_id as area_unit_id'))
+            ->select(DB::raw('users.id as id, users.firstname, users.lastname, users.unumber, users.email, users.role_id as role_id, users.active'))
             ->where('users.id', '=', $id)
-            ->where('users.role_id', '=', 1)
             ->first();
 
         if($user == null)
@@ -261,7 +257,7 @@ class AuthController extends Controller {
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
             'unumber' => array('required', 'regex:/^[u][0-9]{6}$/'),
-            'email' => 'required|email|max:255',
+            /*'email' => 'required|email|max:255',*/
         ]);
 
         if ($v->fails())
@@ -333,7 +329,7 @@ class AuthController extends Controller {
         $v = Validator::make($request->all(), [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
-            'email' => 'required|email|max:255',
+            /*'email' => 'required|email|max:255',*/
         ]);
 
         if ($v->fails())

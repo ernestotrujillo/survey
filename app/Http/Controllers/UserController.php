@@ -29,6 +29,7 @@ class UserController extends Controller {
 			->leftJoin('area_user', 'area_user.user_id', '=', 'users.id')
 			->leftJoin('area', 'area.id', '=', 'area_user.area_id')
 			->select(DB::raw('users.id as id, users.firstname, users.lastname, users.unumber, users.role_id as role_id, roles.name as role_name, users.active, unit_user.unit_id as unit_id, area.name as area_name, area.id as area_id, area.unit_id as area_unit_id'))
+			->orderBy('users.created_at', 'desc')
 			->paginate(20);
 
 		$managers = DB::table('users')

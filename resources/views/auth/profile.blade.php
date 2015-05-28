@@ -34,44 +34,46 @@
                         <!-- view handling messages -->
                 @include('errors.error')
 
-                <form class="form-horizontal" role="form" method="POST" action="{{ url('/profile') }}">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <?php if($user->role->id != 1){ ?>
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/profile') }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right">Nombre</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="col-xs-10 col-sm-6" name="firstname" value="{{ (Input::old('firstname')) ? Input::old('firstname') : $user->firstname }}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">Nombre</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-6" name="firstname" value="{{ (Input::old('firstname')) ? Input::old('firstname') : $user->firstname }}">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right">Apellido</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="col-xs-10 col-sm-6" name="lastname" value="{{ (Input::old('lastname')) ? Input::old('lastname') : $user->lastname }}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">Apellido</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-6" name="lastname" value="{{ (Input::old('lastname')) ? Input::old('lastname') : $user->lastname }}">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right">E-Mail</label>
-                        <div class="col-sm-9">
-                            <input type="email" class="col-xs-10 col-sm-6" name="email" value="{{ (Input::old('email')) ? Input::old('email') : $user->email }}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">E-Mail</label>
+                            <div class="col-sm-9">
+                                <input type="email" class="col-xs-10 col-sm-6" name="email" value="{{ (Input::old('email')) ? Input::old('email') : $user->email }}">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="clearfix">
-                        <div class="col-md-offset-3 col-md-9">
-                            <button class="btn btn-info" type="submit">
-                                <i class="ace-icon fa fa-check bigger-110"></i>
-                                Actualizar
-                            </button>
+                        <div class="clearfix">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn btn-info" type="submit">
+                                    <i class="ace-icon fa fa-check bigger-110"></i>
+                                    Actualizar
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                <div class="hr hr32 hr-dotted"></div>
+                <?php } ?>
                 <!-- PAGE CONTENT ENDS -->
 
                 <form class="form-horizontal" role="form" method="POST" action="{{ url('/profile/password') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <div class="hr hr32 hr-dotted"></div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right">Nuevo password</label>
                         <div class="col-sm-9">

@@ -179,10 +179,11 @@
                 html += '<span class="number"> '+qnumber+' </span>';
                 html += '<small>';
                 html += '<i class="ace-icon fa fa-angle-double-right"></i>';
-                html += '<span class="name"> Cicle </span>';
+                html += '<span class="name"> Ciclo </span>';
                 html += '</small>';
                 html += '</h2><select class="form-control">';
-                    for(i=1;i<11;i++)
+                html += '<option class="options" value="" >-- Seleccione --</option>';
+                    for(i=1;i<=11;i++)
                         html += '<option class="options" value="'+i+'">'+i+'</option>';
                 html += '</select>';
                 html += '</div>';
@@ -214,6 +215,7 @@
             function draw_list(options){
 
                 var htmlOptions = '';
+                htmlOptions += '    <option class="options" value="" >-- Seleccione --</option>';
                 $.each(options, function( index, value ) {
                     htmlOptions += '    <option class="options" value='+index+' >'+value+'</option>';
                 });
@@ -326,7 +328,7 @@
                         return false;
                     }
                 }else{
-                    var survey_obj = { survey_id: survey_id, question_count: question_count, answers:question_list, status:'Completada' };
+                    var survey_obj = { survey_id: survey_id, question_count: question_count, answers:question_list, status:'OK' };
                 }
 
                 console.log(survey_obj);

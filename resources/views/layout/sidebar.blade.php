@@ -17,14 +17,14 @@
         <?php if($user_session['role'] == 1){ ?>
             <li class="">
                 <a href="{{ url('/dashboard/surveys') }}">
-                    <i class="menu-icon fa fa-caret-right"></i>
+                    <i class="menu-icon glyphicon glyphicon-check"></i>
                     Realizar Encuesta
                 </a>
                 <b class="arrow"></b>
             </li>
             <li class="">
                 <a href="{{ url('/dashboard/mysurveys') }}">
-                    <i class="menu-icon fa fa-caret-right"></i>
+                    <i class="menu-icon glyphicon glyphicon-list-alt"></i>
                     Mis Encuestas
                 </a>
                 <b class="arrow"></b>

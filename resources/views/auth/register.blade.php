@@ -1,10 +1,10 @@
 @extends('layout.app')
 
-@section('title', 'Crear Cuenta')
+@section('title', 'Crear Usuario')
 
 @section('breadcrumb')
 	<li>
-		Crear Cuenta
+		Crear Usuario
 	</li>
 @endsection
 
@@ -12,7 +12,7 @@
 
 	<div class="page-header">
 		<h1>
-			Crear Cuenta
+			Crear Usuario
 		</h1>
 	</div>
 

@@ -29,7 +29,7 @@ Route::post('profile', 'Auth\AuthController@postprofile');
 Route::post('profile/password', 'Auth\AuthController@postpassword');
 
 Route::post('survey/user/delete/{id}', 'Survey\SurveyController@deleteSurveyUser');
-Route::get('survey/ajax/{id}/user/{user_id}', 'Survey\SurveyController@getSurveyAjax');
+Route::get('survey/ajax/{id}', 'Survey\SurveyController@getSurveyAjax');
 
 // USER ALLOWED ROUTES
 Route::group(['middleware' => ['auth', 'user']], function()

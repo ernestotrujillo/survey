@@ -65,7 +65,7 @@
 							<input type="email" class="col-xs-10 col-sm-6" name="email" value="{{ (Input::old('email')) ? Input::old('email') : $user->email }}">
 						</div>
 					</div>
-					
+
 					<div class="clearfix">
 						<div class="col-md-offset-3 col-md-9">
 							<button class="btn btn-info" type="submit">

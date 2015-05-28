@@ -71,12 +71,12 @@
                 <table id="simple-table" class="table table-striped table-bordered table-hover dataTable">
                     <thead>
                     <tr>
-                        <th class="center">
+                        <!--th class="center">
                             <label class="pos-rel">
                                 <input type="checkbox" class="ace">
                                 <span class="lbl"></span>
                             </label>
-                        </th>
+                        </th-->
                         <th>Nro. Empleado</th>
                         <th>Nombre</th>
                         <th class="hidden-xs">Unidad</th>
@@ -92,15 +92,15 @@
                     <tbody>
                     <?php foreach ($users as $user): ?>
                     <tr>
-                        <td class="center">
+                        <!--td class="center">
                             <label class="pos-rel">
                                 <input type="checkbox" class="ace">
                                 <span class="lbl"></span>
                             </label>
-                        </td>
+                        </td-->
 
                         <td><?php echo $user->unumber; ?></td>
-                        <td><?php echo $user->firstname .' '. $user->lastname; ?></td>
+                        <td><?php echo $user->lastname .', '. $user->firstname; ?></td>
                         <td class="hidden-xs"><?php echo $user->unit_name; ?></td>
                         <td class="hidden-xs"><?php echo $user->area_name; ?></td>
                         <td><?php echo $user->survey_name; ?></td>
@@ -111,7 +111,7 @@
 
                         <td>
                             <div class="hidden-sm hidden-xs btn-group">
-                                <a href="javascript:void(0);" data-id="{{ $user->survey_id }}" data-user-id="{{ $user->user_id }}" class="view-answers blue" title="Ver">
+                                <a href="javascript:void(0);" data-id="{{ $user->survey_user_id }}" class="view-answers blue" title="Ver">
                                     <i class="ace-icon glyphicon glyphicon-eye-open"></i>
                                 </a>
 
@@ -128,7 +128,7 @@
 
                                     <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                         <li>
-                                            <a href="javascript:void(0);" data-id="{{ $user->survey_id }}" data-user-id="{{ $user->user_id }}" class="tooltip-info view-answers" data-rel="tooltip" title="Ver">
+                                            <a href="javascript:void(0);" data-id="{{ $user->survey_user_id }}" class="tooltip-info view-answers" data-rel="tooltip" title="Ver">
                                                 <span class="blue">
                                                     <i class="ace-icon glyphicon glyphicon-eye-open"></i>
                                                 </span>
@@ -300,7 +300,7 @@
                 var user_id = $(this).attr('data-user-id');
                 $.ajax({
                     type: 'GET',
-                    url: '{{ URL::to('/') }}/survey/ajax/' + id + '/user/' + user_id, //resource
+                    url: '{{ URL::to('/') }}/survey/ajax/' + id, //resource
                     data: {
                         _token: '{{ csrf_token() }}'
                     },
@@ -371,7 +371,7 @@
             html += '<span class="number"> '+qnumber+' </span>';
             html += '<small>';
             html += '<i class="ace-icon fa fa-angle-double-right"></i>';
-            html += '<span class="name"> Cicle </span>';
+            html += '<span class="name"> Ciclo </span>';
             html += '</small>';
             html += '</h2>';
             for(i=1;i<11;i++){
@@ -387,7 +387,7 @@
             var html = '';
             $.each(options, function( index, value ) {
                 if(answer.value.indexOf(index) >= 0){
-                    html += '<h4>'+value+'</h4><br>';
+                    html += '<h4>'+value+'</h4>';
                 }
             });
             return html;

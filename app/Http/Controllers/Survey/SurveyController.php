@@ -34,9 +34,9 @@ class SurveyController extends Controller {
 	{
 
         if ($unit){
-            $surveys = Survey::where('unit_id','=',$unit)->paginate(20);
+            $surveys = Survey::where('unit_id','=',$unit)->paginate(100);
         }else {
-            $surveys = Survey::paginate(20);
+            $surveys = Survey::paginate(100);
         }
 
         //get all current active units
@@ -400,15 +400,15 @@ class SurveyController extends Controller {
 		{
 			if($unit > 0){
 				if($area != null && $area > 0){
-					$users = $query->where('area.id', '=', $area)->paginate(30);
+					$users = $query->where('area.id', '=', $area)->paginate(100);
 				}else{
-					$users = $query->where('unit.id', '=', $unit)->paginate(30);
+					$users = $query->where('unit.id', '=', $unit)->paginate(100);
 				}
 			}else{
-				$users = $query->paginate(30);
+				$users = $query->paginate(100);
 			}
 		}else{
-			$users = $query->paginate(30);
+			$users = $query->paginate(100);
 		}
 		//get all current active units
 		$units = null;
@@ -515,7 +515,8 @@ class SurveyController extends Controller {
             ->select(DB::raw('*'))
             ->where('unit_id', '=', $unit)
             ->where('active', '=', 1)
-            ->paginate(20);
+            ->orderBy('survey.created_at', 'desc')
+            ->paginate(100);
 
         return view('user.survey_list', compact('surveys'));
     }
@@ -539,7 +540,8 @@ class SurveyController extends Controller {
             ->select(DB::raw('survey_user.id as survey_user_id, survey.id as survey_id, survey.name, survey_user.status, survey_user.created_at, survey_user.cicle as cicle'))
             ->join('survey', 'survey.id', '=', 'survey_user.survey_id')
             ->where('survey_user.user_id', '=', $user->id)
-            ->paginate(20);
+            ->orderBy('survey_user.created_at', 'desc')
+            ->paginate(100);
 
         return view('user.my_survey_list', compact('surveys'));
     }
@@ -818,11 +820,17 @@ class SurveyController extends Controller {
 
     }
 
-    public function getSurveyAjax($id, $user_id)
+    public function getSurveyAjax($id)
     {
         //check role of the user to set default unit or area
         //$user = Auth::user();
-        $survey = Survey::find($id);
+
+        $survey_user = DB::table('survey_user')
+            ->select(DB::raw('id, cicle, user_id, survey_id'))
+            ->where('id', '=', $id)
+            ->first();
+
+        $survey = Survey::find($survey_user->survey_id);
 
         if($survey == null)
         {
@@ -831,18 +839,13 @@ class SurveyController extends Controller {
         }
         else
         {
-            $survey_user = DB::table('survey_user')
-                ->select(DB::raw('id, cicle'))
-                ->where('user_id', '=', $user_id)
-                ->where('survey_id', '=', $id)
-                ->first();
 
             if(!empty($survey_user))
             {
                 $area_query = DB::table('area_user')
                     ->select(DB::raw('area_user.area_id as area_id, area.unit_id as unit_id'))
                     ->join('area', 'area.id', '=', 'area_user.area_id')
-                    ->where('area_user.user_id', '=', $user_id)
+                    ->where('area_user.user_id', '=', $survey_user->user_id)
                     ->where('area_user.active', '=', 1)
                     ->first();
 
@@ -854,7 +857,7 @@ class SurveyController extends Controller {
                         ->with('message', array( 'type' => 'error', 'message' => 'No tiene acceso a esa pregunta'));
                 }
 
-                $data = Question::where('active', '=', 1)->where('survey_id', '=', $id)->get(array('id','name','type','survey_id'));
+                $data = Question::where('active', '=', 1)->where('survey_id', '=', $survey->id)->get(array('id','name','type','survey_id'));
                 foreach ($data as $key => $question)
                 {
                     $options = [];
